@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import './index.css'
 import { App } from './App'
-import rootReducer from './rootReducer'
+import rootReducer from './reducers'
 import registerServiceWorker from './registerServiceWorker'
 
 const loggerMiddleware = createLogger()

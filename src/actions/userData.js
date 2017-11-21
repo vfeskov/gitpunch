@@ -15,7 +15,7 @@ export const errorUserData = error => ({
 export function fetchUserData () {
   return dispatch => {
     dispatch(requestUserData())
-    return fetch('http://localhost:3001/api/userData', { credentials: 'include' })
+    return fetch('/api/userData', { credentials: 'include' })
       .then(response => {
         if (response.status === 200) {
           return response.json()

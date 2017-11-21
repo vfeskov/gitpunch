@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { AddRepo as AddRepoComponent } from './component'
-import { fetchSuggestions, receiveSuggestions, setValue, setConfirming, addRepo } from './actions'
+import { fetchSuggestions, receiveSuggestions, setValue, setConfirming } from './actions'
 import debounce from 'lodash.debounce'
 
 export const AddRepo = connect(
@@ -19,8 +19,7 @@ export const AddRepo = connect(
         dispatch(receiveSuggestions(Date.now(), []))
       },
       onChange: value => dispatch(setValue(value)),
-      onConfirming: confirming => dispatch(setConfirming(confirming)),
-      onConfirm: repo => dispatch(addRepo(repo))
+      onConfirming: confirming => dispatch(setConfirming(confirming))
     }
 }
 )(AddRepoComponent)

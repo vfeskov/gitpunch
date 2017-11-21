@@ -1,4 +1,4 @@
-export function Repos (state = [], action) {
+export function repos (state = [], action) {
   switch (action.type) {
     case 'RECEIVE_USER_DATA':
       const { repos } = action.userData || {}

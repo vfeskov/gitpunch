@@ -1,5 +1,3 @@
-import { receiveRepos } from '../Repos/actions'
-
 export const setValue = value => ({
   type: 'ADD_REPO_SET_VALUE',
   value
@@ -41,29 +39,6 @@ export function fetchSuggestions (value) {
       .then(
         json => dispatch(receiveSuggestions(reqTimestamp, json.items)),
         error => dispatch(errorSuggestions(reqTimestamp, error))
-      )
-  }
-}
-
-export function addRepo (fullName) {
-  return dispatch => {
-    return fetch('http://localhost:3001/api/repos', {
-      credentials: 'include',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ fullName })
-    })
-      .then(response => {
-        if (response.status === 200) {
-          return response.json()
-        }
-        throw new Error(response.statusText)
-      })
-      .then(
-        json => dispatch(receiveRepos(json)),
-        console.log
       )
   }
 }

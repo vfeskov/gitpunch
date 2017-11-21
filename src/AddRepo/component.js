@@ -10,6 +10,7 @@ import { EyeIcon, StarIcon, ForkIcon } from './github-icons'
 import { withStyles } from 'material-ui/styles'
 import { LinearProgress } from 'material-ui/Progress'
 import Typography from 'material-ui/Typography'
+import styles from './styles'
 
 function AddRepoComponent ({
   classes,
@@ -24,12 +25,15 @@ function AddRepoComponent ({
   onChange
 }) {
   const confirm = repo => {
+    const action = onConfirm(repo)
+    if (!(action instanceof Promise)) {
+      return onChange('');
+    }
     onConfirming(true)
-    onConfirm(repo)
-      .then(() => {
-        onChange('')
-        onConfirming(false)
-      })
+    action.then(() => {
+      onChange('')
+      onConfirming(false)
+    })
   }
 
   return (
@@ -78,6 +82,8 @@ AddRepoComponent.propTypes = {
   onChange: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 }
+
+export const AddRepo = withStyles(styles)(AddRepoComponent)
 
 function onInputKeyPress (ev, confirm) {
   if (ev.key !== 'Enter') { return }
@@ -153,44 +159,4 @@ function renderSuggestion (classes, suggestion, { query, isHighlighted }) {
     </MenuItem>
   )
 }
-
-const styles = theme => ({
-  container: {
-    flexGrow: 1,
-    position: 'relative'
-  },
-  suggestionsContainerOpen: {
-    position: 'absolute',
-    // marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3,
-    left: 0,
-    right: 0,
-  },
-  suggestion: {
-    display: 'block',
-  },
-  suggestionsList: {
-    margin: 0,
-    padding: 0,
-    listStyleType: 'none',
-  },
-  textField: {
-    width: '100%',
-  },
-  progress: {
-    position: 'absolute',
-    bottom: '0',
-    width: '100%'
-  },
-  suggestionInner: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center'
-  },
-  suggestionIcon: {
-    margin: '0 5px'
-  }
-})
-
-export const AddRepo = withStyles(styles)(AddRepoComponent)
 
