@@ -26,8 +26,9 @@ function AddRepoComponent ({
 }) {
   const confirm = repo => {
     const action = onConfirm(repo)
+    onSuggestionsClearRequested()
     if (!(action instanceof Promise)) {
-      return onChange('');
+      return onChange('')
     }
     onConfirming(true)
     action.then(() => {

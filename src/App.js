@@ -50,12 +50,12 @@ class AppComponent extends Component {
 
   addRepo(repo) {
     const { loggedIn, onCreateRepo, onAddRepoToBuffer } = this.props
-    loggedIn ? onCreateRepo(repo) : onAddRepoToBuffer(repo)
+    return loggedIn ? onCreateRepo(repo) : onAddRepoToBuffer(repo)
   }
 
   removeRepo(repo) {
     const { loggedIn, onDeleteRepo, onRemoveRepoFromBuffer } = this.props
-    loggedIn ? onDeleteRepo(repo) : onRemoveRepoFromBuffer(repo)
+    return loggedIn ? onDeleteRepo(repo) : onRemoveRepoFromBuffer(repo)
   }
 }
 
