@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 import Button from 'material-ui/Button'
 import Paper from 'material-ui/Paper'
 
-function SettingsComponent ({ onLogout, onRegister, loggedIn }) {
+function SettingsComponent ({ onLogout, onRegister, loggedIn, className }) {
   return (
-    <Paper style={{padding: '20px', margin: '10px'}}>
+    <Paper className={className}>
       {loggedIn ? (
       <Button raised onClick={onLogout}>
         Logout
@@ -22,6 +22,7 @@ function SettingsComponent ({ onLogout, onRegister, loggedIn }) {
 }
 
 SettingsComponent.propTypes = {
+  className: PropTypes.string,
   loggedIn: PropTypes.bool.isRequired,
   onRegister: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired

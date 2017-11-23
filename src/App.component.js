@@ -18,16 +18,20 @@ class AppComponent extends Component {
         'Register to start watching'
     return (
       <div className={classes.app}>
-        <AddRepo onConfirm={repo => this.addRepo(repo)} />
+        <AddRepo
+          onConfirm={repo => this.addRepo(repo)}
+          className={classes.sectionContainer}/>
         <div className={classes.container}>
           <Repos
             repos={shownRepos}
             title={reposTitle}
-            onRemove={repo => this.removeRepo(repo)} />
+            onRemove={repo => this.removeRepo(repo)}
+            className={classes.sectionContainer}/>
           <Settings
             loggedIn={loggedIn}
             onLogout={onLogout}
-            onRegister={() => onRegister(buffer)} />
+            onRegister={() => onRegister(buffer)}
+            className={classes.sectionContainer}/>
         </div>
       </div>
     )

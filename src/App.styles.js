@@ -5,5 +5,9 @@ export const styles = theme => ({
   },
   container: {
     display: 'flex'
+  },
+  sectionContainer: {
+    padding: '20px',
+    margin: '10px'
   }
 })

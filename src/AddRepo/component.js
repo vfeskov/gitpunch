@@ -13,6 +13,7 @@ import Typography from 'material-ui/Typography'
 import { styles } from './styles'
 
 function AddRepoComponent ({
+  className,
   classes,
   value,
   confirming,
@@ -38,7 +39,7 @@ function AddRepoComponent ({
   }
 
   return (
-    <Paper style={{padding: '20px', margin: '10px'}}>
+    <Paper className={className}>
       <Typography type="title">Watch repo for new releases</Typography>
       <Autosuggest
         theme={{
@@ -72,6 +73,7 @@ function AddRepoComponent ({
 }
 
 AddRepoComponent.propTypes = {
+  className: PropTypes.string,
   value: PropTypes.string,
   confirming: PropTypes.bool,
   suggestions: PropTypes.arrayOf(PropTypes.object).isRequired,

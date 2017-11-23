@@ -6,9 +6,9 @@ import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import PropTypes from 'prop-types'
 
-function ReposComponent ({ repos, onRemove, classes, title }) {
+function ReposComponent ({ repos, onRemove, classes, title, className }) {
   return (
-    <Paper style={{padding: '20px', margin: '10px'}}>
+    <Paper className={className}>
       <Typography type="title">{title}</Typography>
       {repos.map(repo =>
         <div className={classes.item} key={repo}>
@@ -23,6 +23,7 @@ function ReposComponent ({ repos, onRemove, classes, title }) {
 }
 
 ReposComponent.propTypes = {
+  className: PropTypes.string,
   repos: PropTypes.arrayOf(PropTypes.string).isRequired,
   title: PropTypes.string.isRequired,
   onRemove: PropTypes.func.isRequired,
