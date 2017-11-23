@@ -8,9 +8,9 @@ export const requestSuggestions = reqTimestamp => ({
   reqTimestamp
 })
 
-export const receiveSuggestions = (reqTimestamp, items) => ({
+export const receiveSuggestions = (reqTimestamp, suggestions) => ({
   type: 'ADD_REPO_RECEIVE_SUGGESTIONS',
-  items,
+  suggestions,
   reqTimestamp
 })
 

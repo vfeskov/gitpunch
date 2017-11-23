@@ -10,7 +10,7 @@ import { EyeIcon, StarIcon, ForkIcon } from './github-icons'
 import { withStyles } from 'material-ui/styles'
 import { LinearProgress } from 'material-ui/Progress'
 import Typography from 'material-ui/Typography'
-import styles from './styles'
+import { styles } from './styles'
 
 function AddRepoComponent ({
   classes,

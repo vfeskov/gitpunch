@@ -1,12 +1,12 @@
 const { assign } = Object
 
-export function AddRepo (state, action) {
+export default (state, action) => {
   state = state || {
     value: '',
     latestReqTimestamp: 0,
-    items: [],
+    suggestions: [],
     error: null,
-    loading: false,
+    suggestionsLoading: false,
     confirming: false
   }
   switch (action.type) {
@@ -18,23 +18,23 @@ export function AddRepo (state, action) {
       return assign({}, state, {
         latestReqTimestamp: action.reqTimestamp,
         error: null,
-        loading: true
+        suggestionsLoading: true
       })
     case 'ADD_REPO_RECEIVE_SUGGESTIONS':
       // ignore responses if there's a more recent request pending
       if (state.latestReqTimestamp > action.reqTimestamp) { return state }
       return assign({}, state, {
-        loading: false,
+        suggestionsLoading: false,
         error: null,
-        items: action.items
+        suggestions: action.suggestions
       })
     case 'ADD_REPO_ERROR_SUGGESTIONS':
       // ignore errors if there's a more recent request pending
       if (state.latestReqTimestamp > action.reqTimestamp) { return state }
       return assign({}, state, {
-        loading: false,
+        suggestionsLoading: false,
         error: action.error,
-        items: []
+        suggestions: []
       })
     default:
       return state
