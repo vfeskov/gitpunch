@@ -1,14 +1,12 @@
 import { combineReducers } from 'redux'
-import AddRepo from '../AddRepo/reducer'
 import { repos } from './repos'
 import { loggedIn } from './loggedIn'
 import { buffer } from './buffer'
+import { AddRepo } from '../modules'
 
-export const rootReducer = combineReducers({
-  AddRepo,
+export const reducer = combineReducers({
   repos,
   loggedIn,
-  buffer
+  buffer,
+  ...AddRepo.reducerConfig
 })
-
-export const AddRepoLens = state => state.AddRepo

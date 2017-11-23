@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
-import { createAddRepo }  from './AddRepo/container'
-import { AddRepoLens } from './reducers'
 import { Repos, Settings } from './components'
 import { withStyles } from 'material-ui/styles'
 import { styles } from './App.styles'
-
-const AddRepo = createAddRepo(AddRepoLens)
+import { AddRepo }  from './modules'
 
 class AppComponent extends Component {
-  render() {
+  render () {
     const { classes, repos, buffer, loggedIn, onLogout, onRegister } = this.props
     const shownRepos = loggedIn ? repos : buffer
     const reposTitle = !shownRepos.length ?
@@ -18,35 +15,35 @@ class AppComponent extends Component {
         'Register to start watching'
     return (
       <div className={classes.app}>
-        <AddRepo
+        <AddRepo.AddRepo
           onConfirm={repo => this.addRepo(repo)}
-          className={classes.sectionContainer}/>
+          className={classes.sectionContainer} />
         <div className={classes.container}>
           <Repos
             repos={shownRepos}
             title={reposTitle}
             onRemove={repo => this.removeRepo(repo)}
-            className={classes.sectionContainer}/>
+            className={classes.sectionContainer} />
           <Settings
             loggedIn={loggedIn}
             onLogout={onLogout}
             onRegister={() => onRegister(buffer)}
-            className={classes.sectionContainer}/>
+            className={classes.sectionContainer} />
         </div>
       </div>
     )
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.onInit()
   }
 
-  addRepo(repo) {
+  addRepo (repo) {
     const { loggedIn, onCreateRepo, onAddRepoToBuffer } = this.props
     return loggedIn ? onCreateRepo(repo) : onAddRepoToBuffer(repo)
   }
 
-  removeRepo(repo) {
+  removeRepo (repo) {
     const { loggedIn, onDeleteRepo, onRemoveRepoFromBuffer } = this.props
     return loggedIn ? onDeleteRepo(repo) : onRemoveRepoFromBuffer(repo)
   }

@@ -1,21 +1,30 @@
 import { connect } from 'react-redux'
 import { AddRepo as AddRepoComponent } from './component'
-import { fetchSuggestions, receiveSuggestions, setValue, setConfirming } from './actions'
 import debounce from 'lodash.debounce'
 
-export function createAddRepo (lens) {
+export function createAddRepoContainer (lens, actions) {
   return connect(
     rootState => mapStateToProps(lens(rootState)),
-    mapDispatchToProps
+    dispatch => mapDispatchToProps(dispatch, actions)
   )(AddRepoComponent)
 }
 
 function mapStateToProps (state) {
-  return {...state}
+  return {
+    value: state.value,
+    suggestions: state.suggestions,
+    error: state.error,
+    suggestionsLoading: state.suggestionsLoading,
+    confirming: state.confirming
+  }
 }
 
-function mapDispatchToProps (dispatch) {
-  const onSuggestionsFetchRequested = debounce(({ value }) => dispatch(fetchSuggestions(value)), 300)
+function mapDispatchToProps (dispatch, actions) {
+  const { fetchSuggestions, receiveSuggestions, setValue, setConfirming } = actions
+  const onSuggestionsFetchRequested = debounce(
+    ({ value }) => dispatch(fetchSuggestions(value)),
+    300
+  )
   return {
     onSuggestionsFetchRequested,
     onSuggestionsClearRequested: () => {
