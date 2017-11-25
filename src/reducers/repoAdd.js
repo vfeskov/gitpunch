@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux'
 
-export const addRepo = combineReducers({
+export const repoAdd = combineReducers({
   value,
   disabled
 })
 
 function value (state = '', action) {
   switch (action.type) {
-    case 'SET_ADD_REPO_VALUE':
+    case 'SET_REPO_ADD_VALUE':
       return action.value
     case 'ADD_REPO_TO_BUFFER':
     case 'RECEIVE_CREATE_REPO':

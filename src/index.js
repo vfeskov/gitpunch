@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import './index.css'
-import { App } from './App.container'
+import { App } from './App'
 import { reducer as rootReducer } from './reducers'
 import registerServiceWorker from './registerServiceWorker'
 

@@ -1,12 +1,12 @@
 import { connect } from 'react-redux'
-import { AddRepo as AddRepoComponent } from './component'
+import { RepoAdd as RepoAddComponent } from './component'
 import debounce from 'lodash.debounce'
 
-export function createAddRepoContainer (lens, actions) {
+export function createRepoAddContainer (lens, actions) {
   return connect(
     rootState => mapStateToProps(lens(rootState)),
     dispatch => mapDispatchToProps(dispatch, actions)
-  )(AddRepoComponent)
+  )(RepoAddComponent)
 }
 
 function mapStateToProps (state) {
@@ -19,14 +19,14 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch, actions) {
   const { fetchSuggestions, receiveSuggestions } = actions
-  const onSuggestionsFetchRequested = debounce(
+  const fetchSuggestionsDebounced = debounce(
     ({ value }) => dispatch(fetchSuggestions(value)),
     300
   )
   return {
-    onSuggestionsFetchRequested,
-    onSuggestionsClearRequested: () => {
-      onSuggestionsFetchRequested.cancel()
+    fetchSuggestions: fetchSuggestionsDebounced,
+    clearSuggestions: () => {
+      fetchSuggestionsDebounced.cancel()
       dispatch(receiveSuggestions(Date.now(), []))
     }
   }

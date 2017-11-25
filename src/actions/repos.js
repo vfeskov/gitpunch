@@ -1,21 +1,26 @@
-export const setAddRepoValue = value => ({
-  type: 'SET_ADD_REPO_VALUE',
-  value
-})
+export function setRepoAddValue (value) {
+  return { type: 'SET_REPO_ADD_VALUE', value }
+}
 
-export const requestCreateRepo = () => ({
-  type: 'REQUEST_CREATE_REPO'
-})
+export function addRepo (loggedIn, repo) {
+  return loggedIn ? createRepo(repo) : addRepoToBuffer(repo)
+}
 
-export const receiveCreateRepo = repos => ({
-  type: 'RECEIVE_CREATE_REPO',
-  repos
-})
+export function removeRepo (loggedIn, repo) {
+  return loggedIn ? deleteRepo(repo) : removeRepoFromBuffer(repo)
+}
 
-export const errorCreateRepo = error => ({
-  type: 'CREATE_CREATE_REPO',
-  error
-})
+export function requestCreateRepo () {
+  return { type: 'REQUEST_CREATE_REPO' }
+}
+
+export function receiveCreateRepo (repos) {
+  return { type: 'RECEIVE_CREATE_REPO', repos }
+}
+
+export function errorCreateRepo (error) {
+  return { type: 'CREATE_CREATE_REPO', error }
+}
 
 export function createRepo (fullName) {
   return dispatch => {
@@ -41,23 +46,21 @@ export function createRepo (fullName) {
   }
 }
 
-export const requestDeleteRepo = () => ({
-  type: 'REQUEST_DELETE_REPO'
-})
+export function requestDeleteRepo () {
+  return { type: 'REQUEST_DELETE_REPO' }
+}
 
-export const receiveDeleteRepo = repos => ({
-  type: 'RECEIVE_DELETE_REPO',
-  repos
-})
+export function receiveDeleteRepo (repos) {
+  return { type: 'RECEIVE_DELETE_REPO', repos }
+}
 
-export const errorDeleteRepo = error => ({
-  type: 'CREATE_DELETE_REPO',
-  error
-})
+export function errorDeleteRepo (error) {
+  return { type: 'ERROR_DELETE_REPO', error }
+}
 
 export function deleteRepo (fullName) {
   return dispatch => {
-    dispatch(requestDeleteRepo)
+    dispatch(requestDeleteRepo())
     fetch(`/api/repos/${encodeURIComponent(fullName)}`, {
       credentials: 'include',
       method: 'DELETE',
@@ -78,19 +81,17 @@ export function deleteRepo (fullName) {
   }
 }
 
-export const requestReplaceRepos = () => ({
-  type: 'REQUEST_REPLACE_REPOS'
-})
+export function requestReplaceRepos () {
+  return { type: 'REQUEST_REPLACE_REPOS' }
+}
 
-export const receiveReplaceRepos = repos => ({
-  type: 'RECEIVE_REPLACE_REPOS',
-  repos
-})
+export function receiveReplaceRepos (repos) {
+  return { type: 'RECEIVE_REPLACE_REPOS', repos }
+}
 
-export const errorReplaceRepos = error => ({
-  type: 'CREATE_REPLACE_REPOS',
-  error
-})
+export function errorReplaceRepos (error) {
+  return { type: 'CREATE_REPLACE_REPOS', error }
+}
 
 export function replaceRepos (repos) {
   return dispatch => {
@@ -114,4 +115,12 @@ export function replaceRepos (repos) {
         error => dispatch(errorReplaceRepos(error))
       )
   }
+}
+
+export function addRepoToBuffer (repo) {
+  return { type: 'ADD_REPO_TO_BUFFER', repo }
+}
+
+export function removeRepoFromBuffer (repo) {
+  return { type: 'REMOVE_REPO_FROM_BUFFER', repo }
 }

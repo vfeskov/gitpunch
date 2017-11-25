@@ -12,7 +12,7 @@ import { LinearProgress } from 'material-ui/Progress'
 import Typography from 'material-ui/Typography'
 import { styles } from './styles'
 
-function AddRepoComponent ({
+function RepoAddComponent ({
   // props coming from parent component
   className,
   value,
@@ -20,15 +20,15 @@ function AddRepoComponent ({
   classes,
   onConfirm,
   onChange,
-  // props connected to redux via AddRepoContainer
+  // props connected to redux via RepoAddContainer
   suggestions,
   suggestionsError,
   suggestionsLoading,
-  onSuggestionsFetchRequested,
-  onSuggestionsClearRequested
+  fetchSuggestions,
+  clearSuggestions
 }) {
   const confirm = repo => {
-    onSuggestionsClearRequested()
+    clearSuggestions()
     onConfirm(repo)
   }
   return (
@@ -43,8 +43,8 @@ function AddRepoComponent ({
         }}
         renderInputComponent={renderInput}
         suggestions={suggestions}
-        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        onSuggestionsFetchRequested={fetchSuggestions}
+        onSuggestionsClearRequested={clearSuggestions}
         shouldRenderSuggestions={value => value.trim().length > 1}
         renderSuggestionsContainer={renderSuggestionsContainer}
         getSuggestionValue={suggestion => suggestion.full_name}
@@ -132,18 +132,18 @@ function renderSuggestion (classes, suggestion, { query, isHighlighted }) {
   )
 }
 
-AddRepoComponent.propTypes = {
+RepoAddComponent.propTypes = {
   value: PropTypes.string,
-  diabled: PropTypes.bool,
+  disabled: PropTypes.bool,
   className: PropTypes.string,
-  suggestions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  suggestionsLoading: PropTypes.bool,
-  onSuggestionsFetchRequested: PropTypes.func.isRequired,
-  onSuggestionsClearRequested: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  suggestions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  suggestionsLoading: PropTypes.bool,
+  fetchSuggestions: PropTypes.func.isRequired,
+  clearSuggestions: PropTypes.func.isRequired,
 }
 
-export const AddRepo = withStyles(styles)(AddRepoComponent)
+export const RepoAdd = withStyles(styles)(RepoAddComponent)
 

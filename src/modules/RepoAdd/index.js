@@ -1,4 +1,4 @@
-import { createAddRepoContainer } from './container'
+import { createRepoAddContainer } from './container'
 import { createReducer } from './reducer'
 import { createActions } from './actions'
 
@@ -8,13 +8,13 @@ export function createModule (
 ) {
   const lens = stateNamespace ? state => state[stateNamespace] : state => state
   const actions = createActions(actionPrefix)
-  const AddRepo = createAddRepoContainer(lens, actions)
+  const RepoAdd = createRepoAddContainer(lens, actions)
 
   const reducer = createReducer(actionPrefix)
   const reducerConfig = stateNamespace ? { [stateNamespace]: reducer } : reducer
 
   return {
-    AddRepo,
+    RepoAdd,
     reducerConfig
   }
 }
