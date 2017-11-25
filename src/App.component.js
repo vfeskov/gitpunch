@@ -6,7 +6,16 @@ import { AddRepo }  from './modules'
 
 class AppComponent extends Component {
   render () {
-    const { classes, repos, buffer, loggedIn, onLogout, onRegister } = this.props
+    const {
+      classes,
+      repos,
+      buffer,
+      loggedIn,
+      onLogout,
+      onRegister,
+      addRepo,
+      onAddRepoValueChange
+    } = this.props
     const shownRepos = loggedIn ? repos : buffer
     const reposTitle = !shownRepos.length ?
       'Not watching any repo yet' :
@@ -17,6 +26,9 @@ class AppComponent extends Component {
       <div className={classes.app}>
         <AddRepo.AddRepo
           onConfirm={repo => this.addRepo(repo)}
+          value={addRepo.value}
+          disabled={addRepo.disabled}
+          onChange={onAddRepoValueChange}
           className={classes.sectionContainer} />
         <div className={classes.container}>
           <Repos

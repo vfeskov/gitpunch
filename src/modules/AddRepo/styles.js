@@ -9,6 +9,7 @@ export function styles (theme) {
       marginBottom: theme.spacing.unit * 3,
       left: 0,
       right: 0,
+      zIndex: 1
     },
     suggestion: {
       display: 'block',
@@ -30,6 +31,9 @@ export function styles (theme) {
       display: 'flex',
       width: '100%',
       alignItems: 'center'
+    },
+    divider: {
+      flex: 1
     },
     suggestionIcon: {
       margin: '0 5px'

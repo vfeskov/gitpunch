@@ -13,31 +13,24 @@ import Typography from 'material-ui/Typography'
 import { styles } from './styles'
 
 function AddRepoComponent ({
+  // props coming from parent component
   className,
-  classes,
   value,
-  confirming,
+  disabled,
+  classes,
+  onConfirm,
+  onChange,
+  // props connected to redux via AddRepoContainer
   suggestions,
+  suggestionsError,
   suggestionsLoading,
   onSuggestionsFetchRequested,
-  onSuggestionsClearRequested,
-  onConfirming,
-  onConfirm,
-  onChange
+  onSuggestionsClearRequested
 }) {
   const confirm = repo => {
-    const action = onConfirm(repo)
     onSuggestionsClearRequested()
-    if (!(action instanceof Promise)) {
-      return onChange('')
-    }
-    onConfirming(true)
-    action.then(() => {
-      onChange('')
-      onConfirming(false)
-    })
+    onConfirm(repo)
   }
-
   return (
     <Paper className={className}>
       <Typography type="title">Watch repo for new releases</Typography>
@@ -52,9 +45,9 @@ function AddRepoComponent ({
         suggestions={suggestions}
         onSuggestionsFetchRequested={onSuggestionsFetchRequested}
         onSuggestionsClearRequested={onSuggestionsClearRequested}
-        shouldRenderSuggestions={shouldRenderSuggestions}
+        shouldRenderSuggestions={value => value.trim().length > 1}
         renderSuggestionsContainer={renderSuggestionsContainer}
-        getSuggestionValue={getSuggestionValue}
+        getSuggestionValue={suggestion => suggestion.full_name}
         onSuggestionSelected={(ev, { suggestionValue }) => confirm(suggestionValue)}
         renderSuggestion={(...args) => renderSuggestion(classes, ...args)}
         inputProps={{
@@ -63,7 +56,7 @@ function AddRepoComponent ({
           suggestionsLoading,
           value,
           onChange: (ev, { newValue }) => onChange(newValue),
-          disabled: confirming,
+          disabled,
           onKeyPress: ev => onInputKeyPress(ev, confirm)
         }}
       />
@@ -71,22 +64,6 @@ function AddRepoComponent ({
     </Paper>
   )
 }
-
-AddRepoComponent.propTypes = {
-  className: PropTypes.string,
-  value: PropTypes.string,
-  confirming: PropTypes.bool,
-  suggestions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  suggestionsLoading: PropTypes.bool,
-  onSuggestionsFetchRequested: PropTypes.func.isRequired,
-  onSuggestionsClearRequested: PropTypes.func.isRequired,
-  onConfirming: PropTypes.func.isRequired,
-  onConfirm: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
-}
-
-export const AddRepo = withStyles(styles)(AddRepoComponent)
 
 function onInputKeyPress (ev, confirm) {
   if (ev.key !== 'Enter') { return }
@@ -96,22 +73,14 @@ function onInputKeyPress (ev, confirm) {
   }
 }
 
-function shouldRenderSuggestions (value) {
-  return value.trim().length > 1
-}
-
 function renderSuggestionsContainer (options) {
   const { containerProps, children } = options
 
   return (
-    <Paper {...containerProps} square style={{zIndex: 1}}>
+    <Paper {...containerProps} square>
       {children}
     </Paper>
   )
-}
-
-function getSuggestionValue (suggestion) {
-  return suggestion.full_name
 }
 
 function renderInput (inputProps) {
@@ -145,16 +114,16 @@ function renderSuggestion (classes, suggestion, { query, isHighlighted }) {
       <div className={classes.suggestionInner}>
         {parts.map((part, index) => {
           return part.highlight ? (
-            <strong key={index} style={{ fontWeight: 500 }}>
+            <strong key={index}>
               {part.text}
             </strong>
           ) : (
-            <span key={index} style={{ fontWeight: 300 }}>
+            <span key={index}>
               {part.text}
             </span>
           )
         })}
-        <span style={{flex: 1}}></span>
+        <span className={classes.divider}></span>
         {EyeIcon(classes.suggestionIcon)}{suggestion.watchers_count} &middot;
         {StarIcon(classes.suggestionIcon)}{suggestion.stargazers_count} &middot;
         {ForkIcon(classes.suggestionIcon)}{suggestion.forks_count}
@@ -162,4 +131,19 @@ function renderSuggestion (classes, suggestion, { query, isHighlighted }) {
     </MenuItem>
   )
 }
+
+AddRepoComponent.propTypes = {
+  value: PropTypes.string,
+  diabled: PropTypes.bool,
+  className: PropTypes.string,
+  suggestions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  suggestionsLoading: PropTypes.bool,
+  onSuggestionsFetchRequested: PropTypes.func.isRequired,
+  onSuggestionsClearRequested: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
+}
+
+export const AddRepo = withStyles(styles)(AddRepoComponent)
 

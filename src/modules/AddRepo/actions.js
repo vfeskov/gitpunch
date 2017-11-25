@@ -1,30 +1,20 @@
 export function createActions(actionPrefix) {
-  const setValue = value => ({
-    type: `${actionPrefix}SET_VALUE`,
-    value
-  })
-
-  const requestSuggestions = reqTimestamp => ({
-    type: `${actionPrefix}REQUEST_SUGGESTIONS`,
+  const requestSuggestions = prefix(reqTimestamp => ({
+    type: 'REQUEST_SUGGESTIONS',
     reqTimestamp
-  })
+  }))
 
-  const receiveSuggestions = (reqTimestamp, suggestions) => ({
-    type: `${actionPrefix}RECEIVE_SUGGESTIONS`,
+  const receiveSuggestions = prefix((reqTimestamp, suggestions) => ({
+    type: 'RECEIVE_SUGGESTIONS',
     suggestions,
     reqTimestamp
-  })
+  }))
 
-  const errorSuggestions = (reqTimestamp, error) => ({
-    type: `${actionPrefix}ERROR_SUGGESTIONS`,
+  const errorSuggestions = prefix((reqTimestamp, error) => ({
+    type: 'ERROR_SUGGESTIONS',
     error,
     reqTimestamp
-  })
-
-  const setConfirming = confirming => ({
-    type: `${actionPrefix}SET_CONFIRMING`,
-    confirming
-  })
+  }))
 
   function fetchSuggestions (value) {
     return dispatch => {
@@ -45,11 +35,16 @@ export function createActions(actionPrefix) {
   }
 
   return {
-    setValue,
     requestSuggestions,
     receiveSuggestions,
     errorSuggestions,
-    setConfirming,
     fetchSuggestions
+  }
+
+  function prefix (actionCreator) {
+    return (...args) => {
+      const action = actionCreator(...args)
+      return Object.assign({}, action, { type: actionPrefix + action.type })
+    }
   }
 }

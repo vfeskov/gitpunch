@@ -11,16 +11,14 @@ export function createAddRepoContainer (lens, actions) {
 
 function mapStateToProps (state) {
   return {
-    value: state.value,
     suggestions: state.suggestions,
-    error: state.error,
-    suggestionsLoading: state.suggestionsLoading,
-    confirming: state.confirming
+    suggestionsError: state.suggestionsError,
+    suggestionsLoading: state.suggestionsLoading
   }
 }
 
 function mapDispatchToProps (dispatch, actions) {
-  const { fetchSuggestions, receiveSuggestions, setValue, setConfirming } = actions
+  const { fetchSuggestions, receiveSuggestions } = actions
   const onSuggestionsFetchRequested = debounce(
     ({ value }) => dispatch(fetchSuggestions(value)),
     300
@@ -30,8 +28,6 @@ function mapDispatchToProps (dispatch, actions) {
     onSuggestionsClearRequested: () => {
       onSuggestionsFetchRequested.cancel()
       dispatch(receiveSuggestions(Date.now(), []))
-    },
-    onChange: value => dispatch(setValue(value)),
-    onConfirming: confirming => dispatch(setConfirming(confirming))
+    }
   }
 }

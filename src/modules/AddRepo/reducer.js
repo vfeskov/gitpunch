@@ -3,26 +3,17 @@ const { assign } = Object
 export function createReducer (actionPrefix) {
   return function reducer (state, action) {
     state = state || {
-      value: '',
       latestReqTimestamp: 0,
       suggestions: [],
-      error: null,
-      suggestionsLoading: false,
-      confirming: false
+      suggestionsError: null,
+      suggestionsLoading: false
     }
-
-    const actionType = actionPrefix ?
-      action.type.replace(new RegExp(`^${actionPrefix}`), '') :
-      action.type
+    const actionType = unprefix(action.type)
     switch (actionType) {
-      case 'SET_CONFIRMING':
-        return assign({}, state, { confirming: action.confirming })
-      case 'SET_VALUE':
-        return assign({}, state, { value: action.value })
       case 'REQUEST_SUGGESTIONS':
         return assign({}, state, {
           latestReqTimestamp: action.reqTimestamp,
-          error: null,
+          suggestionsError: null,
           suggestionsLoading: true
         })
       case 'RECEIVE_SUGGESTIONS':
@@ -30,7 +21,7 @@ export function createReducer (actionPrefix) {
         if (state.latestReqTimestamp > action.reqTimestamp) { return state }
         return assign({}, state, {
           suggestionsLoading: false,
-          error: null,
+          suggestionsError: null,
           suggestions: action.suggestions
         })
       case 'ERROR_SUGGESTIONS':
@@ -38,12 +29,18 @@ export function createReducer (actionPrefix) {
         if (state.latestReqTimestamp > action.reqTimestamp) { return state }
         return assign({}, state, {
           suggestionsLoading: false,
-          error: action.error,
+          suggestionsError: action.error,
           suggestions: []
         })
       default:
         return state
     }
+  }
+
+  function unprefix(actionType) {
+    return actionPrefix ?
+      actionType.replace(new RegExp(`^${actionPrefix}`), '') :
+      actionType
   }
 }
 
