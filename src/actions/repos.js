@@ -19,10 +19,10 @@ export function receiveCreateRepo (repos) {
 }
 
 export function errorCreateRepo (error) {
-  return { type: 'CREATE_CREATE_REPO', error }
+  return { type: 'ERROR_CREATE_REPO', error }
 }
 
-export function createRepo (fullName) {
+export function createRepo (repo) {
   return dispatch => {
     dispatch(requestCreateRepo())
     return fetch('/api/repos', {
@@ -31,7 +31,7 @@ export function createRepo (fullName) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ fullName })
+      body: JSON.stringify({ repo })
     })
       .then(response => {
         if (response.status === 200) {
@@ -58,10 +58,10 @@ export function errorDeleteRepo (error) {
   return { type: 'ERROR_DELETE_REPO', error }
 }
 
-export function deleteRepo (fullName) {
+export function deleteRepo (repo) {
   return dispatch => {
     dispatch(requestDeleteRepo())
-    fetch(`/api/repos/${encodeURIComponent(fullName)}`, {
+    fetch(`/api/repos/${encodeURIComponent(repo)}`, {
       credentials: 'include',
       method: 'DELETE',
       headers: {
@@ -77,42 +77,6 @@ export function deleteRepo (fullName) {
       .then(
         json => dispatch(receiveDeleteRepo(json)),
         error => dispatch(errorDeleteRepo(error))
-      )
-  }
-}
-
-export function requestReplaceRepos () {
-  return { type: 'REQUEST_REPLACE_REPOS' }
-}
-
-export function receiveReplaceRepos (repos) {
-  return { type: 'RECEIVE_REPLACE_REPOS', repos }
-}
-
-export function errorReplaceRepos (error) {
-  return { type: 'CREATE_REPLACE_REPOS', error }
-}
-
-export function replaceRepos (repos) {
-  return dispatch => {
-    dispatch(requestReplaceRepos())
-    return fetch('/api/repos', {
-      credentials: 'include',
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(repos)
-    })
-      .then(response => {
-        if (response.status === 200) {
-          return response.json()
-        }
-        throw new Error(response.statusText)
-      })
-      .then(
-        json => dispatch(receiveReplaceRepos(json)),
-        error => dispatch(errorReplaceRepos(error))
       )
   }
 }

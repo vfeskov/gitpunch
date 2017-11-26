@@ -14,15 +14,16 @@ export function user (state = {}, action) {
 
 function loggedIn (state = false, action) {
   switch (action.type) {
-    case 'RECEIVE_REPLACE_REPOS':
-    case 'RECEIVE_USER_DATA':
+    case 'RECEIVE_LOGIN':
+    case 'RECEIVE_REGISTER':
+    case 'RECEIVE_PROFILE':
       return true
     case 'RECEIVE_LOGOUT':
       return false
     case 'ERROR_CREATE_REPO':
     case 'ERROR_REPLACE_REPOS':
     case 'ERROR_DELETE_REPO':
-    case 'ERROR_USER_DATA':
+    case 'ERROR_PROFILE':
       return action.error.message !== 'Unauthorized'
     default:
       return state
@@ -31,8 +32,10 @@ function loggedIn (state = false, action) {
 
 function savedRepos (state = [], action) {
   switch (action.type) {
-    case 'RECEIVE_USER_DATA':
-      const { repos } = action.userData || {}
+    case 'RECEIVE_REGISTER':
+    case 'RECEIVE_LOGIN':
+    case 'RECEIVE_PROFILE':
+      const { repos } = action.profile || {}
       return repos ? [...repos] : []
     case 'RECEIVE_CREATE_REPO':
     case 'RECEIVE_DELETE_REPO':
@@ -47,7 +50,7 @@ function savedRepos (state = [], action) {
 
 function bufferRepos (state = [], action) {
   switch (action.type) {
-    case 'RECEIVE_USER_DATA':
+    case 'RECEIVE_PROFILE':
     case 'RECEIVE_REPLACE_REPOS':
       return []
     case 'ADD_REPO_TO_BUFFER':

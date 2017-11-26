@@ -18,7 +18,7 @@ class AppComponent extends Component {
         <div>
           <RepoAdd className={classes.sectionContainer} />
           <div className={classes.container}>
-            <Repos className={classes.sectionContainer} />
+            <Repos className={`${classes.sectionContainer} ${classes.repos}`} />
             <Settings className={classes.sectionContainer} />
           </div>
         </div>
@@ -33,7 +33,7 @@ class AppComponent extends Component {
   }
 
   componentDidMount () {
-    this.props.fetchUserData()
+    this.props.fetchProfile()
   }
 }
 
@@ -69,6 +69,9 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column'
+  },
+  repos: {
+    flex: 1
   }
 })
 

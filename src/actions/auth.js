@@ -1,5 +1,3 @@
-import { replaceRepos } from './repos'
-
 export const requestLogout = () => ({
   type: 'REQUEST_LOGOUT'
 })
@@ -35,9 +33,9 @@ export const requestRegister = () => ({
   type: 'REQUEST_REGISTER'
 })
 
-export const receiveRegister = json => ({
+export const receiveRegister = profile => ({
   type: 'RECEIVE_REGISTER',
-  json
+  profile
 })
 
 export const errorRegister = error => ({
@@ -45,7 +43,7 @@ export const errorRegister = error => ({
   error
 })
 
-export function register (buffer) {
+export function register (email, password, repos) {
   return dispatch => {
     dispatch(requestRegister())
     return fetch('/api/register', {
@@ -55,9 +53,9 @@ export function register (buffer) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        login: '' + Date.now(),
-        password: '123456',
-        passwordConfirmation: '123456'
+        email,
+        password,
+        repos
       })
     })
       .then(response => {
@@ -67,11 +65,50 @@ export function register (buffer) {
         throw new Error(response.statusText)
       })
       .then(
-        json => {
-          dispatch(receiveRegister(json))
-          dispatch(replaceRepos(buffer))
-        },
+        profile => dispatch(receiveRegister(profile)),
         error => dispatch(errorRegister(error))
       )
   }
 }
+
+export const requestLogin = () => ({
+  type: 'REQUEST_LOGIN'
+})
+
+export const receiveLogin = profile => ({
+  type: 'RECEIVE_LOGIN',
+  profile
+})
+
+export const errorLogin = error => ({
+  type: 'ERROR_LOGIN',
+  error
+})
+
+export function login (email, password, buffer) {
+  return dispatch => {
+    dispatch(requestLogin())
+    return fetch('/api/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        }
+        throw new Error(response.statusText)
+      })
+      .then(
+        profile => dispatch(receiveLogin(profile)),
+        error => dispatch(errorLogin(error))
+      )
+  }
+}
+

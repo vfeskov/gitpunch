@@ -57,8 +57,7 @@ class RepoAddComponent extends Component {
             classes,
             suggestionsLoading,
             value,
-            onChange: (ev, { newValue }) => setRepoAddValue(newValue),
-            disabled,
+            onChange: (ev, { newValue }) => disabled || setRepoAddValue(newValue),
             onKeyPress: ev => this.handleKeyPress(ev)
           }}
         />
