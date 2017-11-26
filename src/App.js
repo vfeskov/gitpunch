@@ -49,11 +49,19 @@ const styles = theme => ({
     margin: '0 auto'
   },
   container: {
-    display: 'flex'
+    '@media (min-width:600px)': {
+      flexDirection: 'row'
+    },
+    display: 'flex',
+    flexDirection: 'column'
   },
   sectionContainer: {
-    padding: '20px',
-    margin: '10px'
+    '@media (min-width:600px)': {
+      padding: theme.spacing.unit * 4,
+      margin: theme.spacing.unit * 2
+    },
+    padding: theme.spacing.unit * 2,
+    margin: theme.spacing.unit
   },
   progressContainer: {
     height: '100%',
