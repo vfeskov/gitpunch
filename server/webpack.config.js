@@ -1,5 +1,5 @@
-const path = require('path');
-const nodeExternals = require('webpack-node-externals');
+const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 const config = {
   target: 'node',
@@ -11,19 +11,22 @@ const config = {
   },
   module: {
     loaders: [
-      {test: /\.ts$/, use: [{
-        loader: 'awesome-typescript-loader',
-        options: {configFileName: path.resolve(__dirname, 'tsconfig.json')}
-      }]},
-      {test: /(\.md|\.map)$/, loader: 'null-loader'},
-      {test: /\.json$/, loader: 'json-loader'}
+      {
+        test: /\.ts$/,
+        use: [{
+          loader: 'awesome-typescript-loader',
+          options: { configFileName: path.resolve(__dirname, 'tsconfig.json') }
+        }]
+      },
+      { test: /(\.md|\.map)$/, loader: 'null-loader' },
+      { test: /\.json$/, loader: 'json-loader' }
     ]
   },
   resolve: {
     extensions: ['.ts', '.js', '.json']
   }
-};
+}
 
-config.externals = [nodeExternals()];
+config.externals = [nodeExternals()]
 
-module.exports = config;
+module.exports = config

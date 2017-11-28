@@ -1,10 +1,10 @@
-import { Server } from 'hapi';
-import { unsubscribeRouteHandler } from './unsubscribe';
-import { watchingRouteHandler } from './watching';
-import { profileRouteHandler } from './profile';
-import { reposReplaceRouteHandler, reposCreateRouteHandler, reposDeleteRouteHandler } from './repos';
+import { Server } from 'hapi'
+import { unsubscribeRouteHandler } from './unsubscribe'
+import { watchingRouteHandler } from './watching'
+import { profileRouteHandler } from './profile'
+import { reposReplaceRouteHandler, reposCreateRouteHandler, reposDeleteRouteHandler } from './repos'
 
-export function register(server: Server, options, callback) {
+export function register (server: Server, options, callback) {
   server.route([{
     method: 'GET',
     path: '/api/profile',
@@ -30,11 +30,11 @@ export function register(server: Server, options, callback) {
     path: '/api/unsubscribe',
     config: { auth: false },
     handler: unsubscribeRouteHandler
-  }]);
-  callback();
+  }])
+  callback()
 }
 
 (register as any).attributes = {
   name: 'profile',
   version: '1.0.0'
-};
+}
