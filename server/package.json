@@ -1,0 +1,40 @@
+{
+  "name": "win-a-beer-react-server",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack",
+    "start": "node build/index.js",
+    "watch": "concurrently \"webpack --watch\" \"nodemon --watch build/index.js build/index.js\""
+  },
+  "private": true,
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "boom": "^7.1.1",
+    "dotenv": "^4.0.0",
+    "hapi": "^16.6.2",
+    "hapi-auth-jwt2": "^7.3.0",
+    "inert": "^4.2.1",
+    "jsonwebtoken": "^8.1.0",
+    "rxjs": "^5.5.2",
+    "rxjs-aws-sdk": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^1.0.0",
+    "@types/boom": "^4.3.8",
+    "@types/dotenv": "^4.0.2",
+    "@types/hapi": "^16.1.11",
+    "@types/inert": "^4.2.4",
+    "@types/jsonwebtoken": "^7.2.3",
+    "@types/node": "^8.0.53",
+    "awesome-typescript-loader": "^3.4.0",
+    "concurrently": "^3.5.1",
+    "json-loader": "^0.5.7",
+    "nodemon": "^1.12.1",
+    "null-loader": "^0.1.1",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2",
+    "webpack": "^3.8.1",
+    "webpack-node-externals": "^1.6.0"
+  }
+}
