@@ -67,9 +67,9 @@ class RepoAddComponent extends Component {
   }
 
   confirm (repo) {
-    const { addRepo, user } = this.props
+    const { addRepo, loggedIn } = this.props
     this.clearSuggestions()
-    addRepo(user.loggedIn, repo)
+    addRepo(loggedIn, repo)
   }
 
   clearSuggestions () {
@@ -137,7 +137,7 @@ RepoAddComponent.propTypes = {
   }),
   className: PropTypes.string,
   addRepo: PropTypes.func.isRequired,
-  user: PropTypes.shape({ loggedIn: PropTypes.bool.isRequired }).isRequired,
+  loggedIn: PropTypes.bool.isRequired,
   setRepoAddValue: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 }
@@ -147,7 +147,7 @@ const RepoAddComponentWithStyles = withStyles(styles)(RepoAddComponent)
 export const RepoAdd = connect(
   state => ({
     repoAdd: state.repoAdd,
-    user: state.user
+    loggedIn: state.loggedIn
   }),
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(RepoAddComponentWithStyles)

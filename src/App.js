@@ -45,18 +45,18 @@ AppComponent.propTypes = {
 const styles = theme => ({
   app: {
     height: '100%',
-    maxWidth: '800px',
+    maxWidth: '900px',
     margin: '0 auto'
   },
   container: {
-    '@media (min-width:600px)': {
+    '@media (min-width:700px)': {
       flexDirection: 'row'
     },
     display: 'flex',
     flexDirection: 'column'
   },
   sectionContainer: {
-    '@media (min-width:600px)': {
+    '@media (min-width:700px)': {
       padding: theme.spacing.unit * 4,
       margin: theme.spacing.unit * 2
     },

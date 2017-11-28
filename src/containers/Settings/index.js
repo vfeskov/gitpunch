@@ -12,8 +12,7 @@ import * as actionCreators from '../../actions'
 
 class SettingsComponent extends Component {
   render () {
-    const { user, email, logout, login, register, className, classes } = this.props
-    const { shownRepos, loggedIn } = user
+    const { shownRepos, loggedIn, email, logout, login, register, className, classes } = this.props
     return (
       <Paper className={`${className} ${classes.container}`}>
         {loggedIn ? (
@@ -29,10 +28,8 @@ class SettingsComponent extends Component {
 SettingsComponent.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
-  user: PropTypes.shape({
-    loggedIn: PropTypes.bool.isRequired,
-    shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired
-  }).isRequired,
+  loggedIn: PropTypes.bool.isRequired,
+  shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
   login: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired
@@ -42,7 +39,8 @@ const SettingsComponentWithStyles = withStyles(styles)(SettingsComponent)
 
 export const Settings = connect(
   state => ({
-    user: state.user,
+    loggedIn: state.loggedIn,
+    shownRepos: state.shownRepos,
     watching: state.watching,
     email: state.email
   }),

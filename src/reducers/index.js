@@ -2,13 +2,26 @@ import { combineReducers } from 'redux'
 import { repoAdd } from './repoAdd'
 import { watching } from './watching'
 import { email } from './email'
-import { user } from './user'
+import { bufferRepos } from './bufferRepos'
+import { savedRepos } from './savedRepos'
+import { loggedIn } from './loggedIn'
 import { inited } from './inited'
 
-export const reducer = combineReducers({
+const allButShownRepos = combineReducers({
   email,
   inited,
   repoAdd,
-  user,
+  bufferRepos,
+  savedRepos,
+  loggedIn,
   watching
 })
+
+export function reducer (prevState, action) {
+  const state = allButShownRepos(prevState, action)
+  const { loggedIn, savedRepos, bufferRepos } = state
+  return {
+    ...state,
+    shownRepos: loggedIn ? savedRepos : bufferRepos
+  }
+}

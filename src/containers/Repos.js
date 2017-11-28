@@ -12,8 +12,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionCreators from '../actions'
 
-function ReposComponent ({ user, watching, toggleWatching, removeRepo, classes, className }) {
-  const { loggedIn, shownRepos } = user
+function ReposComponent ({ loggedIn, shownRepos, watching, toggleWatching, removeRepo, classes, className }) {
   const title = !shownRepos.length ?
     'Not watching any repo yet' :
     !loggedIn ?
@@ -50,10 +49,8 @@ function ReposComponent ({ user, watching, toggleWatching, removeRepo, classes, 
 
 ReposComponent.propTypes = {
   className: PropTypes.string,
-  user: PropTypes.shape({
-    loggedIn: PropTypes.bool.isRequired,
-    shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired
-  }).isRequired,
+  loggedIn: PropTypes.bool.isRequired,
+  shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
   removeRepo: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   watching: PropTypes.bool.isRequired,
@@ -72,7 +69,8 @@ const ReposComponentWithStyles = withStyles(styles)(ReposComponent)
 
 export const Repos = connect(
   state => ({
-    user: state.user,
+    loggedIn: state.loggedIn,
+    shownRepos: state.shownRepos,
     watching: state.watching
   }),
   dispatch => bindActionCreators(actionCreators, dispatch)
