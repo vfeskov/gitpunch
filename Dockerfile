@@ -19,3 +19,5 @@ RUN npm install && \
     npm prune --production
 
 CMD [ "npm", "start" ]
+
+EXPOSE 3000
