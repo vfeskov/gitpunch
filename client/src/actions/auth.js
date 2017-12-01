@@ -16,11 +16,13 @@ export function logout () {
     dispatch(requestLogout())
     return fetch('/api/logout', {
       method: 'DELETE',
-      credentials: 'include'
+      credentials: 'same-origin'
     })
       .then(response => {
         if (response.status === 200) { return }
-        throw new Error(response.statusText)
+        const error = new Error(response.statusText)
+        error.status = response.status
+        throw error
       })
       .then(
         () => dispatch(receiveLogout()),
@@ -48,7 +50,7 @@ export function register (email, password, repos) {
     dispatch(requestRegister())
     return fetch('/api/register', {
       method: 'POST',
-      credentials: 'include',
+      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -62,7 +64,9 @@ export function register (email, password, repos) {
         if (response.status === 200) {
           return response.json()
         }
-        throw new Error(response.statusText)
+        const error = new Error(response.statusText)
+        error.status = response.status
+        throw error
       })
       .then(
         profile => dispatch(receiveRegister(profile)),
@@ -90,7 +94,7 @@ export function login (email, password, buffer) {
     dispatch(requestLogin())
     return fetch('/api/login', {
       method: 'POST',
-      credentials: 'include',
+      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -103,7 +107,9 @@ export function login (email, password, buffer) {
         if (response.status === 200) {
           return response.json()
         }
-        throw new Error(response.statusText)
+        const error = new Error(response.statusText)
+        error.status = response.status
+        throw error
       })
       .then(
         profile => dispatch(receiveLogin(profile)),

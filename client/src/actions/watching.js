@@ -14,7 +14,7 @@ export function toggleWatching (watching) {
   return dispatch => {
     dispatch(requestWatching())
     return fetch('/api/watching', {
-      credentials: 'include',
+      credentials: 'same-origin',
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -25,7 +25,9 @@ export function toggleWatching (watching) {
         if (response.status === 200) {
           return response.json()
         }
-        throw new Error(response.statusText)
+        const error = new Error(response.statusText)
+        error.status = response.status
+        throw error
       })
       .then(
         json => dispatch(receiveWatching(json)),

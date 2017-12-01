@@ -15,12 +15,14 @@ export const errorProfile = error => ({
 export function fetchProfile () {
   return dispatch => {
     dispatch(requestProfile())
-    return fetch('/api/profile', { credentials: 'include' })
+    return fetch('/api/profile', { credentials: 'same-origin' })
       .then(response => {
         if (response.status === 200) {
           return response.json()
         }
-        throw new Error(response.statusText)
+        const error = new Error(response.statusText)
+        error.status = response.status
+        throw error
       })
       .then(
         json => dispatch(receiveProfile(json)),

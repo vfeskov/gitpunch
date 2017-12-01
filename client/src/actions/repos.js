@@ -26,7 +26,7 @@ export function createRepo (repo) {
   return dispatch => {
     dispatch(requestCreateRepo())
     return fetch('/api/repos', {
-      credentials: 'include',
+      credentials: 'same-origin',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -37,7 +37,9 @@ export function createRepo (repo) {
         if (response.status === 200) {
           return response.json()
         }
-        throw new Error(response.statusText)
+        const error = new Error(response.statusText)
+        error.status = response.status
+        throw error
       })
       .then(
         json => dispatch(receiveCreateRepo(json)),
@@ -62,7 +64,7 @@ export function deleteRepo (repo) {
   return dispatch => {
     dispatch(requestDeleteRepo())
     fetch(`/api/repos/${encodeURIComponent(repo)}`, {
-      credentials: 'include',
+      credentials: 'same-origin',
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -72,7 +74,9 @@ export function deleteRepo (repo) {
         if (response.status === 200) {
           return response.json()
         }
-        throw new Error(response.statusText)
+        const error = new Error(response.statusText)
+        error.status = response.status
+        throw error
       })
       .then(
         json => dispatch(receiveDeleteRepo(json)),

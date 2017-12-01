@@ -5,11 +5,11 @@ export function loggedIn (state = false, action) {
     case 'RECEIVE_PROFILE':
       return true
     case 'RECEIVE_LOGOUT':
+    case 'ERROR_PROFILE':
       return false
     case 'ERROR_CREATE_REPO':
     case 'ERROR_DELETE_REPO':
-    case 'ERROR_PROFILE':
-      return action.error.message !== 'Unauthorized'
+      return action.error.status !== 401
     default:
       return state
   }
