@@ -10,7 +10,7 @@ export function updateDb(simpleDb, domainName) {
     return action$.pipe(
       reduce((usersAlerted, action: Action) => {
         const { repo, email, tag, alerted, error } = action
-        if (!error) { return; }
+        if (error) { return usersAlerted }
         if (!usersAlerted[email]) {
           usersAlerted[email] = alerted
         }
