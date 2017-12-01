@@ -16,7 +16,7 @@ export function loginRouteHandler (cookieOptions, jwtSecret) {
         if (!found) { return $.of({ error }) }
         return compareHash(password, passwordEncrypted)
           .map(isValid => isValid ?
-            {token: JWT.sign({ email}, jwtSecret), watching, repos } :
+            { token: JWT.sign({ email }, jwtSecret), watching, repos } :
             { error }
           )
       })

@@ -1,6 +1,7 @@
 {
   "name": "win-a-beer-react",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",

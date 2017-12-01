@@ -8,7 +8,7 @@ RUN cd client && \
     npm install && \
     npm run build && \
     cd .. && \
-    mv client/build server && \
+    mv client/build server/ && \
     mv server/build server/public && \
     rm -rf client
 

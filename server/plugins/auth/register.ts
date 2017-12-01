@@ -20,7 +20,7 @@ export function registerRouteHandler (cookieOptions, jwtSecret) {
           .mergeMap(passwordEncrypted => addUser(email, passwordEncrypted, repos))
           .catch(() => $.of({ error: badImplementation() }))
           .map(() => {
-            return {token: JWT.sign({ email}, jwtSecret) }
+            return { token: JWT.sign({ email }, jwtSecret) }
           })
       })
       .subscribe(({ error, token }) => {
