@@ -8,7 +8,7 @@ export function enrichWithTags (repo$: $<RepoWithUsersData>): $<RepoWithUsersDat
   return repo$.pipe(
     mergeMap(({ repo, usersData }) =>
       RxHR
-        .get(`https://api111.github.com/repos/${ repo }/tags`, {
+        .get(`https://api.github.com/repos/${ repo }/tags`, {
           headers: {
             'User-Agent': process.env.GITHUB_API_USER_AGENT
           }
