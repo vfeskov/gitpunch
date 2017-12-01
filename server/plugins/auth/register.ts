@@ -1,5 +1,5 @@
 import * as JWT from 'jsonwebtoken'
-import * as Bcrypt from 'bcrypt'
+import * as Bcrypt from 'bcryptjs'
 import { badData, badImplementation } from 'boom'
 import { loadFullProfile, addUser } from '../../db'
 import { Observable as $ } from 'rxjs/Observable'
