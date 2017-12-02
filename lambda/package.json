@@ -4,6 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
+    "build": "PROD=true webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
