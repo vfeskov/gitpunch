@@ -20,9 +20,10 @@ export function sendEmail (action$: $<Action>) {
       if (action.action !== 'alert') { return of(action) }
       return sendEmailRequest({
         email: email,
-        subject: `New GitHub Tag: ${ repo } ${ tag }`,
-        body: `Hi, person! :)\n\n` +
-          `We\'re just letting you know that they assigned a new tag to a repo you wanted us to monitor: https://github.com/${ repo }/releases/tag/${ tag }\n\n` +
+        subject: `New GitHub Release: ${ repo } ${ tag }`,
+        body: `Greetings! :)\n\n` +
+          `They released a new version of ${ repo }, check it out: \n` +
+          `https://github.com/${ repo }/releases/tag/${ tag }\n\n` +
           `Have a great day!\n\n` +
           `If you wish to stop receiving such emails click: ${ getUnsubscribeUrl(email) }\n`
       }).pipe(
