@@ -19,7 +19,7 @@ const simpleDb = createRxSimpleDB({
 })
 const domainName = process.env.SDB_DOMAIN_NAME
 
-export function handler(event, context, callback) {
+export function handler (event, context, callback) {
   queryUsersFromDb(simpleDb, domainName)
     .pipe(
       parseUsers,

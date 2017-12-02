@@ -33,7 +33,7 @@ export function sendEmail (action$: $<Action>) {
   )
 }
 
-function getUnsubscribeUrl(email: string) {
+function getUnsubscribeUrl (email: string) {
   const token = JWT.sign(
     { email },
     JWT_RSA_PRIVATE_KEY,

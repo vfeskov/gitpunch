@@ -5,7 +5,7 @@ import { RepoWithUsersData, User } from './interfaces'
 
 const { keys } = Object
 
-export function groupByRepo(users$: $<User>): $<RepoWithUsersData> {
+export function groupByRepo (users$: $<User>): $<RepoWithUsersData> {
   return users$.pipe(
     reduce((result, user: User) => {
       const { repos, alerted, email } = user

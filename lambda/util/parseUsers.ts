@@ -28,7 +28,7 @@ export function parseUsers (queryResult$: $<SelectResult>) {
   )
 }
 
-function parseForceObject(json) {
+function parseForceObject (json) {
   if (!json) { return {} }
   const result = JSON.parse(json)
   return (result !== null && typeof result === 'object' && !isArray(result)) ? result : {}

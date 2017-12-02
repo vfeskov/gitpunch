@@ -5,7 +5,7 @@ import { Action } from './interfaces'
 
 const { assign, keys } = Object
 
-export function updateDb(simpleDb, domainName) {
+export function updateDb (simpleDb, domainName) {
   return (action$: $<Action>) => {
     return action$.pipe(
       reduce((usersAlerted, action: Action) => {
