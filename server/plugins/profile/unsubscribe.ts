@@ -12,7 +12,7 @@ export function unsubscribeRouteHandler ({ payload }, reply) {
     (error, data) => {
       if (error) { return reply(badData('Invalid lambdajwt')) }
       saveWatching(data.email, false)
-        .mapTo('')
+        .mapTo({ email: data.email, watching: false })
         .catch(error => {
           console.error(error)
           return $.of(badImplementation())
