@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack",
     "start": "node build/index.js",
-    "watch": "concurrently \"webpack --watch\" \"nodemon --watch build/index.js build/index.js\""
+    "watch": "PORT=3001 concurrently \"webpack --watch\" \"nodemon --watch build/index.js build/index.js\""
   },
   "private": true,
   "dependencies": {

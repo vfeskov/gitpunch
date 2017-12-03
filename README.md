@@ -11,6 +11,6 @@ Access `http://localhost:3000`
 
 `npm start` in `./client` folder
 
-`PORT=3001 npm run watch` in `./server` folder
+`npm run watch` in `./server` folder
 
 Access `http://localhost:3000`
