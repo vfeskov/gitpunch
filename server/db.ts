@@ -79,6 +79,6 @@ function saveWatching (email: string, watching: boolean) {
     Attributes: [
       { Name: 'watching', Value: watching ? '1' : '0', Replace: true }
     ]})
-    .mapTo({ watching })
+    .mapTo({ email, watching })
 }
 
