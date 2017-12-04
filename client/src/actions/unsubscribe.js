@@ -40,7 +40,7 @@ export function unsubscribe (currentEmail, lambdajwt) {
 }
 
 function getPayloadEmail (lambdajwt) {
-  const payload = (lambdajwt.match(/^[^\.]+\.([^\.]+)\./) || [0, 0])[1]
+  const payload = (lambdajwt.match(/^[^.]+\.([^.]+)\./) || [0, 0])[1]
   if (!payload) { return '' }
   try {
     return JSON.parse(atob(payload)).email

@@ -15,9 +15,10 @@ export class UnsubscribeMessageComponent extends Component {
   }
 
   render () {
-    const { unsubscribeMessage, watching } = this.props
+    const { unsubscribeMessage, watching, email } = this.props
     if (!unsubscribeMessage) { return null }
-    const { success, error, sameUser } = unsubscribeMessage
+    const { success, error, payloadEmail } = unsubscribeMessage
+    const sameUser = payloadEmail === email
     const message = success ?
       'No more emails for you!' :
       'Couldn\'t stop them emails, sorry :('
@@ -58,7 +59,8 @@ export class UnsubscribeMessageComponent extends Component {
 export const UnsubscribeMessage = connect(
   state => ({
     unsubscribeMessage: state.unsubscribeMessage,
-    watching: state.watching
+    watching: state.watching,
+    email: state.email
   }),
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(UnsubscribeMessageComponent)
