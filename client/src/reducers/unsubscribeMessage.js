@@ -3,10 +3,7 @@ export function unsubscribeMessage (state = null, action) {
     case 'ERROR_UNSUBSCRIBE':
       return { error: true }
     case 'RECEIVE_UNSUBSCRIBE':
-      return {
-        sameUser: action.payloadEmail === action.currentEmail,
-        success: true
-      }
+      return { success: true, sameUser: action.sameUser }
     default:
       return state
   }

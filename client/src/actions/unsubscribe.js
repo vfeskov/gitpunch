@@ -2,10 +2,9 @@ export const requestUnsubscribe = () => ({
   type: 'REQUEST_UNSUBSCRIBE'
 })
 
-export const receiveUnsubscribe = ({ payloadEmail, currentEmail }) => ({
+export const receiveUnsubscribe = sameUser => ({
   type: 'RECEIVE_UNSUBSCRIBE',
-  payloadEmail,
-  currentEmail
+  sameUser
 })
 
 export const errorUnsubscribe = error => ({
@@ -17,6 +16,7 @@ export function unsubscribe (currentEmail, lambdajwt) {
   const payloadEmail = getPayloadEmail(lambdajwt)
   return dispatch => {
     if (!payloadEmail) { return }
+    const sameUser = payloadEmail === currentEmail
     dispatch(requestUnsubscribe())
     return fetch('/api/unsubscribe', {
       credentials: 'same-origin',
@@ -33,7 +33,7 @@ export function unsubscribe (currentEmail, lambdajwt) {
         throw error
       })
       .then(
-        () => dispatch(receiveUnsubscribe({ payloadEmail, currentEmail })),
+        () => dispatch(receiveUnsubscribe(sameUser)),
         error => dispatch(errorUnsubscribe(error))
       )
   }

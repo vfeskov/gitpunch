@@ -9,7 +9,7 @@ export function watching (state = false, action) {
     case 'RECEIVE_LOGOUT':
       return false
     case 'RECEIVE_UNSUBSCRIBE':
-      return action.payloadEmail === action.currentEmail ? false : state
+      return action.sameUser ? false : state
     default:
       return state
   }
