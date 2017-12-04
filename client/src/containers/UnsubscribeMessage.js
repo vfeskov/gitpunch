@@ -15,28 +15,12 @@ export class UnsubscribeMessageComponent extends Component {
   }
 
   render () {
-    const { status, email } = this.props
-    if (!status) { return null }
-    const { loading, success, error } = status
-    const sameUser = success && success.email === email
-    const message = loading ? 'Stopping emails...': (
-      success ? 'No more emails for you!' : 'Couldn\'t stop them emails, sorry :('
-    )
-    const action = loading ? null : [
-      error || !sameUser ? null : (
-        <Button key="undo" color="accent" dense onClick={() => this.undo()}>
-          UNDO
-        </Button>
-      ),
-      <IconButton
-        key="close"
-        aria-label="Close"
-        color="inherit"
-        onClick={() => this.setState({ open: false })}
-      >
-        <CloseIcon />
-      </IconButton>
-    ]
+    const { unsubscribeMessage, watching } = this.props
+    if (!unsubscribeMessage) { return null }
+    const { success, error, sameUser } = unsubscribeMessage
+    const message = success ?
+      'No more emails for you!' :
+      'Couldn\'t stop them emails, sorry :('
     return (
       <Snackbar
         anchorOrigin={{
@@ -46,7 +30,21 @@ export class UnsubscribeMessageComponent extends Component {
         open={this.state.open}
         SnackbarContentProps={{ 'aria-describedby': 'message-id' }}
         message={<span id="message-id">{message}</span>}
-        action={action}
+        action={[
+          error || !sameUser || watching ? null : (
+            <Button key="undo" color="accent" dense onClick={() => this.undo()}>
+              UNDO
+            </Button>
+          ),
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            onClick={() => this.setState({ open: false })}
+          >
+            <CloseIcon />
+          </IconButton>
+        ]}
       />
     )
   }
@@ -58,6 +56,9 @@ export class UnsubscribeMessageComponent extends Component {
 }
 
 export const UnsubscribeMessage = connect(
-  state => ({ email: state.email }),
+  state => ({
+    unsubscribeMessage: state.unsubscribeMessage,
+    watching: state.watching
+  }),
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(UnsubscribeMessageComponent)

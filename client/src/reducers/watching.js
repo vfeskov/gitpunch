@@ -8,6 +8,8 @@ export function watching (state = false, action) {
       return action.profile.watching
     case 'RECEIVE_LOGOUT':
       return false
+    case 'RECEIVE_UNSUBSCRIBE':
+      return action.payloadEmail === action.currentEmail ? false : state
     default:
       return state
   }

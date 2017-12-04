@@ -10,10 +10,6 @@ import { connect } from 'react-redux'
 import * as actionCreators from './actions'
 
 class AppComponent extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { unsubscribe: null }
-  }
   render () {
     const { classes, inited } = this.props
     return (
@@ -32,44 +28,24 @@ class AppComponent extends Component {
           <CircularProgress />
         </div>
         )}
-        <UnsubscribeMessage status={this.state.unsubscribe}/>
+        <UnsubscribeMessage />
       </div>
     )
   }
 
   componentDidMount () {
-    this.possiblyUnsubscribe()
-      .then(this.props.fetchProfile)
+    this.props.fetchProfile()
+      .then(action => this.possiblyUnsubscribe(action))
   }
 
-  possiblyUnsubscribe() {
-    const noop = Promise.resolve()
+  possiblyUnsubscribe (action) {
+    const { email } = (action.profile || {})
     const { pathname } = window.location
-    if (pathname.indexOf('/unsubscribe/') !== 0) { return noop }
+    if (pathname.indexOf('/unsubscribe/') !== 0) { return }
     window.history.pushState(null, '', '/')
     const lambdajwt = (pathname.match(/^\/unsubscribe\/(.+)$/) || [0, 0])[1]
-    if (!lambdajwt) { return noop }
-    return this.requestUnsubscribe(lambdajwt)
-  }
-
-  requestUnsubscribe(lambdajwt) {
-    this.setState({ unsubscribe: { loading: true } })
-    return fetch('/api/unsubscribe', {
-      credentials: 'same-origin',
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ lambdajwt })
-    })
-      .then(response => {
-        if (response.status === 200) { return response.json() }
-        throw new Error(response.statusText)
-      })
-      .then(
-        json => this.setState({ unsubscribe: { loading: false, success: json } }),
-        () => this.setState({ unsubscribe: { loading: false, error: true } })
-      )
+    if (!lambdajwt) { return }
+    this.props.unsubscribe(email, lambdajwt)
   }
 }
 
