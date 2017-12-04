@@ -17,7 +17,6 @@ export function unsubscribeRouteHandler ({ payload }, reply) {
           console.error(error)
           return $.of(badImplementation())
         })
-        .delay(500)
         .subscribe(reply)
     }
   )
