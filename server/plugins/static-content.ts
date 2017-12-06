@@ -11,17 +11,9 @@ export function register (server: Server, options, callback) {
       handler: {
         directory: {
           path: 'public',
-          listing: false,
-          index: true
+          index: false
         }
       }
-    })
-    server.ext('onPostHandler', (request, reply) => {
-      const response = request.response
-      if (response.isBoom && (response as any).output.statusCode === 404) {
-        return (reply as any).file('public/index.html')
-      }
-      return reply.continue()
     })
     callback()
   })

@@ -3,6 +3,7 @@ import * as hapiAuthJWT from 'hapi-auth-jwt2'
 import { Observable as $ } from 'rxjs/Observable'
 import { registerRouteHandler } from './register'
 import { loginRouteHandler } from './login'
+import * as jwtSettings from '../jwt-settings'
 const { WAB_JWT_SECRET } = process.env
 const COOKIE_OPTIONS = {
   ttl: 365 * 24 * 60 * 60 * 1000,
@@ -16,11 +17,7 @@ const COOKIE_OPTIONS = {
 
 export function register (server: Server, options, callback) {
   server.register(hapiAuthJWT, error => {
-    server.auth.strategy('jwt', 'jwt', {
-      key: WAB_JWT_SECRET,
-      validateFunc: ({ email }, req, cb) => cb(null, !!email),
-      verifyOptions: { ignoreExpiration: true, algorithms: ['HS256'] }
-    })
+    server.auth.strategy('jwt', 'jwt', jwtSettings)
 
     server.auth.default('jwt')
 

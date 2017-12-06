@@ -18,6 +18,15 @@ const config = {
           options: { configFileName: path.resolve(__dirname, 'tsconfig.json') }
         }]
       },
+      {
+        test: /\.jsx?$/,
+        include: path.resolve(__dirname, '..', 'client', 'src'),
+        loader: require.resolve('babel-loader'),
+        options: {
+          babelrc: false,
+          presets: [require.resolve('babel-preset-react-app')]
+        }
+      },
       { test: /(\.md|\.map)$/, loader: 'null-loader' },
       { test: /\.json$/, loader: 'json-loader' }
     ]

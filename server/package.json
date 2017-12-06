@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
-    "start": "node build/index.js",
-    "watch": "PORT=3001 concurrently \"webpack --watch\" \"nodemon --watch build/index.js build/index.js\""
+    "build": "NODE_ENV=production webpack",
+    "start": "NODE_ENV=production node build/index.js",
+    "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"nodemon --watch build/index.js build/index.js\""
   },
   "private": true,
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-react-app": "^3.1.0",
     "bcryptjs": "^2.4.3",
     "boom": "^7.1.1",
     "dotenv": "^4.0.0",
@@ -16,6 +19,7 @@
     "hapi-auth-jwt2": "^7.3.0",
     "inert": "^4.2.1",
     "jsonwebtoken": "^8.1.0",
+    "react": "^16.2.0",
     "rxjs": "^5.5.2",
     "rxjs-aws-sdk": "^1.1.0"
   },

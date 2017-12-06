@@ -34,17 +34,25 @@ class AppComponent extends Component {
   }
 
   componentDidMount () {
-    this.props.fetchProfile()
+    const jssStyles = document.getElementById('jss-server-side');
+    if (jssStyles && jssStyles.parentNode) {
+      jssStyles.parentNode.removeChild(jssStyles);
+    }
+    const { inited, email, fetchProfile } = this.props
+    if (inited) {
+      return this.possiblyUnsubscribe({ profile: { email } })
+    }
+    fetchProfile()
       .then(action => this.possiblyUnsubscribe(action))
   }
 
   possiblyUnsubscribe (action) {
-    const { email } = (action.profile || {})
     const { pathname } = window.location
     if (pathname.indexOf('/unsubscribe/') !== 0) { return }
     window.history.pushState(null, '', '/')
     const lambdajwt = (pathname.match(/^\/unsubscribe\/(.+)$/) || [0, 0])[1]
     if (!lambdajwt) { return }
+    const { email } = action.profile || {}
     this.props.unsubscribe(email, lambdajwt)
   }
 }
@@ -90,6 +98,9 @@ const styles = theme => ({
 const AppComponentWithStyles = withStyles(styles)(AppComponent)
 
 export const App = connect(
-  state => ({ inited: state.inited }),
+  state => ({
+    inited: state.inited,
+    email: state.email
+  }),
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(AppComponentWithStyles)
