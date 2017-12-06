@@ -11,6 +11,7 @@ const COOKIE_OPTIONS = {
   isSecure: false,
   isHttpOnly: true,
   clearInvalid: false,
+  isSameSite: 'Lax',
   strictHeader: true,
   path: '/'
 }

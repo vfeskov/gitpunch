@@ -13,9 +13,12 @@ server.connection({ port: process.env.PORT || 3000 })
 const plugins = [
   auth,
   profile,
-  staticContent,
-  process.env.NODE_ENV === 'production' ? reactServerSide : null
-].filter(p => p)
+].concat(
+  process.env.NODE_ENV !== 'production' ? [] : [
+    staticContent,
+    reactServerSide,
+  ]
+)
 
 server.register(plugins).then(() => {
   server.start(() => {

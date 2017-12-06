@@ -1,7 +1,8 @@
 import { Server } from 'hapi'
-import { handler } from './response'
+import { makeHandler } from './response'
 
 export function register (server: Server, options, callback) {
+  const handler = makeHandler()
   server.route({
     method: 'GET',
     path: '/',

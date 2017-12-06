@@ -8,10 +8,10 @@ import { badImplementation } from 'boom'
 import { validEmail } from '../validations'
 import { reactApp } from '../../../client/src/serverSide'
 
-const layout = fs.readFileSync('public/index.html').toString()
+export function makeHandler () {
+  const layout = fs.readFileSync('public/index.html').toString()
 
-export function handler (request, reply) {
-  getProfile(request, profile => {
+  return (request, reply) => getProfile(request, profile => {
     const app = reactApp(profile)
     const initState = JSON.stringify(app.state)
     const content = layout
