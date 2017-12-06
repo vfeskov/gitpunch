@@ -9,7 +9,7 @@ import { validEmail } from '../validations'
 import { reactApp } from '../../../client/src/serverSide'
 
 export function makeHandler () {
-  const layout = fs.readFileSync('public/layout.html').toString()
+  const layout = fs.readFileSync('public/index.html').toString()
 
   return (request, reply) => getProfile(request, profile => {
     const app = reactApp(profile)

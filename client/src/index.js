@@ -11,7 +11,7 @@ import { App } from './App'
 import { reducer as rootReducer } from './reducers'
 import { indigo, purple } from 'material-ui/colors'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
-import registerServiceWorker from './registerServiceWorker'
+import { unregister } from './registerServiceWorker'
 
 const loggerMiddleware = createLogger()
 
@@ -40,4 +40,4 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-registerServiceWorker()
+unregister()

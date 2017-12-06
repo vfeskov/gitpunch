@@ -17,7 +17,6 @@ RUN cd client && \
     npm install && \
     npm run build && \
     npm prune --production && \
-    mv public/index.html public/layout.html && \
     \
     rm -rf ../client
 
