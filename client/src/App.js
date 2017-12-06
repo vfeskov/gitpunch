@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Repos, Settings, RepoAdd, UnsubscribeMessage } from './containers'
 import { withStyles } from 'material-ui/styles'
 import PropTypes from 'prop-types'
-import { CircularProgress } from 'material-ui/Progress'
-import Typography from 'material-ui/Typography'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -11,55 +9,45 @@ import * as actionCreators from './actions'
 
 class AppComponent extends Component {
   render () {
-    const { classes, inited } = this.props
+    const { classes } = this.props
     return (
       <div className={classes.app}>
-        {inited ? (
-        <div>
-          <RepoAdd className={classes.sectionContainer} />
-          <div className={classes.container}>
-            <Repos className={`${classes.sectionContainer} ${classes.repos}`} />
-            <Settings className={classes.sectionContainer} />
-          </div>
+        <RepoAdd className={classes.sectionContainer} />
+        <div className={classes.container}>
+          <Repos className={`${classes.sectionContainer} ${classes.repos}`} />
+          <Settings className={classes.sectionContainer} />
         </div>
-        ) : (
-        <div className={classes.progressContainer}>
-          <Typography type="headline">Win A Beer</Typography>
-          <CircularProgress />
-        </div>
-        )}
         <UnsubscribeMessage />
       </div>
     )
   }
 
   componentDidMount () {
-    const jssStyles = document.getElementById('jss-server-side');
+    const jssStyles = document.getElementById('jss-server-side')
     if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles);
+      jssStyles.parentNode.removeChild(jssStyles)
     }
     const { inited, email, fetchProfile } = this.props
     if (inited) {
-      return this.possiblyUnsubscribe({ profile: { email } })
+      return this.possiblyUnsubscribe({ email })
     }
     fetchProfile()
-      .then(action => this.possiblyUnsubscribe(action))
+      .then(({ profile = {} }) => this.possiblyUnsubscribe(profile))
   }
 
-  possiblyUnsubscribe (action) {
+  possiblyUnsubscribe ({ email }) {
     const { pathname } = window.location
     if (pathname.indexOf('/unsubscribe/') !== 0) { return }
     window.history.pushState(null, '', '/')
     const lambdajwt = (pathname.match(/^\/unsubscribe\/(.+)$/) || [0, 0])[1]
     if (!lambdajwt) { return }
-    const { email } = action.profile || {}
     this.props.unsubscribe(email, lambdajwt)
   }
 }
 
 AppComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  inited: PropTypes.bool.isRequired
+  email: PropTypes.string.isRequired
 }
 
 const styles = theme => ({
@@ -83,13 +71,6 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     margin: theme.spacing.unit
   },
-  progressContainer: {
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
   repos: {
     flex: 1
   }
@@ -99,8 +80,8 @@ const AppComponentWithStyles = withStyles(styles)(AppComponent)
 
 export const App = connect(
   state => ({
-    inited: state.inited,
-    email: state.email
+    email: state.email,
+    inited: state.inited
   }),
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(AppComponentWithStyles)

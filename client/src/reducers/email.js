@@ -1,4 +1,4 @@
-export function email (state = false, action) {
+export function email (state = '', action) {
   switch (action.type) {
     case 'RECEIVE_REGISTER':
     case 'RECEIVE_LOGIN':

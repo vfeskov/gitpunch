@@ -5,8 +5,8 @@ import DeleteIcon from 'material-ui-icons/Delete'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import PropTypes from 'prop-types'
-import { FormControlLabel } from 'material-ui/Form';
-import Switch from 'material-ui/Switch';
+import { FormControlLabel } from 'material-ui/Form'
+import Switch from 'material-ui/Switch'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
