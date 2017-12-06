@@ -29,16 +29,20 @@ class AppComponent extends Component {
     }
     const { inited, email, fetchProfile } = this.props
     if (inited) {
-      return this.possiblyUnsubscribe({ email })
+      return this.processProfile({ email })
     }
     fetchProfile()
-      .then(({ profile = {} }) => this.possiblyUnsubscribe(profile))
+      .then(({ profile = {} }) => this.processProfile(profile))
   }
 
-  possiblyUnsubscribe ({ email }) {
+  processProfile ({ email }) {
+    this.possiblyUnsubscribe(email)
+    window.location.pathname === '/' || window.history.pushState(null, '', '/')
+  }
+
+  possiblyUnsubscribe (email) {
     const { pathname } = window.location
     if (pathname.indexOf('/unsubscribe/') !== 0) { return }
-    window.history.pushState(null, '', '/')
     const lambdajwt = (pathname.match(/^\/unsubscribe\/(.+)$/) || [0, 0])[1]
     if (!lambdajwt) { return }
     this.props.unsubscribe(email, lambdajwt)
@@ -47,7 +51,8 @@ class AppComponent extends Component {
 
 AppComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  email: PropTypes.string.isRequired
+  email: PropTypes.string.isRequired,
+  inited: PropTypes.bool.isRequired
 }
 
 const styles = theme => ({
