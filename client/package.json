@@ -18,11 +18,14 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "typeface-roboto": "0.0.45"
+    "typeface-roboto": "0.0.45",
+    "workbox-cli": "^2.1.2",
+    "workbox-sw": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run generate-sw",
+    "generate-sw": "workbox inject:manifest && cp node_modules/workbox-sw/build/importScripts/workbox-sw.prod* build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

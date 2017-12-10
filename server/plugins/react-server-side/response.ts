@@ -6,13 +6,13 @@ import { loadProfile } from '../../db'
 import { Observable as $ } from 'rxjs/Observable'
 import { badImplementation } from 'boom'
 import { validEmail } from '../validations'
-import { reactApp } from '../../../client/src/serverSide'
+import { renderServerSide } from '../../../client/src/renderServerSide'
 
 export function makeHandler () {
   const layout = fs.readFileSync('public/layout.html').toString()
 
   return (request, reply) => getProfile(request, profile => {
-    const app = reactApp(profile)
+    const app = renderServerSide(profile)
     const initState = JSON.stringify(app.state)
     const content = layout
       .replace(
