@@ -17,19 +17,30 @@ self.addEventListener('fetch', event => {
   // if it's a get request and not index then fallback to index
   const request = isGET && !isIndex ? indexRequest : event.request
 
-  const fetchUpdatingIndexCache = fetch(request)
-    .then(async response => {
-      const cache = await caches.open('dynamic-v1')
-      cache.add(new Request('index.html', { credentials: 'same-origin' }))
-      return response
-    })
+  const updateIndexCache = async () => {
+    const cache = await caches.open('dynamic-v1')
+    cache.add(new Request('index.html', { credentials: 'same-origin' }))
+  }
 
-  // if it's not a GET request, then it's AJAX, don't serve index cache if fails
-  if (!isGET) { return event.respondWith(fetchUpdatingIndexCache) }
+  // if it's not a GET request, don't falback to index cache if fails
+  if (!isGET) {
+    return event.respondWith(
+      fetch(request)
+        .then(response => {
+          // user profile gets updated with a delay because of simpledb
+          setTimeout(updateIndexCache, 1000)
+          return response
+        })
+    )
+  }
 
   // otherwise it's index request, serve index cache if fails
   event.respondWith(
-    fetchUpdatingIndexCache
+    fetch(request)
+      .then(response => {
+        updateIndexCache()
+        return response
+      })
       .catch(() => caches.match('index.html'))
   )
 })
