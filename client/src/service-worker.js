@@ -22,7 +22,7 @@ self.addEventListener('fetch', event => {
     cache.add(new Request('index.html', { credentials: 'same-origin' }))
   }
 
-  // if it's not a GET request, don't falback to index cache if fails
+  // if it's not a GET request, don't fallback to index cache if it fails
   if (!isGET) {
     return event.respondWith(
       fetch(request)
@@ -34,7 +34,7 @@ self.addEventListener('fetch', event => {
     )
   }
 
-  // otherwise it's index request, serve index cache if fails
+  // otherwise fallback to index cache if request fails
   event.respondWith(
     fetch(request)
       .then(response => {
