@@ -1,11 +1,11 @@
 import { Observable as $ } from 'rxjs/Observable'
 import { of } from 'rxjs/observable/of'
-import { filter, map, mergeMap, catchError } from 'rxjs/operators'
-import { RepoWithUsersData, RepoWithUsersDataAndTags } from './interfaces'
+import { filter, map, mergeMap, catchError, tap } from 'rxjs/operators'
+import { RepoWithUsersData, RepoWithUsersDataAndLatestTag } from './interfaces'
 import { RxHR } from "@akanass/rx-http-request"
 const accessToken = process.env.GITHUB_ACCESS_TOKEN
 
-export function enrichWithTags (repo$: $<RepoWithUsersData>): $<RepoWithUsersDataAndTags> {
+export function enrichWithLatestTag (repo$: $<RepoWithUsersData>): $<RepoWithUsersDataAndLatestTag> {
   return repo$.pipe(
     mergeMap(({ repo, usersData }) =>
       RxHR
@@ -19,8 +19,9 @@ export function enrichWithTags (repo$: $<RepoWithUsersData>): $<RepoWithUsersDat
             if (response.statusCode !== 200) {
               throw new Error(`status code ${ response.statusCode }`)
             }
+            const tags = JSON.parse(body)
             return ({
-              tags: JSON.parse(body),
+              latestTag: tags.length ? tags[0].name : null,
               repo,
               usersData
             })
@@ -29,8 +30,9 @@ export function enrichWithTags (repo$: $<RepoWithUsersData>): $<RepoWithUsersDat
             console.error(`Failed to load tags for ${ repo }`, error)
             return of({ error })
           })
-        ) as $<RepoWithUsersDataAndTags>
+        ) as $<RepoWithUsersDataAndLatestTag>
     ),
-    filter(({ error, tags }) => !error && !!(tags && tags.length))
+    filter(({ error, latestTag }) => !error && !!latestTag),
+    tap(event => console.log('enrichWithLatestTag', JSON.stringify(event, null, 2)))
   )
 }

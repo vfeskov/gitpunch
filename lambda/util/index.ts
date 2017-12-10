@@ -1,7 +1,7 @@
 export { queryUsersFromDb } from './queryUsersFromDb'
 export { parseUsers } from './parseUsers'
 export { groupByRepo } from './groupByRepo'
-export { enrichWithTags } from './enrichWithTags'
+export { enrichWithLatestTag } from './enrichWithLatestTag'
 export { getAction } from './getAction'
 export { sendEmail } from './sendEmail'
 export { updateDb } from './updateDb'

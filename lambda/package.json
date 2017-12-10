@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "PROD=true webpack",
+    "start": "webpack && node -e \"require('./build').handler()\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",

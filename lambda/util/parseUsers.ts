@@ -1,7 +1,7 @@
 import { Observable as $ } from 'rxjs/Observable'
 import { of } from 'rxjs/observable/of'
 import { flattenAttrs } from 'rxjs-aws-sdk/RxSimpleDB'
-import { filter, map, mergeMap, catchError } from 'rxjs/operators'
+import { filter, map, mergeMap, catchError, tap } from 'rxjs/operators'
 import { SelectResult } from 'aws-sdk/clients/simpledb'
 import { UserRaw, User } from './interfaces'
 
@@ -24,7 +24,8 @@ export function parseUsers (queryResult$: $<SelectResult>) {
       console.error('Failed to parse user data', error)
       return of({ error } as User)
     }),
-    filter(user => !user.error)
+    filter(user => !user.error),
+    tap(event => console.log('parseUsers', JSON.stringify(event, null, 2)))
   )
 }
 

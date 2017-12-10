@@ -27,8 +27,7 @@ export function sendEmail (action$: $<Action>) {
           `Have a great day!\n\n` +
           `If you wish to stop receiving such emails click: ${ getUnsubscribeUrl(email) }\n`
       }).pipe(
-        tap(({ error }) => error && console.error('Failed to send email', error, action)),
-        map(({ error }) => assign({ error }, action))
+        map(({ error }) => assign({ error }, action)),
       )
     })
   )
@@ -44,7 +43,7 @@ function getUnsubscribeUrl (email: string) {
 }
 
 function sendEmailRequest ({ email, subject, body }) {
-  return ses.sendEmail({
+  const params = {
     Source: process.env.FROM,
     Destination: { ToAddresses: [email] },
     Message: {
@@ -57,9 +56,15 @@ function sendEmailRequest ({ email, subject, body }) {
         }
       }
     }
-  })
-  .pipe(
-    map(response => assign({ error: null }, response)),
-    catchError(error => of({ error }))
-  )
+  }
+  const stringifiedParams = JSON.stringify(params, null, 2)
+  return ses.sendEmail(params)
+    .pipe(
+      map(response => assign({ error: null }, response)),
+      catchError(error => of({ error })),
+      tap(({ error }) => error ?
+        console.error('sendEmail', 'ERROR', error, stringifiedParams) :
+        console.log('sendEmail', 'SUCCESS', stringifiedParams)
+      )
+    )
 }

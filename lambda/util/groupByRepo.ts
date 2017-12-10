@@ -1,6 +1,6 @@
 import { Observable as $ } from 'rxjs/Observable'
 import { of } from 'rxjs/observable/of'
-import { reduce, mergeMap } from 'rxjs/operators'
+import { reduce, mergeMap, tap } from 'rxjs/operators'
 import { RepoWithUsersData, User } from './interfaces'
 
 const { keys } = Object
@@ -21,6 +21,7 @@ export function groupByRepo (users$: $<User>): $<RepoWithUsersData> {
         repo,
         usersData: usersGroupedByRepo[repo]
       })))
-    )
+    ),
+    tap(event => console.log('groupByRepo', JSON.stringify(event, null, 2)))
   )
 }

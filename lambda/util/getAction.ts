@@ -1,26 +1,26 @@
 import { Observable as $ } from 'rxjs/Observable'
 import { of } from 'rxjs/observable/of'
-import { filter, map, mergeMap, reduce } from 'rxjs/operators'
-import { RepoWithUsersDataAndTags, Action } from './interfaces'
+import { filter, map, mergeMap, reduce, tap } from 'rxjs/operators'
+import { RepoWithUsersDataAndLatestTag, Action } from './interfaces'
 
 const { assign } = Object
 
-export function getAction (repo$: $<RepoWithUsersDataAndTags>): $<Action> {
+export function getAction (repo$: $<RepoWithUsersDataAndLatestTag>): $<Action> {
   return repo$.pipe(
-    mergeMap(({ tags, repo, usersData }) =>
-      of(...usersData.map(_userData => assign(_userData, { repo, tags })))
+    mergeMap(({ latestTag, repo, usersData }) =>
+      of(...usersData.map(_userData => assign(_userData, { repo, latestTag })))
     ),
     map(data => {
-      const { repo, tags, alerted, email } = data
-      const tagNames = tags.map(tag => tag.name)
+      const { repo, latestTag, alerted, email } = data
       let action = ''
       if (!alerted[repo]) {
         action = 'dontAlertButSave'
-      } else if (tagNames.indexOf(alerted[repo]) !== 0) {
+      } else if (latestTag !== alerted[repo]) {
         action = 'alert'
       }
-      return { action, tag: tagNames[0], repo, alerted, email }
+      return { action, tag: latestTag, repo, alerted, email }
     }),
-    filter(({ action }) => !!action)
+    filter(({ action }) => !!action),
+    tap(event => console.log('getAction', JSON.stringify(event, null, 2)))
   )
 }

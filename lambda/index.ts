@@ -6,7 +6,7 @@ import {
   queryUsersFromDb,
   parseUsers,
   groupByRepo,
-  enrichWithTags,
+  enrichWithLatestTag,
   getAction,
   sendEmail,
   updateDb
@@ -24,7 +24,7 @@ export function handler (event, context, callback) {
     .pipe(
       parseUsers,
       groupByRepo,
-      enrichWithTags,
+      enrichWithLatestTag,
       getAction,
       sendEmail,
       updateDb(simpleDb, domainName),

@@ -23,18 +23,11 @@ export interface RepoWithUsersData {
   usersData: UserData[]
 }
 
-export interface RepoWithUsersDataAndTags {
+export interface RepoWithUsersDataAndLatestTag {
   repo: string
-  tags: Tag[]
+  latestTag: string
   usersData: UserData[]
   error?: any
-}
-
-export interface Tag {
-  name: string
-  commit: {
-    sha: string
-  }
 }
 
 export interface Alerted {

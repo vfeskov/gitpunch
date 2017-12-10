@@ -22,20 +22,25 @@ export function updateDb (simpleDb, domainName) {
           email, alerted: usersAlerted[email]
         })))
       ),
-      mergeMap(({ email, alerted }) =>
-        simpleDb.putAttributes({
+      mergeMap(({ email, alerted }) => {
+        const attributes = {
           DomainName: domainName,
           ItemName: email,
           Attributes: [
             { Name: 'alerted', Value: JSON.stringify(alerted), Replace: true }
           ]
-        })
-        .pipe(
-          map(response => assign({ error: null }, response)),
-          catchError(error => of({ error })),
-          tap(({ error }) => error && console.error('Failed to update db', error, email, alerted)),
-        )
-      )
+        }
+        const stringifiedAttributes = JSON.stringify(attributes, null, 2)
+        return simpleDb.putAttributes(attributes)
+          .pipe(
+            map(response => assign({ error: null }, response)),
+            catchError(error => of({ error })),
+            tap(({ error }) => error ?
+              console.error('updateDb', 'ERROR', error, stringifiedAttributes) :
+              console.log('updateDb', 'SUCCESS', stringifiedAttributes)
+            ),
+          )
+      })
     )
   }
 }
