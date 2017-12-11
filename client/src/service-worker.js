@@ -8,28 +8,25 @@ const workbox = new WorkboxSW({
 workbox.precache([])
 
 self.addEventListener('fetch', event => {
+  // if request was precached by Workbox, let Workbox handle it
   if (isPrecached(event)) { return }
 
-  const isGET = event.request.method === 'GET'
-
-  // if it's a get request and not index then fallback to index
-  const request = isGET && !isIndex(event) ? indexRequest() : event.request
-
-  // if it's not a GET request, don't fallback to index cache if it fails
-  if (!isGET) {
+  // if it's not a GET request, fire it and update index cache with a delay,
+  // because SimpleDB doesn't return updated data right away
+  if (event.request.method !== 'GET') {
     return event.respondWith(
-      fetch(request)
+      fetch(event.request)
         .then(response => {
-          // user profile gets updated with a delay because of simpledb
           setTimeout(updateIndexCache, 1000)
           return response
         })
     )
   }
 
-  // otherwise fallback to index cache if request fails
+  // otherwise ignore the original request and fetch index.html instead,
+  // updating index cache in parallel
   event.respondWith(
-    fetch(request)
+    fetch(indexRequest())
       .then(response => {
         updateIndexCache()
         return response
@@ -37,11 +34,6 @@ self.addEventListener('fetch', event => {
       .catch(() => caches.match('index.html'))
   )
 })
-
-function isIndex({ request }) {
-  const url = new URL(request.url)
-  return url.origin == location.origin && url.pathname == '/'
-}
 
 function isPrecached({ request }) {
   return workbox._revisionedCacheManager._parsedCacheUrls.includes(request.url)
