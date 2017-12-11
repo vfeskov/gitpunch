@@ -8,11 +8,15 @@ const workbox = new WorkboxSW({
 workbox.precache([])
 
 self.addEventListener('fetch', event => {
-  // if request was precached by Workbox, let Workbox handle it
-  if (isPrecached(event)) { return }
-  // if it's a request for static file that wasn't precached,
-  // let default handler handle it
-  if (isStaticFile(event)) { return }
+  // don't do anything
+  if (
+    // if request was precached by Workbox
+    isPrecached(event) ||
+    // if it's a request for static file that wasn't precached
+    isStaticFile(event) ||
+    // if request is for external resource
+    isExternal(event)
+  ) { return }
 
   // if it's not a GET request, fire it and update index cache with a delay,
   // because SimpleDB doesn't return updated data right away
@@ -44,6 +48,11 @@ function isPrecached({ request }) {
 
 function isStaticFile({ request }) {
   return [/\.map$/, /asset-manifest\.json$/].some(r => r.test(request.url))
+}
+
+function isExternal({ request }) {
+  const url = new URL(request.url)
+  return url.origin !== location.origin
 }
 
 async function updateIndexCache() {
