@@ -12,7 +12,7 @@ class AppComponent extends Component {
     const { classes } = this.props
     return (
       <div className={classes.app}>
-        <RepoAdd className={classes.sectionContainer} />
+        <RepoAdd className={`${classes.sectionContainer} ${classes.repoAdd}`} />
         <div className={classes.container}>
           <Repos className={`${classes.sectionContainer} ${classes.repos}`} />
           <Settings className={classes.sectionContainer} />
@@ -57,9 +57,14 @@ AppComponent.propTypes = {
 
 const styles = theme => ({
   app: {
+    boxSizing: 'border-box',
     height: '100%',
     maxWidth: '900px',
-    margin: '0 auto'
+    margin: '0 auto',
+    paddingTop: theme.spacing.unit,
+    '@media (min-width:700px)': {
+      paddingTop: theme.spacing.unit * 2,
+    }
   },
   container: {
     '@media (min-width:700px)': {
@@ -75,6 +80,9 @@ const styles = theme => ({
     },
     padding: theme.spacing.unit * 2,
     margin: theme.spacing.unit
+  },
+  repoAdd: {
+    marginTop: 0
   },
   repos: {
     flex: 1
