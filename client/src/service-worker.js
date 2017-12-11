@@ -10,6 +10,9 @@ workbox.precache([])
 self.addEventListener('fetch', event => {
   // if request was precached by Workbox, let Workbox handle it
   if (isPrecached(event)) { return }
+  // if it's a request for static file that wasn't precached,
+  // let default handler handle it
+  if (isStaticFile(event)) { return }
 
   // if it's not a GET request, fire it and update index cache with a delay,
   // because SimpleDB doesn't return updated data right away
@@ -23,7 +26,7 @@ self.addEventListener('fetch', event => {
     )
   }
 
-  // otherwise ignore the original request and fetch index.html instead,
+  // otherwise ignore the original request and fetch index.html,
   // updating index cache in parallel
   event.respondWith(
     fetch(indexRequest())
@@ -31,12 +34,16 @@ self.addEventListener('fetch', event => {
         updateIndexCache()
         return response
       })
-      .catch(() => caches.match('index.html'))
+      .catch(() => caches.match(indexRequest()))
   )
 })
 
 function isPrecached({ request }) {
   return workbox._revisionedCacheManager._parsedCacheUrls.includes(request.url)
+}
+
+function isStaticFile({ request }) {
+  return [/\.map$/, /asset-manifest\.json$/].some(r => r.test(request.url))
 }
 
 async function updateIndexCache() {
