@@ -8,19 +8,12 @@ const workbox = new WorkboxSW({
 workbox.precache([])
 
 self.addEventListener('fetch', event => {
+  if (isPrecached(event)) { return }
+
   const isGET = event.request.method === 'GET'
-  const isIndex = getIsIndex(event)
-  const isPrecached = getIsPrecached(event)
-  if (isGET && !isIndex || isPrecached) { return }
 
-  const indexRequest = new Request('index.html', { credentials: 'same-origin' })
   // if it's a get request and not index then fallback to index
-  const request = isGET && !isIndex ? indexRequest : event.request
-
-  const updateIndexCache = async () => {
-    const cache = await caches.open('dynamic-v1')
-    cache.add(new Request('index.html', { credentials: 'same-origin' }))
-  }
+  const request = isGET && !isIndex(event) ? indexRequest() : event.request
 
   // if it's not a GET request, don't fallback to index cache if it fails
   if (!isGET) {
@@ -45,11 +38,20 @@ self.addEventListener('fetch', event => {
   )
 })
 
-function getIsIndex({ request }) {
+function isIndex({ request }) {
   const url = new URL(request.url)
   return url.origin == location.origin && url.pathname == '/'
 }
 
-function getIsPrecached({ request }) {
+function isPrecached({ request }) {
   return workbox._revisionedCacheManager._parsedCacheUrls.includes(request.url)
+}
+
+async function updateIndexCache() {
+  const cache = await caches.open('dynamic-v1')
+  cache.add(indexRequest())
+}
+
+function indexRequest() {
+  return new Request('index.html', { credentials: 'same-origin' })
 }
