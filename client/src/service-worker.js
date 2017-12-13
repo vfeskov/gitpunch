@@ -47,7 +47,7 @@ function isPrecached({ request }) {
 }
 
 function isStaticFile({ request }) {
-  return [/\.map$/, /asset-manifest\.json$/].some(r => r.test(request.url))
+  return /\.[^/]+$/.test(request.url)
 }
 
 function isExternal({ request }) {
