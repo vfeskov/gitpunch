@@ -21,11 +21,14 @@ export function sendEmail (action$: $<Action>) {
       return sendEmailRequest({
         email: email,
         subject: `New GitHub Release: ${ repo } ${ tag }`,
-        body: `Greetings! :)\n\n` +
-          `They released a new version of ${ repo }, check it out: \n` +
-          `https://github.com/${ repo }/releases/tag/${ tag }\n\n` +
-          `Have a great day!\n\n` +
-          `If you wish to stop receiving such emails click: ${ getUnsubscribeUrl(email) }\n`
+        body: `Greetings! :)<br/><br/>` +
+          `They released a new version of ${ repo }, check it out:<br/>` +
+          `https://github.com/${ repo }/releases/tag/${ tag }<br/><br/>` +
+          `Have a great day,<br/>` +
+          `Vladimir from <a href="https://beer.vfeskov.com">Win A Beer</a><br/>` +
+          `---<br/>` +
+          `<a href="https://github.com/vfeskov/win-a-beer-react">Star me on GitHub</a><br/>` +
+          `To stop getting these emails click <a href="${ getUnsubscribeUrl(email) }">unsubscribe</a><br/><br/>`
       }).pipe(
         map(({ error }) => assign({ error }, action)),
       )
@@ -51,7 +54,8 @@ function sendEmailRequest ({ email, subject, body }) {
         Data: subject
       },
       Body: {
-        Text: {
+        Html: {
+          Charset: 'UTF-8',
           Data: body
         }
       }
