@@ -4,6 +4,7 @@ import { filter, map, mergeMap, reduce, catchError, tap } from 'rxjs/operators'
 import { Action } from './interfaces'
 import { create as createSES } from 'rxjs-aws-sdk/RxSES'
 import * as JWT from 'jsonwebtoken'
+import { emailBody } from './emailBody'
 
 const { assign } = Object
 const ses = createSES({
@@ -21,14 +22,12 @@ export function sendEmail (action$: $<Action>) {
       return sendEmailRequest({
         email: email,
         subject: `New GitHub Release: ${ repo } ${ tag }`,
-        body: `Greetings! :)<br/><br/>` +
-          `They released a new version of ${ repo }, check it out:<br/>` +
-          `https://github.com/${ repo }/releases/tag/${ tag }<br/><br/>` +
-          `Have a great day,<br/>` +
-          `Vladimir from <a href="https://beer.vfeskov.com">Win A Beer</a><br/>` +
-          `---<br/>` +
-          `<a href="https://github.com/vfeskov/win-a-beer-react">Star me on GitHub</a><br/>` +
-          `To stop getting these emails click <a href="${ getUnsubscribeUrl(email) }">unsubscribe</a><br/><br/>`
+        body: emailBody({
+          repo,
+          tag,
+          unsubscribeUrl: getUnsubscribeUrl(email),
+          appUrl: APP_URL
+        })
       }).pipe(
         map(({ error }) => assign({ error }, action)),
       )
