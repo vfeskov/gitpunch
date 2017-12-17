@@ -10,8 +10,6 @@
   "private": true,
   "dependencies": {
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-react-app": "^3.1.0",
     "bcryptjs": "^2.4.3",
     "boom": "^7.1.1",
     "dotenv": "^4.0.0",
@@ -32,6 +30,8 @@
     "@types/jsonwebtoken": "^7.2.3",
     "@types/node": "^8.0.53",
     "awesome-typescript-loader": "^3.4.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-react-app": "^3.1.0",
     "concurrently": "^3.5.1",
     "json-loader": "^0.5.7",
     "nodemon": "^1.12.1",
