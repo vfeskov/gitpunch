@@ -10,12 +10,13 @@ import * as actionCreators from './actions'
 class AppComponent extends Component {
   render () {
     const { classes } = this.props
+    const { app, sectionContainer, repoAdd, repos } = classes;
     return (
-      <div className={classes.app}>
-        <RepoAdd className={`${classes.sectionContainer} ${classes.repoAdd}`} />
-        <div className={classes.container}>
-          <Repos className={`${classes.sectionContainer} ${classes.repos}`} />
-          <Settings className={classes.sectionContainer} />
+      <div className={app}>
+        <RepoAdd className={`${sectionContainer} ${repoAdd}`} />
+        <div className={container}>
+          <Repos className={`${sectionContainer} ${repos}`} />
+          <Settings className={sectionContainer} />
         </div>
         <UnsubscribeMessage />
       </div>
