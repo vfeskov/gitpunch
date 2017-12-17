@@ -10,7 +10,7 @@ import * as actionCreators from './actions'
 class AppComponent extends Component {
   render () {
     const { classes } = this.props
-    const { app, sectionContainer, repoAdd, repos } = classes;
+    const { app, sectionContainer, repoAdd, container, repos } = classes;
     return (
       <div className={app}>
         <RepoAdd className={`${sectionContainer} ${repoAdd}`} />
