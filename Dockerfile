@@ -10,14 +10,11 @@ RUN cd client && \
     npm install && \
     npm run build && \
     cd .. && \
-    mv client/build server/ && \
-    mv server/build server/public && \
     \
     cd server && \
     npm install && \
     npm run build && \
     npm prune --production && \
-    mv public/index.html public/layout.html && \
     \
     rm -rf ../client
 

@@ -24,8 +24,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && npm run generate-sw",
+    "build": "react-scripts build && npm run generate-sw && npm run move-build-to-server",
     "generate-sw": "workbox inject:manifest && cp node_modules/workbox-sw/build/importScripts/workbox-sw.prod* build",
+    "move-build-to-server": "mv build _build && mv _build ../server && cd ../server && rm -rf public && mv _build public && mv public/index.html public/layout.html",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
