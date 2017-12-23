@@ -14,8 +14,8 @@ const plugins = [
 ]
 
 if (process.env.NODE_ENV === 'production') {
-  const { reactServerSide } = require('./plugins/react-server-side')
-  const { staticContent } = require('./plugins/static-content')
+  const staticContent = require('./plugins/static-content')
+  const reactServerSide = require('./plugins/react-server-side')
 
   plugins.push(
     staticContent,
