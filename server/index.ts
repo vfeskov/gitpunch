@@ -4,8 +4,6 @@ import './rxjs'
 import { Server } from 'hapi'
 import * as auth from './plugins/auth'
 import * as profile from './plugins/profile'
-import * as staticContent from './plugins/static-content'
-import * as reactServerSide from './plugins/react-server-side'
 
 const server = new Server()
 server.connection({ port: process.env.PORT || 3000 })
@@ -13,12 +11,17 @@ server.connection({ port: process.env.PORT || 3000 })
 const plugins = [
   auth,
   profile,
-].concat(
-  process.env.NODE_ENV !== 'production' ? [] : [
+]
+
+if (process.env.NODE_ENV === 'production') {
+  const { reactServerSide } = require('./plugins/react-server-side')
+  const { staticContent } = require('./plugins/static-content')
+
+  plugins.push(
     staticContent,
-    reactServerSide,
-  ]
-)
+    reactServerSide
+  )
+}
 
 server.register(plugins).then(() => {
   server.start(() => {
