@@ -14,7 +14,7 @@ class SettingsComponent extends Component {
   render () {
     const { shownRepos, loggedIn, email, logout, login, register, className, classes } = this.props
     return (
-      <Paper className={`${className} ${classes.container}`}>
+      <Paper className={className}>
         {loggedIn ? (
           LoggedIn({ logout, classes, email })
         ) : (

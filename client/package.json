@@ -7,7 +7,7 @@
     "autosuggest-highlight": "^3.1.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash.debounce": "^4.0.8",
-    "material-ui": "^1.0.0-beta.21",
+    "material-ui": "^1.0.0-beta.25",
     "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "^15.6.0",
     "react": "^16.1.1",

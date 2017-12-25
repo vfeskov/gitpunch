@@ -27,9 +27,10 @@ export function renderServerSide (profile) {
     },
   })
   const jss = create(preset())
-  jss.options.createGenerateClassName = createGenerateClassName
+  const generateClassName = createGenerateClassName()
+
   const html = renderToString(
-    <JssProvider registry={sheetsRegistry} jss={jss}>
+    <JssProvider registry={sheetsRegistry} jss={jss} generateClassName={generateClassName}>
       <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
         <Provider store={store}>
           <App />
@@ -38,9 +39,7 @@ export function renderServerSide (profile) {
     </JssProvider>
   )
   const css = sheetsRegistry.toString()
-  return {
-    html,
-    css,
-    state: store.getState()
-  }
+  const state = JSON.stringify(JSON.stringify(store.getState()))
+
+  return { html, css, state }
 }

@@ -5,20 +5,13 @@ const { DefinePlugin } = require('webpack')
 const config = {
   target: 'node',
   entry: './index',
-  context: path.resolve(__dirname),
+  context: path.resolve(__dirname, 'src'),
   output: {
     filename: 'index.js',
     path: path.join(__dirname, 'build')
   },
   module: {
     loaders: [
-      {
-        test: /\.ts$/,
-        use: [{
-          loader: 'awesome-typescript-loader',
-          options: { configFileName: path.resolve(__dirname, 'tsconfig.json') }
-        }]
-      },
       {
         test: /\.jsx?$/,
         include: path.resolve(__dirname, '..', 'client', 'src'),
@@ -28,7 +21,6 @@ const config = {
           presets: [require.resolve('babel-preset-react-app')]
         }
       },
-      { test: /(\.md|\.map)$/, loader: 'null-loader' },
       { test: /\.json$/, loader: 'json-loader' }
     ]
   },
@@ -38,7 +30,7 @@ const config = {
     })
   ],
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.js', '.json']
   }
 }
 

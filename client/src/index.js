@@ -15,7 +15,7 @@ import registerServiceWorker from './registerServiceWorker'
 
 const loggerMiddleware = createLogger()
 
-const initState = window.__INITIAL_STATE__ && JSON.parse(window.__INITIAL_STATE__)
+const initState = window.__INIT_STATE__ && JSON.parse(window.__INIT_STATE__)
 
 const store = createStore(
   rootReducer,
