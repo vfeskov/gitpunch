@@ -13,7 +13,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import createGenerateClassName from 'material-ui/styles/createGenerateClassName'
 import { indigo, purple } from 'material-ui/colors'
 
-export function renderServerSide (profile) {
+export function renderToStrings (profile) {
   const store = createStore(rootReducer)
   store.dispatch(
     profile ? receiveProfile(profile) : errorProfile()

@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { renderServerSide } from '../../client/src/renderServerSide'
+import { renderToStrings } from '../../client/src/renderToStrings'
 import { loadProfile } from './db'
 
 export function prerenderClient () {
@@ -9,7 +9,7 @@ export function prerenderClient () {
     if (req.method !== 'GET') { return next() }
 
     getProfile(req, profile => {
-      const app = renderServerSide(profile)
+      const app = renderToStrings(profile)
       const content = layout
         .replace(
           '<div id="root"></div>',
