@@ -56,7 +56,7 @@ export function loadProfile (email) {
       (err, data) => {
         if (err) { return error(err) }
         const { Attributes } = data
-        if (!Attributes) { error('User not found') }
+        if (!Attributes) { return error('User not found') }
         const { watching, repos } = flattenAttrs(Attributes)
         resolve({
           email,
