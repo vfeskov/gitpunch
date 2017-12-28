@@ -8,11 +8,12 @@ const workbox = new WorkboxSW({
 workbox.precache([])
 
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url)
   if (
-    isPrecached(event) ||
-    isStaticFile(event) ||
-    isExternal(event) ||
-    isGetApi(event)
+    isPrecached(url) ||
+    isStaticFile(url) ||
+    isExternal(url) ||
+    isGetApi(event, url)
   ) { return }
 
   // if it's not a GET request, e.g., POST /api/repos to add a repo
@@ -40,21 +41,20 @@ self.addEventListener('fetch', event => {
   )
 })
 
-function isPrecached({ request }) {
-  return workbox._revisionedCacheManager._parsedCacheUrls.includes(request.url)
+function isPrecached({ href }) {
+  return workbox._revisionedCacheManager._parsedCacheUrls.includes(href)
 }
 
-function isStaticFile({ request }) {
-  return /\.[^/]+$/.test(request.url)
+function isStaticFile({ pathname }) {
+  return pathname.includes('.') && pathname !== '/index.html'
 }
 
-function isExternal({ request }) {
-  const url = new URL(request.url)
-  return url.origin !== location.origin
+function isExternal({ origin }) {
+  return origin !== location.origin
 }
 
-function isGetApi({ request }) {
-  return request.method === 'GET' &&  /^\/api\/.+/.test(request.url)
+function isGetApi({ request }, { pathname }) {
+  return request.method === 'GET' && /^\/api\/.+/.test(pathname)
 }
 
 async function updateIndexCache() {
