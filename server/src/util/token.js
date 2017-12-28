@@ -2,24 +2,24 @@ import * as JWT from 'jsonwebtoken'
 
 const LAMBDA_JWT_RSA_PUBLIC_KEY = process.env.WAB_LAMBDA_JWT_RSA_PUBLIC_KEY.replace(/\\n/g, '\n')
 
-export function verifyToken (token, callback) {
-  JWT.verify(
+export function verifyToken (token) {
+  return new Promise((r, e) => JWT.verify(
     token,
     process.env.WAB_JWT_SECRET,
-    callback
-  )
+    (err, data) => err ? e(err) : r(data)
+  ))
 }
 
 export function signToken (payload) {
   return JWT.sign(payload, process.env.WAB_JWT_SECRET)
 }
 
-export function verifyUnsubscribeToken (token, callback) {
-  JWT.verify(
+export function verifyUnsubscribeToken (token) {
+  return new Promise((r, e) => JWT.verify(
     token,
     LAMBDA_JWT_RSA_PUBLIC_KEY,
-    callback
-  )
+    (err, data) => err ? e(err) : r(data)
+  ))
 }
 
 export function setCookieTokenHeader (token) {

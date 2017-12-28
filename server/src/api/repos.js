@@ -3,20 +3,16 @@ import { validRepos, validRepo } from '../util/validations'
 import { saveRepos, loadProfile } from '../db'
 
 export async function create ({ body, token }, res, next) {
-  try {
-    if (!token) { return next(unauthorized()) }
-    if (!body || !validRepo(body.repo)) { return next(badRequest()) }
+  if (!token) { return next(unauthorized()) }
+  if (!body || !validRepo(body.repo)) { return next(badRequest()) }
 
-    const { repo } = body
-    const { email } = token
-    const { repos } = await loadProfile(email)
-    if (repos.includes(repo)) { return success(res, repos) }
+  const { repo } = body
+  const { email } = token
+  const { repos } = await loadProfile(email)
+  if (repos.includes(repo)) { return success(res, repos) }
 
-    const newRepos = await saveRepos(email, [repo].concat(repos))
-    success(res, newRepos)
-  } catch (err) {
-    logErrAndNext500(err, next)
-  }
+  const newRepos = await saveRepos(email, [repo].concat(repos))
+  success(res, newRepos)
 }
 
 export async function remove ({ params, token }, res, next) {

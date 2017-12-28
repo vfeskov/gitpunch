@@ -5,23 +5,19 @@ import { validEmail, validPassword, validRepos } from '../util/validations'
 import { setCookieTokenHeader, signToken } from '../util/token'
 
 export async function register (req, res, next) {
-  try {
-    if (!valid(req.body)) { return next(badRequest()) }
+  if (!valid(req.body)) { return next(badRequest()) }
 
-    const { email, password, repos } = req.body
+  const { email, password, repos } = req.body
 
-    const { found } = await loadFullProfile(email)
-    if (found) { return next(badRequest()) }
+  const { found } = await loadFullProfile(email)
+  if (found) { return next(badRequest()) }
 
-    const passwordEncrypted = await hash(password, 10)
-    await addUser(email, passwordEncrypted, repos)
+  const passwordEncrypted = await hash(password, 10)
+  await addUser(email, passwordEncrypted, repos)
 
-    const token = signToken({ email })
-    const body = { email, watching: true, repos }
-    success(res, body, setCookieTokenHeader(token))
-  } catch (err) {
-    logErrAndNext500(err, next)
-  }
+  const token = signToken({ email })
+  const body = { email, watching: true, repos }
+  success(res, body, setCookieTokenHeader(token))
 }
 
 function valid (payload) {

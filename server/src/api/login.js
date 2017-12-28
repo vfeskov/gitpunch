@@ -5,24 +5,20 @@ import { validEmail, validPassword } from '../util/validations'
 import { setCookieTokenHeader, signToken } from '../util/token'
 
 export async function login (req, res, next) {
-  try {
-    if (!valid(req.body)) { return next(badRequest()) }
+  if (!valid(req.body)) { return next(badRequest()) }
 
-    const { email, password } = req.body
+  const { email, password } = req.body
 
-    const { found, passwordEncrypted, watching, repos } = await loadFullProfile(email)
-    if (!found) { return next(badRequest()) }
+  const { found, passwordEncrypted, watching, repos } = await loadFullProfile(email)
+  if (!found) { return next(badRequest()) }
 
-    const match = await compareHash(password, passwordEncrypted)
-    if (!match) { return next(badRequest()) }
+  const match = await compareHash(password, passwordEncrypted)
+  if (!match) { return next(badRequest()) }
 
-    const token = signToken({ email })
-    const body = { email, watching, repos }
+  const token = signToken({ email })
+  const body = { email, watching, repos }
 
-    success(res, body, setCookieTokenHeader(token))
-  } catch (err) {
-    logErrAndNext500(err, next)
-  }
+  success(res, body, setCookieTokenHeader(token))
 }
 
 function valid (body) {
