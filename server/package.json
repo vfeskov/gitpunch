@@ -6,7 +6,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack",
     "start": "NODE_ENV=production node build/index",
-    "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"dotenv -e .env nodemon --watch build/index.js build/index.js\""
+    "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"dotenv nodemon --watch build/index.js build/index.js\""
   },
   "author": "Vladimir Feskov",
   "license": "MIT",

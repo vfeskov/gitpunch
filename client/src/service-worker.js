@@ -8,17 +8,15 @@ const workbox = new WorkboxSW({
 workbox.precache([])
 
 self.addEventListener('fetch', event => {
-  // don't do anything
   if (
-    // if request was precached by Workbox
     isPrecached(event) ||
-    // if it's a request for static file that wasn't precached
     isStaticFile(event) ||
-    // if request is for external resource
-    isExternal(event)
+    isExternal(event) ||
+    isGetApi(event)
   ) { return }
 
-  // if it's not a GET request, fire it and update index cache with a delay,
+  // if it's not a GET request, e.g., POST /api/repos to add a repo
+  // to the list, fire it and update index cache. Delay is there
   // because SimpleDB doesn't return updated data right away
   if (event.request.method !== 'GET') {
     return event.respondWith(
@@ -53,6 +51,10 @@ function isStaticFile({ request }) {
 function isExternal({ request }) {
   const url = new URL(request.url)
   return url.origin !== location.origin
+}
+
+function isGetApi({ request }) {
+  return request.method === 'GET' &&  /^\/api\/.+/.test(request.url)
 }
 
 async function updateIndexCache() {
