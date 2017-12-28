@@ -1,29 +1,27 @@
 import { loadFullProfile, addUser } from '../db'
-import { success, internalServerError, badRequest, logAndNextError } from '../util/http'
+import { success, badRequest, logErrAndNext500 } from '../util/http'
 import { hash } from '../util/bcrypt'
 import { validEmail, validPassword, validRepos } from '../util/validations'
 import { setCookieTokenHeader, signToken } from '../util/token'
 
-export function register (req, res, next) {
-  if (!valid(req.body)) { return next(badRequest()) }
+export async function register (req, res, next) {
+  try {
+    if (!valid(req.body)) { return next(badRequest()) }
 
-  const { email, password, repos } = req.body
-  loadFullProfile(email)
-    .then(({ found }) => {
-      if (found) { return { error: badRequest() } }
-      return hash(password, 10)
-        .then(passwordEncrypted => addUser(email, passwordEncrypted, repos))
-        .then(() => ({ token: signToken({ email }) }))
-    })
-    .then(
-      ({ error, token }) => {
-        if (error) { return next(error) }
+    const { email, password, repos } = req.body
 
-        const body = { email, watching: true, repos }
-        success(res)(body, setCookieTokenHeader(token))
-      },
-      logAndNextError(next, internalServerError())
-    )
+    const { found } = await loadFullProfile(email)
+    if (found) { return next(badRequest()) }
+
+    const passwordEncrypted = await hash(password, 10)
+    await addUser(email, passwordEncrypted, repos)
+
+    const token = signToken({ email })
+    const body = { email, watching: true, repos }
+    success(res, body, setCookieTokenHeader(token))
+  } catch (err) {
+    logErrAndNext500(err, next)
+  }
 }
 
 function valid (payload) {

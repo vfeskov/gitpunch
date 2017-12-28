@@ -1,16 +1,17 @@
 import { saveWatching } from '../db'
-import { success, unauthorized, internalServerError, badRequest, logAndNextError } from '../util/http'
+import { success, unauthorized, badRequest, logErrAndNext500 } from '../util/http'
 import { validWatching } from '../util/validations'
 
-export function watching ({ body, token }, res, next) {
-  if (!token) { return next(unauthorized()) }
-  if (!body || !validWatching(body.watching)) { return next(badRequest()) }
+export async function watching ({ body, token }, res, next) {
+  try {
+    if (!token) { return next(unauthorized()) }
+    if (!body || !validWatching(body.watching)) { return next(badRequest()) }
 
-  const { watching } = body
-  const { email } = token
-  saveWatching(email, watching)
-    .then(
-      success(res),
-      logAndNextError(next, internalServerError())
-    )
+    const { watching } = body
+    const { email } = token
+    const payload = await saveWatching(email, watching)
+    success(res, payload)
+  } catch (err) {
+    logErrAndNext500(err, next)
+  }
 }

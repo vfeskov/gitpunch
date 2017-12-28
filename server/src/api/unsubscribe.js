@@ -1,5 +1,5 @@
 import { saveWatching } from '../db'
-import { success, badRequest, internalServerError, logAndNextError } from '../util/http'
+import { success, badRequest, logErrAndNext500 } from '../util/http'
 import { verifyUnsubscribeToken } from '../util/token'
 
 export function unsubscribe ({ body }, res, next) {
@@ -7,15 +7,16 @@ export function unsubscribe ({ body }, res, next) {
 
   verifyUnsubscribeToken(
     body.lambdajwt,
-    (error, data) => {
-      if (error) { return next(badRequest()) }
+    async (error, { email }) => {
+      try {
+        if (error) { return next(badRequest()) }
 
-      saveWatching(data.email, false)
-        .then(() => ({ email: data.email, watching: false }))
-        .then(
-          success(res),
-          logAndNextError(next, internalServerError())
-        )
+        await saveWatching(email, false)
+
+        success(res, { email, watching: false })
+      } catch (err) {
+        logErrAndNext500(err, next)
+      }
     }
   )
 }

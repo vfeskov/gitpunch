@@ -1,21 +1,17 @@
 const { assign } = Object
 
-export function success (res) {
-  return (payload, headers = {}) => {
-    const content = JSON.stringify(payload)
-    res.writeHead(200, assign({
-      'Content-Type': 'application/json',
-      'Content-Length' : Buffer.from(content).length
-    }, headers))
-    res.end(content)
-  }
+export function success (res, payload, headers = {}) {
+  const content = JSON.stringify(payload)
+  res.writeHead(200, assign({
+    'Content-Type': 'application/json',
+    'Content-Length' : Buffer.from(content).length
+  }, headers))
+  res.end(content)
 }
 
-export function logAndNextError (next, error) {
-  return text => {
-    console.error(text)
-    next(error)
-  }
+export function logErrAndNext500 (err, next) {
+  console.error(err)
+  next(internalServerError())
 }
 
 export function internalServerError () {

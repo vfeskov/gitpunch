@@ -1,12 +1,14 @@
 import { loadProfile } from '../db'
-import { internalServerError, unauthorized, success, logAndNextError } from '../util/http'
+import { unauthorized, success, logErrAndNext500 } from '../util/http'
 
-export function profile ({ token }, res, next) {
-  if (!token) { return next(unauthorized()) }
+export async function profile ({ token }, res, next) {
+  try {
+    if (!token) { return next(unauthorized()) }
 
-  const { email } = token
-  loadProfile(email).then(
-    success(res),
-    logAndNextError(next, internalServerError())
-  )
+    const profile  = await loadProfile(token.email)
+
+    success(res, profile)
+  } catch (err) {
+    logErrAndNext500(err, next)
+  }
 }

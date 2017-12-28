@@ -1,33 +1,28 @@
 import { loadFullProfile } from '../db'
-import { success, internalServerError, badRequest, logAndNextError } from '../util/http'
+import { success, logErrAndNext500, badRequest } from '../util/http'
 import { compareHash } from '../util/bcrypt'
 import { validEmail, validPassword } from '../util/validations'
 import { setCookieTokenHeader, signToken } from '../util/token'
 
-export function login ({ body }, res, next) {
-  if (!valid(body)) { return next(badRequest()) }
+export async function login (req, res, next) {
+  try {
+    if (!valid(req.body)) { return next(badRequest()) }
 
-  const { email, password } = body
-  loadFullProfile(email)
-    .then(({ found, passwordEncrypted, watching, repos }) => {
-      const error = badRequest()
-      if (!found) { return { error } }
+    const { email, password } = req.body
 
-      return compareHash(password, passwordEncrypted)
-        .then(match => match ?
-          { token: signToken({ email }), watching, repos } :
-          { error }
-        )
-    })
-    .then(
-      ({ error, token, watching, repos }) => {
-        if (error) { return next(error) }
+    const { found, passwordEncrypted, watching, repos } = await loadFullProfile(email)
+    if (!found) { return next(badRequest()) }
 
-        const body = { email, watching, repos }
-        success(res)(body, setCookieTokenHeader(token))
-      },
-      logAndNextError(next, internalServerError())
-    )
+    const match = await compareHash(password, passwordEncrypted)
+    if (!match) { return next(badRequest()) }
+
+    const token = signToken({ email })
+    const body = { email, watching, repos }
+
+    success(res, body, setCookieTokenHeader(token))
+  } catch (err) {
+    logErrAndNext500(err, next)
+  }
 }
 
 function valid (body) {
