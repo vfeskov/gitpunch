@@ -6,8 +6,6 @@ export async function watching ({ body, token }, res, next) {
   if (!token) { return next(unauthorized()) }
   if (!body || !validWatching(body.watching)) { return next(badRequest()) }
 
-  const { watching } = body
-  const { email } = token
-  const payload = await saveWatching(email, watching)
+  const payload = await saveWatching(token.email, body.watching)
   success(res, payload)
 }

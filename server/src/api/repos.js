@@ -7,8 +7,7 @@ export async function create ({ body, token }, res, next) {
   if (!body || !validRepo(body.repo)) { return next(badRequest()) }
 
   const { repo } = body
-  const { email } = token
-  const { repos } = await loadProfile(email)
+  const { repos } = await loadProfile(token.email)
   if (repos.includes(repo)) { return success(res, repos) }
 
   const newRepos = await saveRepos(email, [repo].concat(repos))

@@ -9,9 +9,7 @@ export function prerenderClient () {
     if (method !== 'GET') { return next() }
 
     const profile = token && token.email && await loadProfile(token.email).catch(() => null)
-
     const { html, state, css } = renderToStrings(profile)
-
     const content = layout
       .replace(
         '<div id="root"></div>',
@@ -25,7 +23,6 @@ export function prerenderClient () {
         '<body>',
         `<body><style id="jss-server-side">${css}</style>`
       )
-
     res.writeHead(200, {
       'Content-Type': 'text-html',
       'Content-Length': Buffer.from(content).length
