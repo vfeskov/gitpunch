@@ -5,10 +5,10 @@ import { loadProfile } from './db'
 export function prerenderClient () {
   const layout = fs.readFileSync('./public/layout.html').toString()
 
-  return async (req, res, next) => {
-    if (req.method !== 'GET') { return next() }
+  return async ({ method, token }, res, next) => {
+    if (method !== 'GET') { return next() }
 
-    const profile = await getProfile(req)
+    const profile = token && token.email && await loadProfile(token.email).catch(() => null)
 
     const { html, state, css } = renderToStrings(profile)
 
@@ -31,14 +31,5 @@ export function prerenderClient () {
       'Content-Length': Buffer.from(content).length
     })
     res.end(content)
-  }
-}
-
-async function getProfile ({ token }) {
-  try {
-    if (!token) { return null }
-    return await loadProfile(token.email)
-  } catch (err) {
-    return null
   }
 }
