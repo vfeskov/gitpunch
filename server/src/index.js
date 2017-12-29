@@ -1,6 +1,7 @@
 import http from 'http'
 import parseCookies from 'cookie-parser'
 import parseBody from 'body-parser'
+import compression from 'compression'
 import { parseToken } from './parseToken'
 import { api } from './api'
 import { error } from './error'
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const middlewares = [
+  compression(),
   parseCookies(),
   parseBody.json(),
   parseToken,
