@@ -12,11 +12,11 @@ workbox.precache([])
 // cache index.html when service worker gets installed
 self.addEventListener('install', updateIndexCache)
 
-// the listener catches all http requests coming from
-// the browser at my website
+// listen to all http requests coming from
+// the browser on my website
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url)
-  // I want to let event through without modifying if
+  // I want to let event through without modifying it if
   // any of the following conditions are met
   if (
     // if it's a request for a precached file
@@ -29,8 +29,7 @@ self.addEventListener('fetch', event => {
     isGetApi(event, url)
   ) { return }
 
-  // when an API action happens, for example,
-  // "DELETE /api/session" that logs user out,
+  // when an API action happens, e.g., "DELETE /logout" that logs user out,
   // I let the request through and update index.html cache after it's done.
   // Delay is there because SimpleDB doesn't return updated data right away
   if (event.request.method !== 'GET') {
@@ -38,18 +37,6 @@ self.addEventListener('fetch', event => {
       fetch(event.request)
         .then(response => {
           setTimeout(updateIndexCache, 1000)
-          return response
-        })
-    )
-  }
-
-  // if it's not a GET request, e.g., POST /api/repos to add a repo
-  // to the list, fire it and update index cache.
-  if (event.request.method !== 'GET') {
-    return event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          updateIndexCache()
           return response
         })
     )
@@ -79,8 +66,6 @@ function isExternal({ origin }) {
   return origin !== location.origin
 }
 
-// if your api has a different prefix, e.g., /api/v1/,
-// just update RegExp accordingly
 function isGetApi({ request }, { pathname }) {
   return request.method === 'GET' && /^\/api\/.+/.test(pathname)
 }
