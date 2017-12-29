@@ -5,20 +5,34 @@ const workbox = new WorkboxSW({
   clientsClaim: true
 })
 
+// following array will be filled with filenames
+// from `build/` folder when `generate-sw` script runs
 workbox.precache([])
 
+// cache index.html when service worker gets installed
+self.addEventListener('install', updateIndexCache)
+
+// the listener catches all http requests coming from
+// the browser at my website
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url)
+  // I want to let event through without modifying if
+  // any of the following conditions are met
   if (
+    // if it's a request for a precached file
     isPrecached(url) ||
+    // if it's a request for a static file (not index.html)
     isStaticFile(url) ||
+    // if it's an external request to another domain
     isExternal(url) ||
+    // if it's a GET request to /api/* url
     isGetApi(event, url)
   ) { return }
 
-  // if it's not a GET request, e.g., POST /api/repos to add a repo
-  // to the list, fire it and update index cache. Delay is there
-  // because SimpleDB doesn't return updated data right away
+  // when an API action happens, for example,
+  // "DELETE /api/session" that logs user out,
+  // I let the request through and update index.html cache after it's done.
+  // Delay is there because SimpleDB doesn't return updated data right away
   if (event.request.method !== 'GET') {
     return event.respondWith(
       fetch(event.request)
@@ -29,8 +43,20 @@ self.addEventListener('fetch', event => {
     )
   }
 
-  // otherwise ignore the original request and fetch index.html,
-  // updating index cache in parallel
+  // if it's not a GET request, e.g., POST /api/repos to add a repo
+  // to the list, fire it and update index cache.
+  if (event.request.method !== 'GET') {
+    return event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          updateIndexCache()
+          return response
+        })
+    )
+  }
+
+  // I serve index.html network-first on any request that
+  // reaches this line
   event.respondWith(
     fetch(indexRequest())
       .then(response => {
@@ -53,6 +79,8 @@ function isExternal({ origin }) {
   return origin !== location.origin
 }
 
+// if your api has a different prefix, e.g., /api/v1/,
+// just update RegExp accordingly
 function isGetApi({ request }, { pathname }) {
   return request.method === 'GET' && /^\/api\/.+/.test(pathname)
 }
