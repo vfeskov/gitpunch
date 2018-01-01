@@ -2,7 +2,7 @@
 
 A webservice to watch for releases on GitHub.
 
-<a href="https://beer.vfeskov.com"><img src="http://i.pi.gy/b0ggq.png" width="708px" /></a>
+<a href="https://beer.vfeskov.com"><img src="http://i.pi.gy/DoDYG.png" width="698px" /></a>
 
 Emails look like this:
 
