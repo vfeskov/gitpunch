@@ -95,7 +95,7 @@ Open `lambda/.env` in a text editor and fill in the variables:
 |`FROM`|Sender email address|
 |`GITHUB_ACCESS_TOKEN`|GitHub [access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) with `public_repo` scope|
 |`GITHUB_API_USER_AGENT`|User-Agent header to send to GitHub API|
-|`JWT_RSA_PRIVATE_KEY`|Lambda's RSA **private** to sign links inside emails. You can make a key pair like [this](https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9). IMPORTANT: newlines in it has to  be replaced with `\n` characters|
+|`JWT_RSA_PRIVATE_KEY`|Lambda's RSA **private** key to sign links inside emails. You can make a key pair like [this](https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9). IMPORTANT: newlines in it has to  be replaced with `\n` characters|
 |`SDB_DOMAIN_NAME`|SimpleDB domain name|
 |`SDB_ENDPOINT`|SimpleDB endpoint|
 |`SDB_REGION`|SimpleDB region|
