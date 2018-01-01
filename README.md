@@ -2,10 +2,11 @@
 
 A webservice to watch for releases on GitHub.
 
-<img src="http://i.pi.gy/b0ggq.png"/>
+<a href="https://beer.vfeskov.com"><img src="http://i.pi.gy/b0ggq.png" width="708px" /></a>
 
 Emails look like this:
-<img src="http://i.pi.gy/Wmnnp.png"/>
+
+<a href="https://beer.vfeskov.com"><img src="http://i.pi.gy/Wmnnp.png" width="444px" /></a>
 
 ## How to use
 
