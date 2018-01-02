@@ -10,7 +10,7 @@ export async function create ({ body, token }, res, next) {
   const { repos } = await loadProfile(token.email)
   if (repos.includes(repo)) { return success(res, repos) }
 
-  const newRepos = await saveRepos(email, [repo].concat(repos))
+  const newRepos = await saveRepos(token.email, [repo].concat(repos))
   success(res, newRepos)
 }
 
@@ -20,11 +20,10 @@ export async function remove ({ params, token }, res, next) {
     if (!params || !validRepo(params.repo)) { return next(badRequest()) }
 
     const { repo } = params
-    const { email } = token
-    const { repos } = await loadProfile(email)
+    const { repos } = await loadProfile(token.email)
     if (!repos.includes(repo)) { return success(res, repos) }
 
-    const newRepos = await saveRepos(email, repos.filter(r => r !== repo))
+    const newRepos = await saveRepos(token.email, repos.filter(r => r !== repo))
     success(res, newRepos)
   } catch (err) {
     logErrAndNext500(err, next)
