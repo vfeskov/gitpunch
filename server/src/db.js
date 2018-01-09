@@ -1,112 +1,46 @@
-import { SimpleDB } from 'aws-sdk'
+import { MongoClient, ObjectID } from 'mongodb'
+const url = process.env.WAB_MONGODB_URL
+const dbName = process.env.WAB_MONGODB_DBNAME
+const collectionName = process.env.WAB_MONGODB_COLLECTIONNAME
 const { assign } = Object
 
-process.env.AWS_ACCESS_KEY_ID = process.env.WAB_AWS_ACCESS_KEY_ID
-process.env.AWS_SECRET_ACCESS_KEY = process.env.WAB_AWS_SECRET_ACCESS_KEY
-const DomainName = process.env.WAB_SDB_DOMAIN_NAME
-const simpleDb = new SimpleDB({
-  region: process.env.WAB_SDB_REGION,
-  endpoint: process.env.WAB_SDB_ENDPOINT
-})
+const collectionPrms = (async () => {
+  const client = await MongoClient.connect(url)
+  return client.db(dbName).collection(collectionName)
+})()
 
-export function loadFullProfile (email, callback) {
-  return new Promise((resolve, error) => {
-    simpleDb.getAttributes(
-      { DomainName, ItemName: email },
-      (err, data) => {
-        if (err) { return error(err) }
-        const { Attributes } = data
-        if (!Attributes) {
-          return resolve(assign({ email, found: false }))
-        }
-        const { watching, repos, passwordEncrypted } = flattenAttrs(Attributes)
-        resolve({
-          email,
-          found: true,
-          passwordEncrypted,
-          watching: watching === '1' ? true : false,
-          repos: repos ? repos.split(',') : []
-        })
-      }
-    )
-  })
+export async function load (params) {
+  const collection = await collectionPrms
+  const user = await collection.findOne(query(params))
+  return withId(user)
 }
 
-export function addUser (email, passwordEncrypted, repos) {
-  return new Promise((resolve, error) => {
-    simpleDb.putAttributes({
-      DomainName,
-      ItemName: email,
-      Attributes: [
-        { Name: 'passwordEncrypted', Value: passwordEncrypted },
-        { Name: 'repos', Value: repos.join(',') },
-        { Name: 'watching', Value: '1' }
-      ]
-    }, (err, data) => {
-      if (err) { return error(err) }
-      resolve(data)
-    })
-  })
+export async function create (email, passwordEncrypted, repos) {
+  const collection = await collectionPrms
+  const _id = ObjectID()
+  const user = {
+    _id,
+    email,
+    passwordEncrypted,
+    repos,
+    watching: true
+  }
+  await collection.insertOne(user)
+  return withId(user)
 }
 
-export function loadProfile (email) {
-  return new Promise((resolve, error) => {
-    simpleDb.getAttributes(
-      { DomainName, ItemName: email, AttributeNames: ['repos', 'watching'] },
-      (err, data) => {
-        if (err) { return error(err) }
-        const { Attributes } = data
-        if (!Attributes) { return error('User not found') }
-        const { watching, repos } = flattenAttrs(Attributes)
-        resolve({
-          email,
-          watching: watching === '1' ? true : false,
-          repos: repos ? repos.split(',') : []
-        })
-      }
-    )
-  })
+export async function update (params, attrs) {
+  const collection = await collectionPrms
+  return collection.updateOne(
+    query(params),
+    { $set: attrs }
+  )
 }
 
-export function saveRepos (email, repos) {
-  const Value = repos.map(r => r.replace(',', '')).join(',')
-  return new Promise((resolve, error) => {
-    simpleDb.putAttributes(
-      {
-        DomainName,
-        ItemName: email,
-        Attributes: [
-          { Name: 'repos', Value, Replace: true }
-        ]
-      },
-      err => {
-        if (err) { return error(err) }
-        resolve(repos)
-      }
-    )
-  })
+function query ({ id, email }) {
+  return id ? { _id: ObjectID(id) } : { email }
 }
 
-export function saveWatching (email, watching) {
-  return new Promise((resolve, error) => {
-    simpleDb.putAttributes(
-      {
-        DomainName,
-        ItemName: email,
-        Attributes: [
-          { Name: 'watching', Value: watching ? '1' : '0', Replace: true }
-        ]
-      },
-      err => {
-        if (err) { return error(err) }
-        resolve({ email, watching })
-      }
-    )
-  })
-}
-
-export function flattenAttrs (attrs) {
-  return attrs.reduce((res, attr) =>
-    assign(res, { [attr.Name]: attr.Value }),
-  {});
+function withId (user) {
+  return user && assign(user, { id: user._id.toString() })
 }

@@ -1,11 +1,10 @@
 const path = require('path')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
-const plugins = process.env.PROD ? [new UglifyJSPlugin()] : []
+const nodeExternals = require('webpack-node-externals')
 
 const config = {
   target: 'node',
   entry: './index',
-  context: path.resolve(__dirname),
+  context: path.resolve(__dirname, 'src'),
   output: {
     filename: 'index.js',
     path: path.join(__dirname, 'build'),
@@ -23,9 +22,9 @@ const config = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts']
   },
-  plugins
+  externals: [nodeExternals()]
 }
 
 module.exports = config

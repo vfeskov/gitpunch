@@ -5,13 +5,10 @@ const { assign, keys } = Object
 
 export function api () {
   const routes = prepareRoutes(rawRoutes)
-
   return async (req, res, next) => {
     const route = routes.find(routeMatchesRequest(req))
     if (!route) { return next() }
-
     parseRouteParams(req, route)
-
     try {
       await route.handler(req, res, next)
     } catch (err) {
