@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb'
+import loadUsers from './parts/loadUsers'
 import groupByRepo from './parts/groupByRepo'
 import fetchTags from './parts/fetchTags'
 import backToUsers from './parts/backToUsers'
@@ -16,7 +17,7 @@ export async function handler (event, context, callback) {
     log('start')
     const client = await MongoClient.connect(url)
     const collection = client.db(dbName).collection(collectionName)
-    const dbUsers = await collection.find({}, { passwordEncrypted: 0 }).toArray() as DBUser[]
+    const dbUsers = await loadUsers(collection)
     log('dbUsers', dbUsers)
     const byRepo = groupByRepo(dbUsers)
     const byRepoWithTags = await fetchTags(byRepo)

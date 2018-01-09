@@ -23,8 +23,7 @@ export async function create (email, passwordEncrypted, repos) {
     email,
     passwordEncrypted,
     repos,
-    watching: true,
-    alerted: {}
+    watching: true
   }
   await collection.insertOne(user)
   return withId(user)

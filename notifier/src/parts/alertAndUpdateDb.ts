@@ -62,10 +62,11 @@ export async function updateDb (user: ActionableUser, collection: Collection): P
     return newAlerted
   }, {}) as Alerted
   Object.assign(alerted, newAlerted)
+  const alertedAsArray = Object.keys(alerted).map(repo => [repo, alerted[repo]])
   log('updateDb', { _id, alerted })
   return collection.updateOne(
     { _id: user._id },
-    { $set: { alerted } }
+    { $set: { alerted: alertedAsArray } }
   )
 }
 
