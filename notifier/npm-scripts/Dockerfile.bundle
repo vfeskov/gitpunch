@@ -1,0 +1,9 @@
+FROM node:6-alpine
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+ADD ./node_modules ./node_modules
+ADD ./package.json ./package.json
+ADD ./package-lock.json ./package-lock.json
+RUN npm prune --production

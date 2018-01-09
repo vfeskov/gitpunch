@@ -42,7 +42,7 @@ export function createRepo (repo) {
         throw error
       })
       .then(
-        json => dispatch(receiveCreateRepo(json)),
+        json => dispatch(receiveCreateRepo(json.repos)),
         error => dispatch(errorCreateRepo(error))
       )
   }
@@ -79,7 +79,7 @@ export function deleteRepo (repo) {
         throw error
       })
       .then(
-        json => dispatch(receiveDeleteRepo(json)),
+        json => dispatch(receiveDeleteRepo(json.repos)),
         error => dispatch(errorDeleteRepo(error))
       )
   }

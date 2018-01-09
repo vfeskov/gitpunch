@@ -1,0 +1,27 @@
+{
+  "name": "win-a-beer-notifier",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "bundle": "time sh ./npm-scripts/bundle.sh",
+    "build": "webpack",
+    "start": "source .env && node -e \"require('./build').handler(null, null, console.log)\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "jsonwebtoken": "^8.1.0",
+    "mongodb": "^3.0.1",
+    "node-fetch": "^1.7.3"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^2.2.18",
+    "@types/node-fetch": "^1.6.7",
+    "awesome-typescript-loader": "^3.4.1",
+    "aws-sdk": "^2.177.0",
+    "typescript": "^2.6.2",
+    "webpack": "^3.9.1",
+    "webpack-node-externals": "^1.6.0"
+  }
+}

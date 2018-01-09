@@ -1,15 +1,14 @@
 import fs from 'fs'
 import { renderToStrings } from '../../client/src/renderToStrings'
-import { loadProfile } from './db'
+import { load } from './db'
+import { serialize } from './util/serialize'
 
 export function prerenderClient () {
   const layout = fs.readFileSync('./public/layout.html').toString()
-
   return async ({ method, token }, res, next) => {
     if (method !== 'GET') { return next() }
-
-    const profile = token && token.email && await loadProfile(token.email).catch(() => null)
-    const { html, state, css } = renderToStrings(profile)
+    const user = token && await load(token).catch(() => null)
+    const { html, state, css } = renderToStrings(serialize(user))
     const content = layout
       .replace(
         '<div id="root"></div>',
