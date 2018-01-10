@@ -18,7 +18,8 @@ To **unsubscribe** from emails just click on "*unsubscribe*" link in any of the 
 
 ## Further plans
 
+0. Optional authentication using GitHub account
 1. Configurable frequency of checks - hourly or daily, only selected hours / days
 2. Browser extensions to allow subscribing right from a GitHub page
 
-Star to support ♥
+Support me with a star ♥
