@@ -3,7 +3,7 @@ import { prepareRoutes, routeMatchesRequest, parseRouteParams } from '../util/ro
 import { logErrAndNext500 } from '../util/http'
 const { assign, keys } = Object
 
-export function api () {
+export default function api () {
   const routes = prepareRoutes(rawRoutes)
   return async (req, res, next) => {
     const route = routes.find(routeMatchesRequest(req))

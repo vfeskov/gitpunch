@@ -12,13 +12,13 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionCreators from '../actions'
 
-function ReposComponent ({ loggedIn, shownRepos, watching, toggleWatching, removeRepo, classes, className }) {
+function ReposComponent ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, classes, className }) {
   const title = !shownRepos.length ?
     'Not watching any repo yet' :
-    !loggedIn ?
-      'Register to start watching' :
+    !signedIn ?
+      'Sign in to start watching' :
       watching ? 'Watching' : 'Not watching'
-  const header = loggedIn && shownRepos.length ? (
+  const header = signedIn && shownRepos.length ? (
     <FormControlLabel
       classes={{ label: classes.titleLabel }}
       control={
@@ -38,7 +38,7 @@ function ReposComponent ({ loggedIn, shownRepos, watching, toggleWatching, remov
       {shownRepos.map(repo =>
         <div className={classes.item} key={repo}>
           <a href={`https://github.com/${repo}`} target="_blank">{repo}</a>
-          <IconButton aria-label="Delete" onClick={() => removeRepo(loggedIn, repo)}>
+          <IconButton aria-label="Delete" onClick={() => removeRepo(signedIn, repo)}>
             <DeleteIcon />
           </IconButton>
         </div>
@@ -49,7 +49,7 @@ function ReposComponent ({ loggedIn, shownRepos, watching, toggleWatching, remov
 
 ReposComponent.propTypes = {
   className: PropTypes.string,
-  loggedIn: PropTypes.bool.isRequired,
+  signedIn: PropTypes.bool.isRequired,
   shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
   removeRepo: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
@@ -69,7 +69,7 @@ const ReposComponentWithStyles = withStyles(styles)(ReposComponent)
 
 export const Repos = connect(
   state => ({
-    loggedIn: state.loggedIn,
+    signedIn: state.signedIn,
     shownRepos: state.shownRepos,
     watching: state.watching
   }),

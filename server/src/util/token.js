@@ -23,9 +23,9 @@ export function verifyUnsubscribeToken (token) {
 }
 
 export function setCookieTokenHeader (token) {
-  return { 'Set-Cookie': `token=${token}; Path=/; HttpOnly; SameSite=Lax` }
+  return `token=${token}; Path=/; HttpOnly; SameSite=Lax`
 }
 
 export function unsetCookieTokenHeader () {
-  return { 'Set-Cookie': 'token=; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT' }
+  return 'token=; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
 }

@@ -1,7 +1,7 @@
 import fs from 'fs'
-import { renderToStrings } from '../../client/src/renderToStrings'
-import { load } from './db'
-import { serialize } from './util/serialize'
+import { renderToStrings } from '../../../client/src/renderToStrings'
+import { load } from '../db'
+import serialize from '../util/serialize'
 
 export function prerenderClient () {
   const layout = fs.readFileSync('./public/layout.html').toString()

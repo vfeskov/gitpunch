@@ -2,12 +2,12 @@ export function setRepoAddValue (value) {
   return { type: 'SET_REPO_ADD_VALUE', value }
 }
 
-export function addRepo (loggedIn, repo) {
-  return loggedIn ? createRepo(repo) : addRepoToBuffer(repo)
+export function addRepo (signedIn, repo) {
+  return signedIn ? createRepo(repo) : addRepoToBuffer(repo)
 }
 
-export function removeRepo (loggedIn, repo) {
-  return loggedIn ? deleteRepo(repo) : removeRepoFromBuffer(repo)
+export function removeRepo (signedIn, repo) {
+  return signedIn ? deleteRepo(repo) : removeRepoFromBuffer(repo)
 }
 
 export function requestCreateRepo () {

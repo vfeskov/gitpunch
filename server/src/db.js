@@ -15,16 +15,13 @@ export async function load (params) {
   return withId(user)
 }
 
-export async function create (email, passwordEncrypted, repos) {
+export async function create (params) {
   const collection = await collectionPrms
   const _id = ObjectID()
-  const user = {
+  const user = assign({}, params, {
     _id,
-    email,
-    passwordEncrypted,
-    repos,
     watching: true
-  }
+  })
   await collection.insertOne(user)
   return withId(user)
 }

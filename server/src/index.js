@@ -2,16 +2,17 @@ import http from 'http'
 import parseCookies from 'cookie-parser'
 import parseBody from 'body-parser'
 import compression from 'compression'
-import { parseToken } from './parseToken'
-import { api } from './api'
-import { error } from './error'
-import { chain } from './util/chain'
+import api from './api-middleware'
+import parseParams from './other-middlewares/parseParams'
+import parseToken from './other-middlewares/parseToken'
+import error from './other-middlewares/error'
+import chain from './util/chain'
 
 const envSpecificMiddlewares = []
 
 if (process.env.NODE_ENV === 'production') {
   const serveStatic = require('serve-static')
-  const { prerenderClient } = require('./prerenderClient')
+  const { prerenderClient } = require('./other-middlewares/prerenderClient')
 
   envSpecificMiddlewares.push(
     serveStatic('./public'),
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const middlewares = [
   compression(),
+  parseParams,
   parseCookies(),
   parseBody.json(),
   parseToken,

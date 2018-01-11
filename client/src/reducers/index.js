@@ -4,7 +4,7 @@ import { watching } from './watching'
 import { email } from './email'
 import { bufferRepos } from './bufferRepos'
 import { savedRepos } from './savedRepos'
-import { loggedIn } from './loggedIn'
+import { signedIn } from './signedIn'
 import { inited } from './inited'
 import { unsubscribeMessage } from './unsubscribeMessage'
 
@@ -14,16 +14,16 @@ const allButShownRepos = combineReducers({
   repoAdd,
   bufferRepos,
   savedRepos,
-  loggedIn,
+  signedIn,
   watching,
   unsubscribeMessage
 })
 
 export function reducer (prevState, action) {
   const state = allButShownRepos(prevState, action)
-  const { loggedIn, savedRepos, bufferRepos } = state
+  const { signedIn, savedRepos, bufferRepos } = state
   return {
     ...state,
-    shownRepos: loggedIn ? savedRepos : bufferRepos
+    shownRepos: signedIn ? savedRepos : bufferRepos
   }
 }

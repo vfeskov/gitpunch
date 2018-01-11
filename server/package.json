@@ -19,6 +19,7 @@
     "finalhandler": "^1.1.0",
     "jsonwebtoken": "^8.1.0",
     "mongodb": "^3.0.1",
+    "node-fetch": "^1.7.3",
     "react": "^16.2.0",
     "serve-static": "^1.13.1"
   },

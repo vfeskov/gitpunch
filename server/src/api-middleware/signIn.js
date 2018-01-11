@@ -3,17 +3,24 @@ import { success, badRequest, logErrAndNext500 } from '../util/http'
 import { hash } from '../util/bcrypt'
 import { validEmail, validPassword, validRepos } from '../util/validations'
 import { setCookieTokenHeader, signToken } from '../util/token'
-import { serialize } from '../util/serialize'
+import serialize from '../util/serialize'
+import { compareHash } from '../util/bcrypt'
 
-export async function register (req, res, next) {
+export default async function signIn (req, res, next) {
   if (!valid(req.body)) { return next(badRequest()) }
   const { email, password, repos } = req.body
-  const found = await load({ email })
-  if (found) { return next(badRequest()) }
-  const passwordEncrypted = await hash(password, 10)
-  const user = await create(email, passwordEncrypted, repos)
+  let user = await load({ email })
+  if (user) {
+    if (!user.passwordEncrypted) { return next(badRequest()) }
+    const match = await compareHash(password, user.passwordEncrypted)
+    if (!match) { return next(badRequest()) }
+  } else {
+    const passwordEncrypted = await hash(password, 10)
+    user = await create({ email, passwordEncrypted, repos })
+  }
   const token = signToken({ id: user.id })
-  success(res, serialize(user), setCookieTokenHeader(token))
+  const headers = { 'Set-Cookie': setCookieTokenHeader(token) }
+  success(res, serialize(user), headers)
 }
 
 function valid (payload) {

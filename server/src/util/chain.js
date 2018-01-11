@@ -1,4 +1,4 @@
-export function chain (middlewares) {
+export default function chain (middlewares) {
   return (req, res) => {
     [...middlewares] // need to copy array because #reverse mutates it
       .reverse()

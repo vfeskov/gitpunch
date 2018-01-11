@@ -4,7 +4,7 @@ export function prepareRoutes (routes) {
   return keys(routes)
     .map(route => {
       const [method, url] = route.split(' ', 2)
-      const urlRegExp = new RegExp(`^${url.replace(/\:[^\/]+/g, '([^/]+)')}$`)
+      const urlRegExp = new RegExp(`^${url.replace(/\:[^\/]+/g, '([^/]+)')}(\\?.+)?$`)
       const paramNames = (url.match(/\:[^\/]+/g) || []).map(n => n.substr(1))
       const handler = routes[route]
       return { method, url, urlRegExp, paramNames, handler }

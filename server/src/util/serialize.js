@@ -1,7 +1,8 @@
-export function serialize (user) {
+export default function serialize (user) {
   return user && {
     email: user.email,
     watching: user.watching,
-    repos: user.repos
+    repos: user.repos,
+    hasAccessToken: !!user.accessToken
   }
 }

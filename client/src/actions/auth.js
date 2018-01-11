@@ -1,20 +1,20 @@
-export const requestLogout = () => ({
-  type: 'REQUEST_LOGOUT'
+export const requestSignOut = () => ({
+  type: 'REQUEST_SIGN_OUT'
 })
 
-export const receiveLogout = () => ({
-  type: 'RECEIVE_LOGOUT'
+export const receiveSignOut = () => ({
+  type: 'RECEIVE_SIGN_OUT'
 })
 
-export const errorLogout = error => ({
-  type: 'ERROR_LOGOUT',
+export const errorSignOut = error => ({
+  type: 'ERROR_SIGN_OUT',
   error
 })
 
-export function logout () {
+export function signOut () {
   return dispatch => {
-    dispatch(requestLogout())
-    return fetch('/api/logout', {
+    dispatch(requestSignOut())
+    return fetch('/api/sign_out', {
       method: 'DELETE',
       credentials: 'same-origin'
     })
@@ -25,30 +25,30 @@ export function logout () {
         throw error
       })
       .then(
-        () => dispatch(receiveLogout()),
-        error => dispatch(errorLogout(error))
+        () => dispatch(receiveSignOut()),
+        error => dispatch(errorSignOut(error))
       )
   }
 }
 
-export const requestRegister = () => ({
-  type: 'REQUEST_REGISTER'
+export const requestSignIn = () => ({
+  type: 'REQUEST_SIGN_IN'
 })
 
-export const receiveRegister = profile => ({
-  type: 'RECEIVE_REGISTER',
+export const receiveSignIn = profile => ({
+  type: 'RECEIVE_SIGN_IN',
   profile
 })
 
-export const errorRegister = error => ({
-  type: 'ERROR_REGISTER',
+export const errorSignIn = error => ({
+  type: 'ERROR_SIGN_IN',
   error
 })
 
-export function register (email, password, repos) {
+export function signIn (email, password, repos) {
   return dispatch => {
-    dispatch(requestRegister())
-    return fetch('/api/register', {
+    dispatch(requestSignIn())
+    return fetch('/api/sign_in', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
@@ -69,51 +69,8 @@ export function register (email, password, repos) {
         throw error
       })
       .then(
-        profile => dispatch(receiveRegister(profile)),
-        error => dispatch(errorRegister(error))
-      )
-  }
-}
-
-export const requestLogin = () => ({
-  type: 'REQUEST_LOGIN'
-})
-
-export const receiveLogin = profile => ({
-  type: 'RECEIVE_LOGIN',
-  profile
-})
-
-export const errorLogin = error => ({
-  type: 'ERROR_LOGIN',
-  error
-})
-
-export function login (email, password, buffer) {
-  return dispatch => {
-    dispatch(requestLogin())
-    return fetch('/api/login', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
-    })
-      .then(response => {
-        if (response.status === 200) {
-          return response.json()
-        }
-        const error = new Error(response.statusText)
-        error.status = response.status
-        throw error
-      })
-      .then(
-        profile => dispatch(receiveLogin(profile)),
-        error => dispatch(errorLogin(error))
+        profile => dispatch(receiveSignIn(profile)),
+        error => dispatch(errorSignIn(error))
       )
   }
 }
