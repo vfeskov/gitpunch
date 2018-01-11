@@ -29,14 +29,13 @@ self.addEventListener('fetch', event => {
     isGetApi(event, url)
   ) { return }
 
-  // when an API action happens, e.g., "DELETE /logout" that logs user out,
+  // when an API action happens, e.g., "DELETE /sign_out" that signs user out,
   // I let the request through and update index.html cache after it's done.
-  // Delay is there because SimpleDB doesn't return updated data right away
   if (event.request.method !== 'GET') {
     return event.respondWith(
       fetch(event.request)
         .then(response => {
-          setTimeout(updateIndexCache, 1000)
+          updateIndexCache()
           return response
         })
     )
