@@ -7,6 +7,7 @@ import { savedRepos } from './savedRepos'
 import { signedIn } from './signedIn'
 import { inited } from './inited'
 import { unsubscribeMessage } from './unsubscribeMessage'
+import hasAccessToken from './hasAccessToken'
 
 const allButShownRepos = combineReducers({
   email,
@@ -16,7 +17,8 @@ const allButShownRepos = combineReducers({
   savedRepos,
   signedIn,
   watching,
-  unsubscribeMessage
+  unsubscribeMessage,
+  hasAccessToken
 })
 
 export function reducer (prevState, action) {

@@ -20,7 +20,7 @@ export default class SignedOut extends Component {
     const { classes, bufferRepos } = this.props
     const { email, password } = this.state
     return <div>
-      <GitHubButton bufferRepos={bufferRepos} />
+      <GitHubButton bufferRepos={bufferRepos} text="Sign In with GitHub"/>
       <div className={classes.or}>or</div>
       <form onSubmit={e => this.signIn(e)} className={classes.form}>
         <FormControl required className={classes.formControl}>

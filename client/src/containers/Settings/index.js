@@ -12,11 +12,11 @@ import * as actionCreators from '../../actions'
 
 class SettingsComponent extends Component {
   render () {
-    const { bufferRepos, signedIn, email, signOut, signIn, className, classes } = this.props
+    const { bufferRepos, signedIn, email, signOut, signIn, className, classes, hasAccessToken } = this.props
     return (
       <Paper className={className}>
         {signedIn ? (
-          SignedIn({ signOut, classes, email })
+          SignedIn({ signOut, classes, email, hasAccessToken })
         ) : (
           <SignedOut signIn={signIn} classes={classes} bufferRepos={bufferRepos} />
         )}
@@ -41,7 +41,8 @@ export const Settings = connect(
     signedIn: state.signedIn,
     bufferRepos: state.bufferRepos,
     watching: state.watching,
-    email: state.email
+    email: state.email,
+    hasAccessToken: state.hasAccessToken
   }),
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(SettingsComponentWithStyles)
