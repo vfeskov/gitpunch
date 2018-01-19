@@ -57,7 +57,7 @@ async function fetchThem(repo: string, users: User[], revoked: (user: User) => v
 }
 
 function attemptFetch (repo: string, accessToken: string) {
-  log('attemptFetch', { repo, accessToken })
+  log('attemptFetch', { repo })
   const url = `https://api.github.com/repos/${ repo }/tags?access_token=${ accessToken }`
   return fetch(url, { headers: { 'User-Agent': userAgent } })
 }
