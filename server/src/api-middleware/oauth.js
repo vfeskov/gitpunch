@@ -81,7 +81,7 @@ async function getAccessToken (code, state) {
 }
 
 async function getEmail (accessToken) {
-  const response = await fetch('https://api.github.com/user/public_emails', {
+  const response = await fetch('https://api.github.com/user/emails', {
     headers: {
       Authorization: `token ${accessToken}`,
       Accept: 'application/json'
