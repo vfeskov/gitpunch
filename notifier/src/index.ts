@@ -3,9 +3,9 @@ import loadUsers from './parts/loadUsers'
 import groupByRepo from './parts/groupByRepo'
 import fetchTags from './parts/fetchTags'
 import backToUsers from './parts/backToUsers'
-import { DBUser } from './parts/interfaces'
-import findActionableUsers from './parts/findActionableUsers';
-import alertAndUpdateDb from './parts/alertAndUpdateDb'
+import findUsersToAlert from './parts/findUsersToAlert'
+import combineActionableUsers from './parts/combineActionableUsers'
+import sendEmailAndUpdateDb from './parts/sendEmailAndUpdateDb'
 import log from './parts/log'
 const url = process.env.MONGODB_URL
 const dbName = process.env.MONGODB_DBNAME
@@ -20,11 +20,12 @@ export async function handler (event, context, callback) {
     const dbUsers = await loadUsers(collection)
     log('dbUsers', dbUsers)
     const byRepo = groupByRepo(dbUsers)
-    const byRepoWithTags = await fetchTags(byRepo)
+    const { byRepoWithTags, revokedTokenUsers } = await fetchTags(byRepo)
     const fullUsers = backToUsers(byRepoWithTags)
-    const actionableUsers = findActionableUsers(fullUsers)
+    const usersToAlert = findUsersToAlert(fullUsers)
+    const actionableUsers = combineActionableUsers(usersToAlert, revokedTokenUsers)
     log('actionableUsers', actionableUsers)
-    await alertAndUpdateDb(actionableUsers, collection)
+    await sendEmailAndUpdateDb(actionableUsers, collection)
     client.close()
     log('finish')
     callback()

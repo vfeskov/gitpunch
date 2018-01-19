@@ -4,6 +4,7 @@ export interface User {
   _id: ObjectID
   email: string
   alerted: Alerted
+  accessToken?: string
 }
 
 export interface Alerted {
@@ -19,9 +20,10 @@ export interface FullUser extends User {
 }
 
 export interface ActionableUser extends User {
-  actions: {
+  actionableRepos: {
     [type: string]: RepoWithTags[]
-  }
+  },
+  deleteAccessToken?: boolean
 }
 
 export interface RepoGroup {

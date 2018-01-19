@@ -1,16 +1,17 @@
 import fetch from 'node-fetch'
-import { RepoGroupWithTags, RepoGroup, Tag } from './interfaces'
+import { RepoGroupWithTags, RepoGroup, Tag, User } from './interfaces'
 import log from './log'
-const accessToken = process.env.GITHUB_ACCESS_TOKEN
+const { keys } = Object
+const fallbackToken = process.env.GITHUB_ACCESS_TOKEN
 const userAgent = process.env.GITHUB_API_USER_AGENT
 
-export default async function fetchTags (byRepo: RepoGroup[]): Promise<RepoGroupWithTags[]> {
+export default async function fetchTags (byRepo: RepoGroup[]) {
+  const revoked: {[email: string]: User} = {}
   const byRepoWithTags = await Promise.all(byRepo
     .map(async ({ repo, users }) => {
       try {
-        log('fetchTags', { repo })
-        const response = await fetch(tagsUrl(repo), { headers: { 'User-Agent': userAgent } })
-        if (response.status !== 200) { throw Error(`Status ${response.status}`) }
+        const response = await fetchThem(repo, users, user => revoked[user.email] = user)
+        log('fetchTags', { repo, remaining: response.headers.get('x-ratelimit-remaining') })
         const tags = await response.json() as Tag[]
         if (!tags || !tags.length) { throw Error('No tags') }
         return { repo, users, tags }
@@ -20,9 +21,55 @@ export default async function fetchTags (byRepo: RepoGroup[]): Promise<RepoGroup
       }
     })
   )
-  return byRepoWithTags.filter(b => b)
+  return {
+    byRepoWithTags: byRepoWithTags.filter(b => b),
+    revokedTokenUsers: keys(revoked).map(email => revoked[email])
+  }
 }
 
-function tagsUrl (repo) {
-  return `https://api.github.com/repos/${ repo }/tags?access_token=${ accessToken }`
+// shuffles list of users who watch given repo and fetches tags using access token of the first user.
+// if request fails with 401 (token revoked) or 403 (rate limit exceeded), it will fetch using token
+// of the next user in the shuffled list and so on. Finally it will fallback to my personal token
+// specified in environment variable
+//
+// `revoked` callback is used to track revoked tokens, which are later deleted from db
+async function fetchThem(repo: string, users: User[], revoked: (user: User) => void) {
+  const withTokens = shuffle(users.filter(u => u.accessToken))
+  const fallback = { accessToken: fallbackToken }
+
+  const attempts = [...withTokens, fallback].map(user =>
+    async () => {
+      const r = await attemptFetch(repo, user.accessToken)
+      r.status === 401 && revoked(user)
+      return r
+    }
+  )
+  return attempts
+    .reverse()
+    .reduce((next, attempt) =>
+      async () => {
+        const r = await attempt()
+        if (r.status === 200) { return r }
+        if ([401, 403].includes(r.status)) { return next() }
+        throw Error(`Status ${r.status}`)
+      }
+    )()
+}
+
+function attemptFetch (repo: string, accessToken: string) {
+  log('attemptFetch', { repo, accessToken })
+  const url = `https://api.github.com/repos/${ repo }/tags?access_token=${ accessToken }`
+  return fetch(url, { headers: { 'User-Agent': userAgent } })
+}
+
+function shuffle (items: any[]) {
+  let i = items.length, tmp, randomI
+  while (0 !== i) {
+    randomI = Math.floor(Math.random() * i)
+    i -= 1
+    tmp = items[i]
+    items[i] = items[randomI]
+    items[randomI] = tmp
+  }
+  return items
 }

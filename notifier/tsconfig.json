@@ -4,6 +4,7 @@
     "target": "es6",
     "noImplicitAny": false,
     "sourceMap": false,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "lib": ["es7"]
   }
 }

@@ -1,2 +1,2 @@
-export const ALERT_AND_UPDATE_DB = 0
-export const ONLY_UPDATE_DB = 1
+export const SEND_EMAIL_AND_UPDATE_ALERTED = 0
+export const ONLY_UPDATE_ALERTED = 1
