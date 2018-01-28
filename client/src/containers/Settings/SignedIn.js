@@ -11,7 +11,7 @@ export default function SignedIn ({ signOut, classes, email, hasAccessToken }) {
       {hasAccessToken ? (
         <div className={classes.formControl}><small>{GitHubIcon()} GitHub is connected</small></div>
       ) : (
-        <GitHubButton text="Connect with GitHub" className={classes.formControl}/>
+        <GitHubButton text="Connect to GitHub" className={classes.formControl}/>
       )}
       <Button raised onClick={signOut}>
         Sign Out

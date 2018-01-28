@@ -11,7 +11,6 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
     .map(async ({ repo, users }) => {
       try {
         const response = await fetchThem(repo, users, user => revoked[user.email] = user)
-        log('fetchTags', { repo, remaining: response.headers.get('x-ratelimit-remaining') })
         const tags = await response.json() as Tag[]
         if (!tags || !tags.length) { throw Error('No tags') }
         return { repo, users, tags }
@@ -21,6 +20,7 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
       }
     })
   )
+  log('revokedTokenUsers', { revoked });
   return {
     byRepoWithTags: byRepoWithTags.filter(b => b),
     revokedTokenUsers: keys(revoked).map(email => revoked[email])
@@ -36,6 +36,7 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
 async function fetchThem(repo: string, users: User[], revoked: (user: User) => void) {
   const withTokens = shuffle(users.filter(u => u.accessToken))
   const fallback = { accessToken: fallbackToken }
+  log('fetchThem', { repo, users })
 
   const attempts = [...withTokens, fallback].map(user =>
     async () => {
@@ -56,10 +57,16 @@ async function fetchThem(repo: string, users: User[], revoked: (user: User) => v
     )()
 }
 
-function attemptFetch (repo: string, accessToken: string) {
-  log('attemptFetch', { repo })
+async function attemptFetch (repo: string, accessToken: string) {
   const url = `https://api.github.com/repos/${ repo }/tags?access_token=${ accessToken }`
-  return fetch(url, { headers: { 'User-Agent': userAgent } })
+  const response = await fetch(url, { headers: { 'User-Agent': userAgent } })
+  log('attemptFetch', {
+    repo,
+    accessToken,
+    status: response.status,
+    remaining: response.headers.get('x-ratelimit-remaining')
+  })
+  return response
 }
 
 function shuffle (items: any[]) {
