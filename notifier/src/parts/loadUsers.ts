@@ -2,7 +2,9 @@ import { DBUser } from './interfaces'
 import { Collection } from 'mongodb'
 
 export default async function loadUsers (collection: Collection) {
-  const dbUsers = await collection.find({}, { passwordEncrypted: 0 }).toArray()
+  const dbUsers = await collection.find({}, {
+    projection: { passwordEncrypted: 0 }
+  }).toArray()
   return dbUsers.map(user => {
     user.alerted = (user.alerted || [])
       .reduce((alerted, [repo, tag]) => {
