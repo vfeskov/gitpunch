@@ -2,8 +2,10 @@ import fs from 'fs'
 import { renderToStrings } from '../../../client/src/renderToStrings'
 import { load } from '../db'
 import serialize from '../util/serialize'
+import globalLocation from '../util/globalLocation'
 
 export function prerenderClient () {
+  globalLocation()
   const layout = fs.readFileSync('./public/layout.html').toString()
   return async ({ method, token }, res, next) => {
     if (method !== 'GET') { return next() }

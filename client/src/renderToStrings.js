@@ -7,10 +7,7 @@ import { renderToString } from 'react-dom/server'
 import { App } from './App'
 import { SheetsRegistry } from 'react-jss/lib/jss'
 import JssProvider from 'react-jss/lib/JssProvider'
-import { create } from 'jss'
-import preset from 'jss-preset-default'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
-import createGenerateClassName from 'material-ui/styles/createGenerateClassName'
+import { MuiThemeProvider, createMuiTheme, createGenerateClassName } from 'material-ui/styles'
 import { indigo, purple } from 'material-ui/colors'
 
 export function renderToStrings (profile) {
@@ -26,11 +23,10 @@ export function renderToStrings (profile) {
       type: 'light',
     },
   })
-  const jss = create(preset())
   const generateClassName = createGenerateClassName()
 
   const html = renderToString(
-    <JssProvider registry={sheetsRegistry} jss={jss} generateClassName={generateClassName}>
+    <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
       <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
         <Provider store={store}>
           <App />

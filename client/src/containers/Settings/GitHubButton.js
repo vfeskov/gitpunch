@@ -6,13 +6,11 @@ import GitHubIcon from './GitHubIcon'
 class GitHubButton extends Component {
   render () {
     const { bufferRepos: repos, classes, className, text } = this.props
-    // TODO: make it work server-side, uncomment for development
-    // let { hostname, protocol, port } = window.location
-    // if (hostname === 'localhost') { port = 3001 }
-    // const baseUrl = `${protocol}//${hostname}${port && ':' + port}`
-    // const oauthLink = `${baseUrl}/api/oauth/start` +
-    //   (repos && repos.length ? `?repos=${JSON.stringify(repos)}` : '')
-    const oauthLink = `https://beer.vfeskov.com/api/oauth/start` +
+    // eslint-disable-next-line no-restricted-globals
+    let { hostname, protocol, port } = location
+    if (hostname === 'localhost') { port = 3001 }
+    const baseUrl = `${protocol}//${hostname}${port && ':' + port}`
+    const oauthLink = `${baseUrl}/api/oauth/start` +
       (repos && repos.length ? `?repos=${JSON.stringify(repos)}` : '')
     return (
       <Button href={oauthLink} raised className={`${classes.theButton} ${className}`}>
