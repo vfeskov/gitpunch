@@ -20,10 +20,11 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
       }
     })
   )
-  log('revokedTokenUsers', { revoked });
+  const revokedTokenUsers = keys(revoked).map(email => revoked[email]);
+  if (revokedTokenUsers.length) { log('revokedTokenUsers', { revokedTokenUsers }); }
   return {
     byRepoWithTags: byRepoWithTags.filter(b => b),
-    revokedTokenUsers: keys(revoked).map(email => revoked[email])
+    revokedTokenUsers
   }
 }
 
@@ -36,7 +37,7 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
 async function fetchThem(repo: string, users: User[], revoked: (user: User) => void) {
   const withTokens = shuffle(users.filter(u => u.accessToken))
   const fallback = { accessToken: fallbackToken }
-  log('fetchThem', { repo, users })
+  log('fetchThem', { repo, withTokens })
 
   const attempts = [...withTokens, fallback].map(user =>
     async () => {
