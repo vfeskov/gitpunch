@@ -2,7 +2,7 @@ import { DBUser } from './interfaces'
 import { Collection } from 'mongodb'
 
 export default async function loadUsers (collection: Collection) {
-  const dbUsers = await collection.find({}, {
+  const dbUsers = await collection.find({ watching: true }, {
     projection: { passwordEncrypted: 0 }
   }).toArray()
   return dbUsers.map(user => {
