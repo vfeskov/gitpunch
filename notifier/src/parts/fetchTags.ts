@@ -13,7 +13,7 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
         const response = await fetchThem(repo, users, user => revoked[user.email] = user)
         const tags = await response.json() as Tag[]
         if (!tags || !tags.length) { throw Error('No tags') }
-        return { repo, users, tags }
+        return { repo, users, tags: tags.map(t => ({ name: t.name, sha: t.commit.sha })) }
       } catch (e) {
         log('fetchTagsError', { repo, message: e.message })
         return null

@@ -31,15 +31,15 @@ export function body (user: ActionableUser, repos: RepoWithTags[]) {
         `<li>
           <strong><a href="https://github.com/${repo}">${repo}</a></strong>
           <ul style="padding-left: 25px;">
-          ${tags.map(({ name, zipball_url, tarball_url, commit }) => '' +
+          ${tags.map(({ name, sha }) => '' +
             `<li>
               <strong><a href="https://github.com/${repo}/releases/tag/${name}">${name}</a></strong>
               &#32;&middot;&#32;
-              <a href="${commit.url}">commit</a>
+              <a href="https://github.com/${repo}/commit/${sha}">commit</a>
               &#32;&middot;&#32;
-              <a href="${zipball_url}">zip</a>
+              <a href="https://api.github.com/repos/${repo}/zipball/${name}">zip</a>
               &#32;&middot;&#32;
-              <a href="${tarball_url}">tar</a>
+              <a href="https://api.github.com/repos/${repo}/tarball/${name}">tar</a>
             </li>`
           ).join('')}
           </ul>
@@ -53,7 +53,7 @@ export function body (user: ActionableUser, repos: RepoWithTags[]) {
       <small>
         This is an automated message, reply if you have any questions<br/>
         To stop getting these emails click&#32;<a href="${unsubscribeUrl(user)}">unsubscribe</a><br/>
-        <a href="https://github.com/vfeskov/win-a-beer">&#9733; Star me on GitHub</a>
+        <a href="https://github.com/vfeskov/win-a-beer">Support&#32;<strong>Win A Beer</strong>&#32;with a star ♥</a>
       </small>
     </div>`
       .replace(/\s*\n\s*/g, '')

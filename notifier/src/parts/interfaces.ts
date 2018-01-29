@@ -32,12 +32,12 @@ export interface RepoGroup {
 }
 
 export interface RepoGroupWithTags extends RepoGroup {
-  tags: Tag[]
+  tags: TagCut[]
 }
 
 export interface RepoWithTags {
   repo: string
-  tags: Tag[]
+  tags: TagCut[]
 }
 
 export interface Tag {
@@ -48,4 +48,9 @@ export interface Tag {
     sha: string
     url: string
   }
+}
+
+export interface TagCut {
+  name: string
+  sha: string
 }
