@@ -12,11 +12,11 @@ import * as actionCreators from '../../actions'
 
 class SettingsComponent extends Component {
   render () {
-    const { bufferRepos, signedIn, email, signOut, signIn, className, classes, hasAccessToken } = this.props
+    const { bufferRepos, signedIn, email, signOut, signIn, className, classes, hasAccessToken, frequency, saveFrequency, checkAt, saveCheckAt } = this.props
     return (
       <Paper className={className}>
         {signedIn ? (
-          SignedIn({ signOut, classes, email, hasAccessToken })
+          SignedIn({ signOut, classes, email, hasAccessToken, frequency, saveFrequency, checkAt, saveCheckAt })
         ) : (
           <SignedOut signIn={signIn} classes={classes} bufferRepos={bufferRepos} />
         )}
@@ -29,9 +29,14 @@ SettingsComponent.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
   signedIn: PropTypes.bool.isRequired,
+  frequency: PropTypes.string.isRequired,
+  checkAt: PropTypes.number.isRequired,
+  hasAccessToken: PropTypes.bool.isRequired,
   bufferRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
   signIn: PropTypes.func.isRequired,
-  signOut: PropTypes.func.isRequired
+  signOut: PropTypes.func.isRequired,
+  saveFrequency: PropTypes.func.isRequired,
+  saveCheckAt: PropTypes.func.isRequired
 }
 
 const SettingsComponentWithStyles = withStyles(styles)(SettingsComponent)
@@ -42,7 +47,9 @@ export const Settings = connect(
     bufferRepos: state.bufferRepos,
     watching: state.watching,
     email: state.email,
-    hasAccessToken: state.hasAccessToken
+    hasAccessToken: state.hasAccessToken,
+    frequency: state.frequency,
+    checkAt: state.checkAt
   }),
   dispatch => bindActionCreators(actionCreators, dispatch)
 )(SettingsComponentWithStyles)

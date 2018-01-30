@@ -61,7 +61,7 @@ class RepoAddComponent extends Component {
             onKeyPress: ev => this.handleKeyPress(ev)
           }}
         />
-        <small>Select from suggestions or simply hit Enter</small>
+        <small><strong>Select</strong> from list or just press <strong>Enter</strong></small>
       </Paper>
     )
   }

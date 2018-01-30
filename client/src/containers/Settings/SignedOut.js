@@ -3,7 +3,7 @@ import Button from 'material-ui/Button'
 import Input, { InputLabel } from 'material-ui/Input'
 import { FormControl } from 'material-ui/Form'
 import PropTypes from 'prop-types'
-import GitHubButton from './GitHubButton'
+import GitHubButton from '../../components/GitHubButton'
 
 const { assign } = Object
 

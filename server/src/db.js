@@ -2,7 +2,7 @@ import { MongoClient, ObjectID } from 'mongodb'
 const url = process.env.WAB_MONGODB_URL
 const dbName = process.env.WAB_MONGODB_DBNAME
 const collectionName = process.env.WAB_MONGODB_COLLECTIONNAME
-const { assign } = Object
+const { assign, keys } = Object
 
 const collectionPrms = (async () => {
   const client = await MongoClient.connect(url)
@@ -28,9 +28,17 @@ export async function create (params) {
 
 export async function update (params, attrs) {
   const collection = await collectionPrms
+  const update = {}
+  if (keys(attrs).some(k => k === '$unset' || k === '$set')) {
+    const { $set, $unset } = attrs
+    if ($set) { update.$set = $set }
+    if ($unset) { update.$unset = $unset }
+  } else {
+    update.$set = attrs
+  }
   return collection.updateOne(
     query(params),
-    { $set: attrs }
+    update
   )
 }
 

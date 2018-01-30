@@ -17,3 +17,13 @@ export function validPassword (password) {
 export function validWatching (watching) {
   return typeof watching === 'boolean'
 }
+
+export function validFrequency (frequency) {
+  return typeof frequency === 'string' && ['hourly', 'daily'].includes(frequency)
+}
+
+export function validCheckAt (checkAt) {
+  return typeof checkAt === 'number' &&
+    Math.round(checkAt) === checkAt &&
+    checkAt >= 0 && checkAt < 24
+}

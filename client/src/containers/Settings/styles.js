@@ -9,6 +9,20 @@ export default function styles (theme) {
     },
     or: {
       textAlign: 'center'
+    },
+    frequencyOptions: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    email: {
+      fontSize: '1.2em'
+    },
+    checkAtText: {
+      cursor: 'pointer',
+      textDecoration: 'underline'
+    },
+    dailyOption: {
+      marginRight: 0
     }
   }
 }
