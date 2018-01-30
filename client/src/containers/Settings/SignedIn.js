@@ -2,7 +2,7 @@ import React from 'react'
 import Button from 'material-ui/Button'
 import PropTypes from 'prop-types'
 import GitHubButton from '../../components/GitHubButton'
-import GitHubIcon from '../../components/GitHubIcon'
+import { GitHubIcon } from '../../components/icons'
 import Hourpicker from '../../components/Hourpicker'
 import Radio, { RadioGroup } from 'material-ui/Radio'
 import { FormLabel, FormControl, FormControlLabel } from 'material-ui/Form'
@@ -51,5 +51,7 @@ SignedIn.propTypes = {
   signOut: PropTypes.func.isRequired,
   hasAccessToken: PropTypes.bool.isRequired,
   frequency: PropTypes.string.isRequired,
-  saveFrequency: PropTypes.func.isRequired
+  saveFrequency: PropTypes.func.isRequired,
+  checkAt: PropTypes.number.isRequired,
+  saveCheckAt: PropTypes.func.isRequired
 }

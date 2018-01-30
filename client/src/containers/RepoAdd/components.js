@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper'
 import { MenuItem } from 'material-ui/Menu'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-import { EyeIcon, StarIcon, ForkIcon } from './github-icons'
+import { EyeIcon, StarIcon, ForkIcon } from '../../components/icons'
 import { LinearProgress } from 'material-ui/Progress'
 
 export function renderSuggestionsContainer (options) {
@@ -58,7 +58,6 @@ export function renderSuggestion (classes, suggestion, { query, isHighlighted })
           )
         })}
         <span className={classes.divider}></span>
-        {EyeIcon(classes.suggestionIcon)}{suggestion.watchers_count} &middot;
         {StarIcon(classes.suggestionIcon)}{suggestion.stargazers_count} &middot;
         {ForkIcon(classes.suggestionIcon)}{suggestion.forks_count}
       </div>
