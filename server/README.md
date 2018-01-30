@@ -26,8 +26,6 @@ Then open `.env` in a text editor and fill in the variables:
 
 Run the server:
 ```bash
-Open another terminal, go to `server/` folder and start the server:
-```bash
 npm run watch
 ```
 
@@ -36,7 +34,7 @@ Open another terminal, go to `client/` folder and start the client:
 npm start
 ```
 
-Client will be accessible on http://localhost:3000, it will proxy `/api*` requests to http://localhost:3001/api where the server will run.
+Client will be accessible on http://localhost:3000, it will proxy `/api*` requests to http://localhost:3001/api where the server will listen.
 
 ### Production mode
 

@@ -140,7 +140,7 @@ class HourpickerDialog extends Component {
       >
         <DialogTitle id="hourpicker-dialog-title">Check repos daily at:</DialogTitle>
         <DialogContent>
-        <div className={classes.value}>
+          <div className={classes.value}>
             {timeText(fromLocal(value))}<br/><small>Timezone: {moment.tz.guess()}</small>
           </div>
           <div className={classes.controlsContainer}>
