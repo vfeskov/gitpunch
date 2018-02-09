@@ -26,7 +26,7 @@ export function renderInput (inputProps) {
         className={classes.textField}
         value={value}
         inputRef={ref}
-        placeholder="Enter name, e.g., facebook/react"
+        placeholder="Enter name or link"
         InputProps={{
           classes: {
             input: classes.input,

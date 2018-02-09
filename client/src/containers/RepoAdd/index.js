@@ -13,6 +13,11 @@ import { connect } from 'react-redux'
 import * as actionCreators from '../../actions'
 
 const { assign } = Object
+const valueReplaceArgs = [
+  [new RegExp('^https?://'), ''],
+  [new RegExp('^github.com/'), ''],
+  [new RegExp('^([^/]+/[^/]+)[/#?].*'), '$1'],
+]
 
 class RepoAddComponent extends Component {
   constructor (props) {
@@ -30,7 +35,7 @@ class RepoAddComponent extends Component {
   }
 
   render () {
-    const { className, classes, repoAdd, setRepoAddValue } = this.props
+    const { className, classes, repoAdd } = this.props
     const { value, disabled } = repoAdd
     const { suggestions, suggestionsLoading } = this.state
     return (
@@ -46,7 +51,7 @@ class RepoAddComponent extends Component {
           renderInputComponent={renderInput}
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.fetchSuggestionsDebounced}
-          onSuggestionsClearRequested={() => this.clearSuggestions()}
+          onSuggestionsClearRequested={this.clearSuggestions}
           shouldRenderSuggestions={value => value.trim().length > 1}
           renderSuggestionsContainer={renderSuggestionsContainer}
           getSuggestionValue={suggestion => suggestion.full_name}
@@ -57,8 +62,8 @@ class RepoAddComponent extends Component {
             classes,
             suggestionsLoading,
             value,
-            onChange: (ev, { newValue }) => disabled || setRepoAddValue(newValue),
-            onKeyPress: ev => this.handleKeyPress(ev)
+            onChange: (ev, { newValue }) => disabled || this.setValue(newValue),
+            onKeyPress: this.handleKeyPress
           }}
         />
         <small><strong>Select</strong> from list or just press <strong>Enter</strong></small>
@@ -72,12 +77,17 @@ class RepoAddComponent extends Component {
     addRepo(signedIn, repo)
   }
 
-  clearSuggestions () {
+  clearSuggestions = () => {
     this.fetchSuggestionsDebounced.cancel()
     this.receiveSuggestions(Date.now(), [])
   }
 
-  handleKeyPress (ev) {
+  setValue(value) {
+    valueReplaceArgs.forEach(args => value = value.replace(...args));
+    this.props.setRepoAddValue(value)
+  }
+
+  handleKeyPress = ev => {
     if (ev.key !== 'Enter') { return }
     const repo = ev.target.value
     if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
