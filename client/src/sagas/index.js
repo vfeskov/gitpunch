@@ -11,15 +11,11 @@ function* onApiRequest (actionGroup, api) {
     } catch (error) {
       yield put(actionGroup.failure(error))
     }
-    const { signedIn, savedRepos, bufferRepos, shownRepos } = yield select()
-    const newShownRepos = signedIn ? savedRepos : bufferRepos
-    if (newShownRepos === shownRepos) { continue }
-    yield put(actions.setShownRepos(newShownRepos))
   }
 }
 
 const apiActions = (
-  'fetchProfile signIn signOut saveCheckAt saveFrequency saveWatching ' +
+  'signIn signOut saveCheckAt saveFrequency saveWatching ' +
   'createRepo deleteRepo unwatch'
 ).split(' ')
 
@@ -55,15 +51,34 @@ function* onRemoveRepo () {
   }
 }
 
+function* onSignedInChanges (once = false) {
+  while (true) {
+    if (!once) { yield take('*') }
+    const { signedIn, savedRepos, bufferRepos, shownRepos } = yield select()
+    const newShownRepos = signedIn ? savedRepos : bufferRepos
+    if (newShownRepos === shownRepos && !once) { continue }
+    yield put(actions.setShownRepos(newShownRepos))
+    if (once) { break }
+  }
+}
+
 function* onStartup () {
   const { serverRendered } = yield select()
   if (serverRendered) { return }
   yield put(actions.fetchProfile.request())
+  try {
+    const profile = yield call(api.fetchProfile)
+    yield put(actions.fetchProfile.success(profile))
+  } catch (error) {
+    yield put(actions.fetchProfile.failure(error))
+  }
+  yield onSignedInChanges(true)
 }
 
 export default function* root () {
   yield all([
     ...genericApiRequests.map(h => fork(h)),
+    fork(onSignedInChanges),
     fork(onToggleWatching),
     fork(onAddRepo),
     fork(onRemoveRepo),
