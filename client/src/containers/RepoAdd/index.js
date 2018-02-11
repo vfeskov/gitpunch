@@ -5,12 +5,12 @@ import { renderInput, renderSuggestion, renderSuggestionsContainer } from './com
 import Paper from 'material-ui/Paper'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
-import { styles } from './styles'
 import debounce from 'lodash.debounce'
+import { styles } from './styles'
+import oauthUrl from '../../lib/oauthUrl'
 
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actionCreators from '../../actions'
+import { mapDispatchToProps } from '../../actions'
 
 const { assign } = Object
 const valueReplaceArgs = [
@@ -19,7 +19,7 @@ const valueReplaceArgs = [
   [new RegExp('^([^/]+/[^/]+)[/#?].*'), '$1'],
 ]
 
-class RepoAddComponent extends Component {
+class RepoAdd extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -35,46 +35,54 @@ class RepoAddComponent extends Component {
   }
 
   render () {
-    const { className, classes, repoAdd } = this.props
+    const { className, classes, repoAdd, accessToken, bufferRepos: repos } = this.props
     const { value, disabled } = repoAdd
     const { suggestions, suggestionsLoading } = this.state
+    const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
     return (
       <Paper className={className}>
         <Typography type="title">Watch repo for new releases</Typography>
-        <Autosuggest
-          theme={{
-            container: classes.container,
-            suggestionsContainerOpen: classes.suggestionsContainerOpen,
-            suggestionsList: classes.suggestionsList,
-            suggestion: classes.suggestion,
-          }}
-          renderInputComponent={renderInput}
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.fetchSuggestionsDebounced}
-          onSuggestionsClearRequested={this.clearSuggestions}
-          shouldRenderSuggestions={value => value.trim().length > 1}
-          renderSuggestionsContainer={renderSuggestionsContainer}
-          getSuggestionValue={suggestion => suggestion.full_name}
-          onSuggestionSelected={(ev, { suggestionValue }) => this.confirm(suggestionValue)}
-          renderSuggestion={(...args) => renderSuggestion(classes, ...args)}
-          inputProps={{
-            autoFocus: true,
-            classes,
-            suggestionsLoading,
-            value,
-            onChange: (ev, { newValue }) => disabled || this.setValue(newValue),
-            onKeyPress: this.handleKeyPress
-          }}
-        />
-        <small><strong>Select</strong> from list or just press <strong>Enter</strong></small>
+        <div className={classes.contentWrapper}>
+          <div className={classes.autosuggestWrapper}>
+            <Autosuggest
+              theme={{
+                container: classes.container,
+                suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                suggestionsList: classes.suggestionsList,
+                suggestion: classes.suggestion,
+              }}
+              renderInputComponent={renderInput}
+              suggestions={suggestions}
+              onSuggestionsFetchRequested={this.fetchSuggestionsDebounced}
+              onSuggestionsClearRequested={this.clearSuggestions}
+              shouldRenderSuggestions={value => value.trim().length > 1}
+              renderSuggestionsContainer={renderSuggestionsContainer}
+              getSuggestionValue={suggestion => suggestion.full_name}
+              onSuggestionSelected={(ev, { suggestionValue }) => this.confirm(suggestionValue)}
+              renderSuggestion={(...args) => renderSuggestion(classes, ...args)}
+              inputProps={{
+                autoFocus: true,
+                classes,
+                suggestionsLoading,
+                value,
+                onChange: (ev, { newValue }) => disabled || this.setValue(newValue),
+                onKeyPress: this.handleKeyPress
+              }}
+            />
+            <small>Press <strong>Enter</strong> to confirm</small>
+          </div>
+          <div className={classes.or}>or</div>
+          <div className={classes.starredLink}>
+            <a href={starredLink} onClick={this.starredClicked}>pick starred repos</a>
+          </div>
+        </div>
       </Paper>
     )
   }
 
   confirm (repo) {
-    const { addRepo, signedIn } = this.props
     this.clearSuggestions()
-    addRepo(signedIn, repo)
+    this.props.addRepo(repo)
   }
 
   clearSuggestions = () => {
@@ -93,6 +101,12 @@ class RepoAddComponent extends Component {
     if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
       this.confirm(repo)
     }
+  }
+
+  starredClicked = ev => {
+    if (!this.props.accessToken) { return }
+    ev.preventDefault()
+    this.props.setStarredOpen(true)
   }
 
   fetchSuggestions (value) {
@@ -140,25 +154,23 @@ class RepoAddComponent extends Component {
   }
 }
 
-RepoAddComponent.propTypes = {
+RepoAdd.propTypes = {
   repoAdd: PropTypes.shape({
     value: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired
   }),
   className: PropTypes.string,
   addRepo: PropTypes.func.isRequired,
-  signedIn: PropTypes.bool.isRequired,
   setRepoAddValue: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  accessToken: PropTypes.string.isRequired
 }
 
-const RepoAddComponentWithStyles = withStyles(styles)(RepoAddComponent)
-
-export const RepoAdd = connect(
+export default connect(
   state => ({
     repoAdd: state.repoAdd,
-    signedIn: state.signedIn
+    accessToken: state.accessToken,
+    bufferRepos: state.bufferRepos
   }),
-  dispatch => bindActionCreators(actionCreators, dispatch)
-)(RepoAddComponentWithStyles)
-
+  mapDispatchToProps()
+)(withStyles(styles)(RepoAdd))

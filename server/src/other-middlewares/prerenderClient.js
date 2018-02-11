@@ -1,16 +1,14 @@
 import fs from 'fs'
 import { renderToStrings } from '../../../client/src/renderToStrings'
-import { load } from '../db'
-import serialize from '../util/serialize'
 import globalLocation from '../util/globalLocation'
 
-export function prerenderClient () {
+export function prerenderClient (port) {
   globalLocation()
   const layout = fs.readFileSync('./public/layout.html').toString()
-  return async ({ method, token }, res, next) => {
+  return async ({ method, headers }, res, next) => {
     if (method !== 'GET') { return next() }
-    const user = token && await load(token).catch(() => null)
-    const { html, state, css } = renderToStrings(serialize(user))
+    const fetchOpts = { headers: { cookie: headers.cookie } }
+    const { html, state, css } = await renderToStrings(port, fetchOpts)
     const content = layout
       .replace(
         '<div id="root"></div>',
@@ -18,7 +16,7 @@ export function prerenderClient () {
       )
       .replace(
         '</head>',
-        `<script>window.__INIT_STATE__=${state}</script></head>`
+        `<script>window.__INITIAL_STATE__=${state}</script></head>`
       )
       .replace(
         '<body>',

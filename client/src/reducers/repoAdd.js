@@ -1,16 +1,12 @@
+import { SET_REPO_ADD_VALUE, ADD_REPO_TO_BUFFER, CREATE_REPO } from '../actions'
 import { combineReducers } from 'redux'
-
-export const repoAdd = combineReducers({
-  value,
-  disabled
-})
 
 function value (state = '', action) {
   switch (action.type) {
-    case 'SET_REPO_ADD_VALUE':
+    case SET_REPO_ADD_VALUE:
       return action.value
-    case 'ADD_REPO_TO_BUFFER':
-    case 'RECEIVE_CREATE_REPO':
+    case ADD_REPO_TO_BUFFER:
+    case CREATE_REPO.SUCCESS:
       return ''
     default:
       return state
@@ -19,12 +15,17 @@ function value (state = '', action) {
 
 function disabled (state = false, action) {
   switch (action.type) {
-    case 'REQUEST_CREATE_REPO':
+    case CREATE_REPO.REQUEST:
       return true
-    case 'RECEIVE_CREATE_REPO':
-    case 'ERROR_CREATE_REPO':
+    case CREATE_REPO.SUCCESS:
+    case CREATE_REPO.FAILURE:
       return false
     default:
       return state
   }
 }
+
+export default combineReducers({
+  value,
+  disabled
+})

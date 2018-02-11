@@ -4,21 +4,19 @@ import IconButton from 'material-ui/IconButton'
 import CloseIcon from 'material-ui-icons/Close'
 import Button from 'material-ui/Button'
 
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actionCreators from '../actions'
+import { mapDispatchToProps } from '../actions'
 
-export class UnsubscribeMessageComponent extends Component {
+export class UnwatchMessage extends Component {
   constructor (props) {
     super(props)
     this.state = { open: true }
   }
 
   render () {
-    const { unsubscribeMessage, watching, email } = this.props
-    if (!unsubscribeMessage) { return null }
-    const { success, error, payloadEmail } = unsubscribeMessage
-    const sameUser = payloadEmail === email
+    const { unwatchMessage, watching } = this.props
+    if (!unwatchMessage) { return null }
+    const { success, sameUser } = unwatchMessage
     const message = success ?
       'No more emails for you!' :
       'Couldn\'t stop them emails, sorry :('
@@ -32,8 +30,8 @@ export class UnsubscribeMessageComponent extends Component {
         SnackbarContentProps={{ 'aria-describedby': 'message-id' }}
         message={<span id="message-id">{message}</span>}
         action={[
-          error || !sameUser || watching ? null : (
-            <Button key="undo" color="accent" dense onClick={() => this.undo()}>
+          !success || !sameUser || watching ? null : (
+            <Button key="undo" color="secondary" dense onClick={() => this.undo()}>
               UNDO
             </Button>
           ),
@@ -51,16 +49,15 @@ export class UnsubscribeMessageComponent extends Component {
   }
 
   undo () {
-    this.props.toggleWatching(true)
+    this.props.toggleWatching()
     this.setState({ open: false })
   }
 }
 
-export const UnsubscribeMessage = connect(
+export default connect(
   state => ({
-    unsubscribeMessage: state.unsubscribeMessage,
-    watching: state.watching,
-    email: state.email
+    unwatchMessage: state.unwatchMessage,
+    watching: state.watching
   }),
-  dispatch => bindActionCreators(actionCreators, dispatch)
-)(UnsubscribeMessageComponent)
+  mapDispatchToProps()
+)(UnwatchMessage)

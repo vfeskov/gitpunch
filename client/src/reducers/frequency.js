@@ -1,13 +1,15 @@
+import { SIGN_IN, FETCH_PROFILE, SIGN_OUT, SAVE_FREQUENCY } from '../actions'
+
 const defaultFrequency = 'hourly'
 
 export default function frequency (state = defaultFrequency, action) {
   switch (action.type) {
-    case 'RECEIVE_SIGN_IN':
-    case 'RECEIVE_PROFILE':
+    case SIGN_IN.SUCCESS:
+    case FETCH_PROFILE.SUCCESS:
       return action.profile.frequency || defaultFrequency
-    case 'RECEIVE_FREQUENCY':
-      return action.json.frequency
-    case 'RECEIVE_SIGN_OUT':
+    case SAVE_FREQUENCY.SUCCESS:
+      return action.frequency
+    case SIGN_OUT.SUCCESS:
       return defaultFrequency
     default:
       return state

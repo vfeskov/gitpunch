@@ -5,6 +5,6 @@ export default function serialize (user) {
     repos: user.repos,
     frequency: user.frequency || 'hourly',
     checkAt: user.checkAt || 0,
-    hasAccessToken: !!user.accessToken
+    accessToken: user.accessToken || ''
   }
 }

@@ -5,30 +5,55 @@ import DeleteIcon from 'material-ui-icons/Delete'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import PropTypes from 'prop-types'
-import { FormControlLabel } from 'material-ui/Form'
+import moment from 'moment'
+import Radio, { RadioGroup } from 'material-ui/Radio'
+import { FormLabel, FormControl, FormControlLabel } from 'material-ui/Form'
 import Switch from 'material-ui/Switch'
+import Hourpicker from '../components/Hourpicker'
 
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actionCreators from '../actions'
+import { mapDispatchToProps } from '../actions'
 
-function ReposComponent ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, classes, className }) {
+function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, classes, className, frequency, checkAt, saveFrequency, saveCheckAt }) {
   const title = !shownRepos.length ?
     'Not watching any repo yet' :
     !signedIn ?
       'Sign in to start watching' :
       watching ? 'Watching' : 'Not watching'
+  function handleFrequencyChange (e, frequency) {
+    if (frequency !== 'daily') { return saveFrequency({ frequency }) }
+    const checkAt = +moment('9', 'H').utc().format('H')
+    saveFrequency({ frequency, checkAt })
+  }
   const header = signedIn && shownRepos.length ? (
-    <FormControlLabel
-      classes={{ label: classes.titleLabel }}
-      control={
-        <Switch
-          checked={watching}
-          onChange={(event, checked) => toggleWatching(checked)}
-        />
-      }
-      label={title}
-    />
+    <div>
+      <FormControlLabel
+        classes={{ label: classes.titleLabel }}
+        control={
+          <Switch
+            checked={watching}
+            onChange={toggleWatching}
+          />
+        }
+        label={title}
+      />
+      {watching && <div>
+        <FormControl component="div" style={{flexDirection: 'row', alignItems: 'center'}}>
+          <FormLabel component="legend">Check every</FormLabel>
+          <RadioGroup
+            aria-label="Check for updates"
+            name="frequency"
+            value={frequency}
+            className={classes.frequencyOptions}
+            onChange={handleFrequencyChange}
+          >
+            <FormControlLabel value="hourly" control={<Radio />} className={classes.hourlyOption} label="hour" />
+            <FormControlLabel value="daily" control={<Radio />} className={classes.dailyOption} label="day" />
+            {frequency === 'daily' && <Hourpicker utcHour={checkAt} onSave={saveCheckAt} />}
+          </RadioGroup>
+        </FormControl>
+      </div>}
+    </div>
   ) : (
     <Typography type="title">{title}</Typography>
   )
@@ -38,7 +63,7 @@ function ReposComponent ({ signedIn, shownRepos, watching, toggleWatching, remov
       {shownRepos.map(repo =>
         <div className={classes.item} key={repo}>
           <a href={`https://github.com/${repo}`} target="_blank">{repo}</a>
-          <IconButton aria-label="Delete" onClick={() => removeRepo(signedIn, repo)}>
+          <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
             <DeleteIcon />
           </IconButton>
         </div>
@@ -47,7 +72,7 @@ function ReposComponent ({ signedIn, shownRepos, watching, toggleWatching, remov
   )
 }
 
-ReposComponent.propTypes = {
+Repos.propTypes = {
   className: PropTypes.string,
   signedIn: PropTypes.bool.isRequired,
   shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -62,16 +87,30 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center'
   },
-  titleLabel: theme.typography.title
+  titleLabel: theme.typography.title,
+  frequencyOptions: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  checkAtText: {
+    cursor: 'pointer',
+    textDecoration: 'underline'
+  },
+  hourlyOption: {
+    marginLeft: 0
+  },
+  dailyOption: {
+    marginRight: 0
+  }
 })
 
-const ReposComponentWithStyles = withStyles(styles)(ReposComponent)
-
-export const Repos = connect(
+export default connect(
   state => ({
     signedIn: state.signedIn,
     shownRepos: state.shownRepos,
-    watching: state.watching
+    watching: state.watching,
+    frequency: state.frequency,
+    checkAt: state.checkAt
   }),
-  dispatch => bindActionCreators(actionCreators, dispatch)
-)(ReposComponentWithStyles)
+  mapDispatchToProps()
+)(withStyles(styles)(Repos))

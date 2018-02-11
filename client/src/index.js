@@ -1,41 +1,23 @@
 import 'typeface-roboto'
-import 'isomorphic-fetch'
-import thunkMiddleware from 'redux-thunk'
-import { createLogger } from 'redux-logger'
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
 import './index.css'
-import { App } from './App'
-import { reducer as rootReducer } from './reducers'
-import { indigo, purple } from 'material-ui/colors'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
+import '@babel/polyfill'
+import React from 'react'
+import { render } from 'react-dom'
+import { MuiThemeProvider } from 'material-ui/styles'
+
+import configureStore from './store/configureStore'
+import rootSaga from './sagas'
+import createTheme from './theme/createTheme'
+import Root from './containers/Root'
 import registerServiceWorker from './registerServiceWorker'
 
-const loggerMiddleware = createLogger()
+const store = configureStore(window.__INITIAL_STATE__)
+store.runSaga(rootSaga)
+const theme = createTheme()
 
-const initState = window.__INIT_STATE__ && JSON.parse(window.__INIT_STATE__)
-
-const store = createStore(
-  rootReducer,
-  initState,
-  applyMiddleware(thunkMiddleware, loggerMiddleware)
-)
-
-const theme = createMuiTheme({
-  palette: {
-    primary: indigo,
-    accent: purple,
-    type: 'light',
-  },
-})
-
-ReactDOM.render(
+render(
   <MuiThemeProvider theme={theme}>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <Root store={store} />
   </MuiThemeProvider>,
   document.getElementById('root')
 )

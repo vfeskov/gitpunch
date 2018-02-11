@@ -1,14 +1,15 @@
-export function savedRepos (state = [], action) {
+import { SIGN_IN, FETCH_PROFILE, CREATE_REPO, DELETE_REPO, SIGN_OUT } from '../actions'
+
+export default function savedRepos (state = [], action) {
   switch (action.type) {
-    case 'RECEIVE_SIGN_IN':
-    case 'RECEIVE_PROFILE':
+    case SIGN_IN.SUCCESS:
+    case FETCH_PROFILE.SUCCESS:
       const { repos } = action.profile || {}
       return repos ? [...repos] : []
-    case 'RECEIVE_CREATE_REPO':
-    case 'RECEIVE_DELETE_REPO':
-    case 'RECEIVE_REPLACE_REPOS':
+    case CREATE_REPO.SUCCESS:
+    case DELETE_REPO.SUCCESS:
       return action.repos ? [...action.repos] : []
-    case 'RECEIVE_SIGN_OUT':
+    case SIGN_OUT.SUCCESS:
       return []
     default:
       return state

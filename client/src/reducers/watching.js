@@ -1,14 +1,16 @@
-export function watching (state = false, action) {
+import { SIGN_IN, SAVE_WATCHING, FETCH_PROFILE, SIGN_OUT, UNWATCH } from '../actions'
+
+export default function watching (state = false, action) {
   switch (action.type) {
-    case 'RECEIVE_WATCHING':
-      return action.json.watching
-    case 'RECEIVE_SIGN_IN':
-    case 'RECEIVE_PROFILE':
+    case SAVE_WATCHING.SUCCESS:
+      return action.watching
+    case SIGN_IN.SUCCESS:
+    case FETCH_PROFILE.SUCCESS:
       return action.profile.watching
-    case 'RECEIVE_SIGN_OUT':
+    case SIGN_OUT.SUCCESS:
       return false
-    case 'RECEIVE_UNSUBSCRIBE':
-      return action.payloadEmail === action.currentEmail ? false : state
+    case UNWATCH.SUCCESS:
+      return action.sameUser ? action.watching : state
     default:
       return state
   }

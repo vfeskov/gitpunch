@@ -1,15 +1,15 @@
-export function signedIn (state = false, action) {
+import { SIGN_IN, FETCH_PROFILE, SIGN_OUT, isRequestFailure } from '../actions'
+
+export default function signedIn (state = false, action) {
   switch (action.type) {
-    case 'RECEIVE_SIGN_IN':
-    case 'RECEIVE_PROFILE':
+    case SIGN_IN.SUCCESS:
+    case FETCH_PROFILE.SUCCESS:
       return true
-    case 'RECEIVE_SIGN_OUT':
-    case 'ERROR_PROFILE':
+    case SIGN_IN.FAILURE:
+    case FETCH_PROFILE.FAILURE:
+    case SIGN_OUT.SUCCESS:
       return false
-    case 'ERROR_CREATE_REPO':
-    case 'ERROR_DELETE_REPO':
-      return action.error.status !== 401
     default:
-      return state
+      return isRequestFailure(action) ? action.error.status !== 401 : state
   }
 }

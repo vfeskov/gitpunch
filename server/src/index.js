@@ -8,6 +8,8 @@ import parseToken from './other-middlewares/parseToken'
 import error from './other-middlewares/error'
 import chain from './util/chain'
 
+const port = process.env.PORT || 3000
+
 const envSpecificMiddlewares = []
 
 if (process.env.NODE_ENV === 'production') {
@@ -16,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 
   envSpecificMiddlewares.push(
     serveStatic('./public'),
-    prerenderClient()
+    prerenderClient(port)
   )
 }
 
@@ -33,4 +35,4 @@ const middlewares = [
 
 const server = http.createServer(chain(middlewares))
 
-server.listen(process.env.PORT || 3000)
+server.listen(port)

@@ -1,32 +1,12 @@
 import React, { Component } from 'react'
-import Tooltip from 'material-ui/Tooltip'
 import moment from 'moment-timezone'
-import { withStyles } from 'material-ui/styles'
-import EditIcon from 'material-ui-icons/Edit'
-import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog'
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog'
 import Radio, { RadioGroup } from 'material-ui/Radio'
 import { FormControl, FormControlLabel } from 'material-ui/Form'
 import Button from 'material-ui/Button'
+import { ampmMode, timeText, fromUTC, toUTC, fromLocal } from './util'
 const { assign } = Object
 const { cos, sin, PI } = Math
-
-const ampmMode = new Date().toLocaleTimeString().toLowerCase().match(/(am|pm)/)
-
-function fromUTC (utcHour) {
-  return moment.utc(utcHour, 'H').local()
-}
-
-function toUTC (hour) {
-  return +moment(hour, 'H').utc().format('H')
-}
-
-function fromLocal (hour) {
-  return moment(hour, 'H')
-}
-
-function timeText (time) {
-  return ampmMode ? time.format('LT') : time.format('HH:mm')
-}
 
 const ticks1to12 = [
   { l: '114',     t: '40.2346', v: '1' },
@@ -62,10 +42,7 @@ const innerRadius = 54
 const outerRadius = 80
 
 class HourpickerDialog extends Component {
-  state = {
-    value: undefined,
-    ampm: undefined
-  }
+  state = {}
 
   setValue (value) {
     return this.setState({
@@ -74,13 +51,8 @@ class HourpickerDialog extends Component {
     })
   }
 
-  componentWillMount () {
-    this.setValue(fromUTC(this.props.value).format('H'))
-  }
-
-  componentWillUpdate (nextProps) {
-    if (nextProps.value !== this.props.value) {
-      // eslint-disable-next-line react/no-will-update-set-state
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.value !== this.props.value || !this.state.value) {
       this.setValue(fromUTC(nextProps.value).format('H'))
     }
   }
@@ -138,8 +110,8 @@ class HourpickerDialog extends Component {
         aria-labelledby="hourpicker-dialog-title"
         {...other}
       >
-        <DialogTitle id="hourpicker-dialog-title">Check repos daily at:</DialogTitle>
-        <DialogContent>
+        <DialogTitle id="hourpicker-dialog-title">Check every day at</DialogTitle>
+        <DialogContent className={classes.dialogContent}>
           <div className={classes.value}>
             {timeText(fromLocal(value))}<br/><small>Timezone: {moment.tz.guess()}</small>
           </div>
@@ -189,131 +161,4 @@ class HourpickerDialog extends Component {
   }
 }
 
-class Hourpicker extends Component {
-  state = {
-    dialogOpen: false
-  }
-
-  openDialog = () => {
-    this.setState({ dialogOpen: true })
-  }
-
-  closeDialog = (e, value) => {
-    this.setState({ dialogOpen: false })
-    if (value === 'backdropClick') { return }
-    const { utcHour, onSave } = this.props
-    if (value !== utcHour) { onSave(value) }
-  }
-
-  render() {
-    const { utcHour, classes } = this.props
-    const { dialogOpen } = this.state
-    return (
-      <div className={classes.container}>
-        <Tooltip title={`Timezone: ${moment.tz.guess()}`} placement="bottom">
-          <div>&nbsp;at <span className={classes.text} onClick={this.openDialog}>{timeText(fromUTC(utcHour))}<EditIcon className={classes.editIcon}/></span></div>
-        </Tooltip>
-        <HourpickerDialog
-          classes={classes}
-          open={dialogOpen}
-          onClose={this.closeDialog}
-          value={utcHour}
-        />
-      </div>
-    )
-  }
-}
-
-const styles = theme => ({
-  controlsContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  ampm: {
-    marginLeft: theme.spacing.unit * 2
-  },
-  value: {
-    fontSize: '1.2em',
-    textAlign: 'center',
-    marginBottom: theme.spacing.unit * 2
-  },
-  canvas: {
-    width: '200px',
-    height: '200px',
-    position: 'absolute',
-    left: '-1px',
-    top: '-1px'
-  },
-  canvasBg: {
-    stroke: 'none',
-    fill: '#c0e5f7'
-  },
-  canvasBearing: {
-    stroke: 'none',
-    fill: '#0095dd'
-  },
-  canvasFg: {
-    stroke: 'none',
-    fill: '#0095dd'
-  },
-  canvasLine: {
-    stroke: '#0095dd',
-    strokeWidth: 1,
-    strokeLinecap: 'round'
-  },
-  plate: {
-    backgroundColor: '#fff',
-    border: '1px solid #ccc',
-    borderRadius: '50%',
-    width: '200px',
-    height: '200px',
-    overflow: 'visible',
-    position: 'relative',
-    '-webkit-touch-callout': 'none',
-    '-webkit-user-select': 'none',
-    '-khtml-user-select': 'none',
-    '-moz-user-select': 'none',
-    '-ms-user-select': 'none',
-    'userSelect': 'none'
-  },
-  dial: {
-    height: '200px',
-    position: 'absolute',
-    width: '200px',
-    left: '-1px',
-    top: '-1px',
-    fontSize: '14px'
-  },
-  tick: {
-    borderRadius: '50%',
-    color: '#666',
-    lineHeight: '26px',
-    textAlign: 'center',
-    width: '26px',
-    height: '26px',
-    position: 'absolute',
-    cursor: 'pointer'
-  },
-  container: {
-    fontSize: theme.typography.body1.fontSize
-  },
-  text: {
-    cursor: 'pointer',
-    position: 'relative',
-    '&:hover': {
-      textDecoration: 'underline'
-    }
-  },
-  editIcon: {
-    bottom: 0,
-    display: 'none',
-    left: '100%',
-    position: 'absolute',
-    ':hover > &': {
-      display: 'block'
-    }
-  }
-})
-
-export default withStyles(styles)(Hourpicker)
+export default withMobileDialog()(HourpickerDialog)

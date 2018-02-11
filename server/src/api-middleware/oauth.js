@@ -11,11 +11,9 @@ export function start (req, res, next) {
   const state = randomBytes(32).toString('hex')
   const flags = 'Path=/; expires=0; HttpOnly; SameSite=Lax'
   const cookies = [`githubOAuthState=${state}; ${flags}`]
-  const { repos } = req.params || {}
-  if (repos) {
-    const reposHex = new Buffer(repos).toString('hex')
-    cookies.push([`repos=${reposHex}; ${flags}`])
-  }
+  const { repos, returnTo } = req.params || {}
+  if (repos) { cookies.push([`repos=${hex(repos)}; ${flags}`]) }
+  if (returnTo) { cookies.push([`returnTo=${hex(returnTo)}; ${flags}`]) }
   res.writeHead(302, {
     'Set-Cookie': cookies,
     'Location': `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user:email&state=${state}`
@@ -25,19 +23,22 @@ export function start (req, res, next) {
 
 export async function done (req, res, next) {
   const { code, state } = req.params
-  const { githubOAuthState: rightState, repos } = req.cookies
+  const { githubOAuthState: rightState, repos, returnTo } = req.cookies
   const flags = 'Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
   const cookies = [
     `githubOAuthState=; ${flags}`,
-    `repos=; ${flags}`
+    `repos=; ${flags}`,
+    `returnTo=; ${flags}`
   ]
+  let redirect = clientHost
   if (state === rightState && code) {
     const token = await authToken(code, state, repos)
     cookies.push(setCookieTokenHeader(token))
+    redirect += parseReturnTo(returnTo)
   }
   res.writeHead(302, {
     'Set-Cookie': cookies,
-    Location: clientHost
+    Location: redirect
   })
   res.end()
 }
@@ -99,11 +100,29 @@ async function getEmail (accessToken) {
 function parseRepos (repos) {
   if (!repos) { return [] }
   try {
-    repos = Buffer.from(repos, 'hex').toString()
+    repos = fromHex(repos)
     repos = decodeURIComponent(repos)
     repos = JSON.parse(repos)
     return validRepos(repos) ? repos : []
   } catch (e) {
     return []
   }
+}
+
+function parseReturnTo (returnTo) {
+  if (!returnTo) { return '' }
+  try {
+    returnTo = fromHex(returnTo)
+    return /^\/[a-z0-9\-]+$/.test(returnTo) ? returnTo : ''
+  } catch (e) {
+    return ''
+  }
+}
+
+function hex (string) {
+  return new Buffer(string).toString('hex')
+}
+
+function fromHex (string) {
+  return Buffer.from(string, 'hex').toString()
 }

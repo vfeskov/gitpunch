@@ -37,6 +37,35 @@ export function styles (theme) {
     },
     suggestionIcon: {
       margin: '0 5px'
+    },
+    contentWrapper: {
+      display: 'flex',
+      [theme.breakpoints.down('xs')]: {
+        display: 'block'
+      }
+    },
+    autosuggestWrapper: {
+      flex: 1,
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: theme.spacing.unit
+      }
+    },
+    starredLink: {
+      [theme.breakpoints.up('sm')]: {
+        paddingTop: '6px'
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: theme.spacing.unit,
+        textAlign: 'center'
+      }
+    },
+    or: {
+      padding: '6px 1em 0',
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: theme.spacing.unit,
+        padding: 0,
+        textAlign: 'center'
+      }
     }
   }
 }

@@ -1,35 +1,30 @@
 import { combineReducers } from 'redux'
-import { repoAdd } from './repoAdd'
-import { watching } from './watching'
-import { email } from './email'
-import { bufferRepos } from './bufferRepos'
-import { savedRepos } from './savedRepos'
-import { signedIn } from './signedIn'
-import { inited } from './inited'
-import { unsubscribeMessage } from './unsubscribeMessage'
-import hasAccessToken from './hasAccessToken'
+import repoAdd from './repoAdd'
+import watching from './watching'
+import email from './email'
+import bufferRepos from './bufferRepos'
+import savedRepos from './savedRepos'
+import signedIn from './signedIn'
+import shownRepos from './shownRepos'
+import unwatchMessage from './unwatchMessage'
+import accessToken from './accessToken'
 import frequency from './frequency'
 import checkAt from './checkAt'
+import serverRendered from './serverRendered'
+import starredOpen from './starredOpen'
 
-const allButShownRepos = combineReducers({
+export default combineReducers({
   email,
-  inited,
   repoAdd,
   bufferRepos,
   savedRepos,
   signedIn,
+  shownRepos,
   watching,
-  unsubscribeMessage,
-  hasAccessToken,
+  unwatchMessage,
+  accessToken,
   frequency,
-  checkAt
+  checkAt,
+  serverRendered,
+  starredOpen
 })
-
-export function reducer (prevState, action) {
-  const state = allButShownRepos(prevState, action)
-  const { signedIn, savedRepos, bufferRepos } = state
-  return {
-    ...state,
-    shownRepos: signedIn ? savedRepos : bufferRepos
-  }
-}
