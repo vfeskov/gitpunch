@@ -1,6 +1,7 @@
 {
   "short_name": "Win A Beer",
-  "name": "Win A Beer: Watch Releases On GitHub",
+  "name": "Win A Beer",
+  "description": "Watch Releases On GitHub",
   "icons": [
     {
       "src": "favicon.ico",
