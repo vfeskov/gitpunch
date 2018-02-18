@@ -8,7 +8,7 @@ export default async function loadUsers (collection: Collection) {
     watching: true,
     $or: [
       { frequency: { $exists: false } },
-      { frequency: 'hourly' },
+      { frequency: 'realtime' },
       { frequency: 'daily', checkAt: utcHour }
     ]
   }
