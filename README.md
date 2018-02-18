@@ -13,9 +13,9 @@ Emails look like this:
 
 Make a list of repos on [Win a Beer](https://beer.vfeskov.com) and start watching :)
 
-**Every hour** or **every day**, depending on your preferences, the notifier will check those and if there are new releases it will send a **single** email with all the news combined
+Feeling spammed by all them emails? Switch to watching **daily** and get a single email once a day at the time you choose
 
-To **unsubscribe** from emails just click on "*unsubscribe*" link in any of the emails. You **don't need to be logged in** to do this
+Can't take it anymore? Click **unsubscribe** link in any of the emails and you won't hear from us ever again
 
 ## Further plans
 
