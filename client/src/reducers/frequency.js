@@ -1,6 +1,6 @@
 import { SIGN_IN, FETCH_PROFILE, SIGN_OUT, SAVE_FREQUENCY } from '../actions'
 
-const defaultFrequency = 'hourly'
+const defaultFrequency = 'realtime'
 
 export default function frequency (state = defaultFrequency, action) {
   switch (action.type) {

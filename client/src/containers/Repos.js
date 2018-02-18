@@ -46,7 +46,7 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
             className={classes.frequencyOptions}
             onChange={handleFrequencyChange}
           >
-            <FormControlLabel value="realtime" control={<Radio />} className={classes.hourlyOption} label="Realtime" />
+            <FormControlLabel value="realtime" control={<Radio />} className={classes.realtimeOption} label="Realtime" />
             <FormControlLabel value="daily" control={<Radio />} className={classes.dailyOption} label="Daily" />
             {frequency === 'daily' && <Hourpicker utcHour={checkAt} onSave={saveCheckAt} />}
           </RadioGroup>
@@ -96,7 +96,7 @@ const styles = theme => ({
     cursor: 'pointer',
     textDecoration: 'underline'
   },
-  hourlyOption: {
+  realtimeOption: {
     marginLeft: 0
   },
   dailyOption: {
