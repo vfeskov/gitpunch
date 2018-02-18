@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import Radio, { RadioGroup } from 'material-ui/Radio'
-import { FormLabel, FormControl, FormControlLabel } from 'material-ui/Form'
+import { FormControl, FormControlLabel } from 'material-ui/Form'
 import Switch from 'material-ui/Switch'
 import Hourpicker from '../components/Hourpicker'
 
@@ -54,7 +54,7 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
       </div>}
     </div>
   ) : (
-    <Typography type="title">{title}</Typography>
+    <Typography variant="title">{title}</Typography>
   )
   return (
     <Paper className={className}>

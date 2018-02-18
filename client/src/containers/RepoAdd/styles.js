@@ -2,7 +2,8 @@ export function styles (theme) {
   return {
     container: {
       flexGrow: 1,
-      position: 'relative'
+      position: 'relative',
+      paddingRight: theme.spacing.unit
     },
     suggestionsContainerOpen: {
       position: 'absolute',
@@ -39,28 +40,28 @@ export function styles (theme) {
       margin: '0 5px'
     },
     contentWrapper: {
+      alignItems: 'center',
       display: 'flex',
       [theme.breakpoints.down('xs')]: {
         display: 'block'
       }
     },
     autosuggestWrapper: {
+      alignItems: 'center',
+      display: 'flex',
       flex: 1,
       [theme.breakpoints.down('xs')]: {
         marginBottom: theme.spacing.unit
       }
     },
     starredLink: {
-      [theme.breakpoints.up('sm')]: {
-        paddingTop: '6px'
-      },
       [theme.breakpoints.down('xs')]: {
         marginBottom: theme.spacing.unit,
         textAlign: 'center'
       }
     },
     or: {
-      padding: '6px 1em 0',
+      padding: '0 1em',
       [theme.breakpoints.down('xs')]: {
         marginBottom: theme.spacing.unit,
         padding: 0,

@@ -16,11 +16,3 @@ Make a list of repos on [Win a Beer](https://beer.vfeskov.com) and start watchin
 Feeling spammed by all them emails? Switch to watching **daily** and get a single email once a day at the time you choose
 
 Can't take it anymore? Click **unsubscribe** link in any of the emails and you won't hear from us ever again
-
-## Further plans
-
-1. Mute button next to each repo #13
-2. Show repo versions, of which users were alerted already #14
-3. Browser extensions to allow subscribing right from a GitHub page
-
-Support me with a star ♥

@@ -9,7 +9,7 @@ class GitHubButton extends Component {
     const { bufferRepos: repos, classes, className, text } = this.props
     const link = oauthUrl({ repos })
     return (
-      <Button href={link} raised className={`${classes.theButton} ${className}`}>
+      <Button href={link} variant="raised" className={`${classes.theButton} ${className}`}>
         {GitHubIcon()}&nbsp;{text}
       </Button>
     )

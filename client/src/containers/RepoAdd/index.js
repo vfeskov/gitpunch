@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { renderInput, renderSuggestion, renderSuggestionsContainer } from './components'
 import Paper from 'material-ui/Paper'
+import Button from 'material-ui/Button'
+import AddIcon from 'material-ui-icons/Add'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import debounce from 'lodash.debounce'
@@ -41,9 +43,9 @@ class RepoAdd extends Component {
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
     return (
       <Paper className={className}>
-        <Typography type="title">Watch repo for new releases</Typography>
+        <Typography variant="title">Watch repo for new releases</Typography>
         <div className={classes.contentWrapper}>
-          <div className={classes.autosuggestWrapper}>
+          <form className={classes.autosuggestWrapper} onSubmit={this.onSubmit}>
             <Autosuggest
               theme={{
                 container: classes.container,
@@ -66,11 +68,12 @@ class RepoAdd extends Component {
                 suggestionsLoading,
                 value,
                 onChange: (ev, { newValue }) => disabled || this.setValue(newValue),
-                onKeyPress: this.handleKeyPress
               }}
             />
-            <small>Press <strong>Enter</strong> to confirm</small>
-          </div>
+            <Button type="submit" size="small" variant="raised">
+              Watch
+            </Button>
+          </form>
           <div className={classes.or}>or</div>
           <div className={classes.starredLink}>
             <a href={starredLink} onClick={this.starredClicked}>pick starred repos</a>
@@ -95,11 +98,12 @@ class RepoAdd extends Component {
     this.props.setRepoAddValue(value)
   }
 
-  handleKeyPress = ev => {
-    if (ev.key !== 'Enter') { return }
-    const repo = ev.target.value
-    if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
-      this.confirm(repo)
+  onSubmit = ev => {
+    ev.preventDefault()
+    const { value, disabled } = this.props.repoAdd
+    if (disabled) { return }
+    if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value)) {
+      this.confirm(value)
     }
   }
 
