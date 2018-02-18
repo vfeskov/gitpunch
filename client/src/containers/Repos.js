@@ -88,8 +88,9 @@ const styles = theme => ({
   },
   titleLabel: theme.typography.title,
   frequencyOptions: {
+    alignItems: 'center',
     flexDirection: 'row',
-    alignItems: 'center'
+    marginLeft: '-12px'
   },
   checkAtText: {
     cursor: 'pointer',
