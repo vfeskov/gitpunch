@@ -19,14 +19,14 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
 }
 
 const entryRegExp = /<entry>[\s\S]*?<\/entry>/gm
-const titleRegExp = /<title>([^<]+)<\/title>/
+const idRegExp = new RegExp('<id>[^<]+/([^/<]+)</id>')
 
 async function fetchThem (repo: string) {
   const response = await fetch(`https://github.com/${ repo }/releases.atom`)
   const xml = await response.text()
   return (xml.match(entryRegExp) || [])
     .map(entry => {
-      const match = entry.match(titleRegExp)
+      const match = entry.match(idRegExp)
       if (!match) { return }
       return { name: match[1], entry }
     })
