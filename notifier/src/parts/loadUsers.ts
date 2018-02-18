@@ -3,15 +3,22 @@ import log from './log'
 import { DBUser } from './interfaces'
 
 export default async function loadUsers (collection: Collection) {
-  const utcHour = new Date().getUTCHours()
   const query = {
     watching: true,
     $or: [
       { frequency: { $exists: false } },
-      { frequency: 'realtime' },
-      { frequency: 'daily', checkAt: utcHour }
-    ]
+      { frequency: 'realtime' }
+    ] as any
   }
+
+  const date = new Date()
+  if (date.getUTCMinutes() === 0) {
+    query.$or.push({
+      frequency: 'daily',
+      checkAt: date.getUTCHours()
+    })
+  }
+
   const dbUsers = await collection.find(query, {
     projection: { passwordEncrypted: 0 }
   }).toArray()
