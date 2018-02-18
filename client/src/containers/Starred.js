@@ -158,4 +158,4 @@ export default connect(
     addRepo,
     removeRepo
   }
-)(withMobileDialog()(withStyles(styles)(StarredDialog)))
+)(withMobileDialog({ breakpoint: 'xs' })(withStyles(styles)(StarredDialog)))

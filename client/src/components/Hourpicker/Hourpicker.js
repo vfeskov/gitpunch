@@ -135,6 +135,11 @@ const styles = theme => ({
     ':hover > &': {
       display: 'block'
     }
+  },
+  dialogTitle: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between'
   }
 })
 

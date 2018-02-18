@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import moment from 'moment-timezone'
 import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog'
 import Radio, { RadioGroup } from 'material-ui/Radio'
+import IconButton from 'material-ui/IconButton'
+import CloseIcon from 'material-ui-icons/Close'
 import { FormControl, FormControlLabel } from 'material-ui/Form'
 import Button from 'material-ui/Button'
 import { ampmMode, timeText, fromUTC, toUTC, fromLocal } from './util'
@@ -110,7 +112,14 @@ class HourpickerDialog extends Component {
         aria-labelledby="hourpicker-dialog-title"
         {...other}
       >
-        <DialogTitle id="hourpicker-dialog-title">Check every day at</DialogTitle>
+        <DialogTitle id="hourpicker-dialog-title">
+          <div className={classes.dialogTitle}>
+            Watch daily at
+            <IconButton color="inherit" onClick={this.handleCancel} aria-label="Close">
+              <CloseIcon />
+            </IconButton>
+          </div>
+        </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <div className={classes.value}>
             {timeText(fromLocal(value))}<br/><small>Timezone: {moment.tz.guess()}</small>
@@ -149,11 +158,8 @@ class HourpickerDialog extends Component {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleCancel} color="primary">
-            Cancel
-          </Button>
           <Button onClick={this.handleOk} color="primary">
-            Ok
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -161,4 +167,4 @@ class HourpickerDialog extends Component {
   }
 }
 
-export default withMobileDialog()(HourpickerDialog)
+export default withMobileDialog({ breakpoint: 'xs' })(HourpickerDialog)
