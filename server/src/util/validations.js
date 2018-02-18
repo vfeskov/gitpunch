@@ -19,7 +19,7 @@ export function validWatching (watching) {
 }
 
 export function validFrequency (frequency) {
-  return typeof frequency === 'string' && ['hourly', 'daily'].includes(frequency)
+  return typeof frequency === 'string' && ['realtime', 'daily'].includes(frequency)
 }
 
 export function validCheckAt (checkAt) {

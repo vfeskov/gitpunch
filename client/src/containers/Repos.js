@@ -39,7 +39,6 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
       />
       {watching && <div>
         <FormControl component="div" style={{flexDirection: 'row', alignItems: 'center'}}>
-          <FormLabel component="legend">Check every</FormLabel>
           <RadioGroup
             aria-label="Check for updates"
             name="frequency"
@@ -47,8 +46,8 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
             className={classes.frequencyOptions}
             onChange={handleFrequencyChange}
           >
-            <FormControlLabel value="hourly" control={<Radio />} className={classes.hourlyOption} label="hour" />
-            <FormControlLabel value="daily" control={<Radio />} className={classes.dailyOption} label="day" />
+            <FormControlLabel value="realtime" control={<Radio />} className={classes.hourlyOption} label="Realtime" />
+            <FormControlLabel value="daily" control={<Radio />} className={classes.dailyOption} label="Daily" />
             {frequency === 'daily' && <Hourpicker utcHour={checkAt} onSave={saveCheckAt} />}
           </RadioGroup>
         </FormControl>

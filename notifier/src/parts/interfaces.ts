@@ -22,8 +22,7 @@ export interface FullUser extends User {
 export interface ActionableUser extends User {
   actionableRepos: {
     [type: string]: RepoWithTags[]
-  },
-  deleteAccessToken?: boolean
+  }
 }
 
 export interface RepoGroup {
@@ -32,25 +31,15 @@ export interface RepoGroup {
 }
 
 export interface RepoGroupWithTags extends RepoGroup {
-  tags: TagCut[]
+  tags: Tag[]
 }
 
 export interface RepoWithTags {
   repo: string
-  tags: TagCut[]
+  tags: Tag[]
 }
 
 export interface Tag {
   name: string
-  zipball_url: string
-  tarball_url: string
-  commit: {
-    sha: string
-    url: string
-  }
-}
-
-export interface TagCut {
-  name: string
-  sha: string
+  entry: string
 }

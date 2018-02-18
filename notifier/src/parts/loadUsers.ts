@@ -1,5 +1,6 @@
-import { DBUser } from './interfaces'
 import { Collection } from 'mongodb'
+import log from './log'
+import { DBUser } from './interfaces'
 
 export default async function loadUsers (collection: Collection) {
   const utcHour = new Date().getUTCHours()
@@ -14,7 +15,7 @@ export default async function loadUsers (collection: Collection) {
   const dbUsers = await collection.find(query, {
     projection: { passwordEncrypted: 0 }
   }).toArray()
-  return dbUsers.map(user => {
+  const users = dbUsers.map(user => {
     user.alerted = (user.alerted || [])
       .reduce((alerted, [repo, tag]) => {
         alerted[repo] = tag
@@ -22,4 +23,6 @@ export default async function loadUsers (collection: Collection) {
       }, {})
     return user
   }) as DBUser[]
+  log('dbUsers', users)
+  return users
 }

@@ -1,4 +1,5 @@
 import { DBUser, RepoGroup } from './interfaces'
+import log from './log'
 
 export default function groupByRepo (users: DBUser[]): RepoGroup[] {
   const byRepo = users.reduce((byRepo, { _id, email, alerted, accessToken, repos }) => {
@@ -8,5 +9,7 @@ export default function groupByRepo (users: DBUser[]): RepoGroup[] {
     })
     return byRepo
   }, {})
-  return Object.keys(byRepo).map(r => byRepo[r])
+  const result = Object.keys(byRepo).map(r => byRepo[r])
+  log('uniqueReposCount', result.length)
+  return result
 }

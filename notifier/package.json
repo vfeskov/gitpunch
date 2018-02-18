@@ -4,18 +4,19 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "bundle": "time sh ./npm-scripts/bundle.sh",
-    "build": "webpack",
-    "start": "source .env && node -e \"require('./build').handler(null, null, console.log)\"",
+    "bundle": "webpack && time sh ./npm-scripts/bundle.sh",
+    "start": "webpack && source .env && node -e \"require('./build').handler(null, null, console.log)\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
   "dependencies": {
+    "he": "^1.1.1",
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.1",
     "node-fetch": "^1.7.3"
   },
   "devDependencies": {
+    "@types/he": "^0.5.29",
     "@types/mongodb": "^3.0.5",
     "@types/node-fetch": "^1.6.7",
     "awesome-typescript-loader": "^3.4.1",
