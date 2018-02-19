@@ -1,6 +1,6 @@
-# [Win A Beer](https://beer.vfeskov.com)
+# [Win A Beer](https://winabeer.com)
 
-**The** webservice to watch for releases on GitHub: [https://beer.vfeskov.com](https://beer.vfeskov.com)
+**The** webservice to watch for releases on GitHub: [https://winabeer.com](https://winabeer.com)
 
 <img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" width="600px" /><br/>
 
@@ -18,7 +18,7 @@ Emails look like this:
 
 ## How to use
 
-Make a list of repos on [Win a Beer](https://beer.vfeskov.com) and start watching :)
+Make a list of repos on [Win a Beer](https://winabeer.com) and start watching :)
 
 Feeling spammed by all them emails? Switch to watching **daily** and get a single email once a day at the time you choose
 
