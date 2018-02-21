@@ -10,5 +10,6 @@ export function start () {
 
 export function finish () {
   const diff = process.hrtime(time);
-  log('durationMilliseconds', (diff[0] * NS_PER_SEC + diff[1]) / NS_PER_MS)
+  const duration = (diff[0] * NS_PER_SEC + diff[1]) / NS_PER_MS
+  log('durationMilliseconds', { duration })
 }

@@ -29,7 +29,7 @@ export async function handler (event, context, callback) {
     client.close()
     done()
   } catch (e) {
-    log('error', e)
+    log('error', { error: e })
     done(e)
   }
 }
