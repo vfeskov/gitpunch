@@ -14,7 +14,20 @@ import Hourpicker from '../components/Hourpicker'
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
 
-function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, classes, className, frequency, checkAt, saveFrequency, saveCheckAt }) {
+function Repos ({
+  signedIn,
+  shownRepos,
+  watching,
+  toggleWatching,
+  removeRepo,
+  classes,
+  className,
+  frequency,
+  checkAt,
+  saveFrequency,
+  saveCheckAt,
+  alerted
+}) {
   const title = !shownRepos.length ?
     'Not watching any repo yet' :
     !signedIn ?
@@ -26,7 +39,7 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
     saveFrequency({ frequency, checkAt })
   }
   const header = signedIn && shownRepos.length ? (
-    <div>
+    <div style={{ display: 'flex' }}>
       <FormControlLabel
         classes={{ label: classes.titleLabel }}
         control={
@@ -57,40 +70,55 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
     <Typography variant="title">{title}</Typography>
   )
   return (
-    <Paper className={className}>
+    <div className={className}>
       {header}
       {shownRepos.map(repo =>
         <div className={classes.item} key={repo}>
-          <a href={`https://github.com/${repo}`} target="_blank">{repo}</a>
           <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
             <DeleteIcon />
           </IconButton>
+          <a className={classes.repoLink} href={`https://github.com/${repo}`} target="_blank">{repo}</a>
+          {/* {alerted[repo] &&
+            <a
+              href={`https://github.com/${repo}/releases/tag/${alerted[repo]}`}
+              target="_blank"
+              className={classes.releaseLink}
+            >
+              {alerted[repo]}
+            </a>
+          } */}
         </div>
       )}
-    </Paper>
+    </div>
   )
 }
 
 Repos.propTypes = {
+  classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   signedIn: PropTypes.bool.isRequired,
   shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
   removeRepo: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   watching: PropTypes.bool.isRequired,
-  toggleWatching: PropTypes.func.isRequired
+  toggleWatching: PropTypes.func.isRequired,
+  frequency: PropTypes.string.isRequired,
+  checkAt: PropTypes.number.isRequired,
+  saveFrequency: PropTypes.func.isRequired,
+  saveCheckAt: PropTypes.func.isRequired,
+  alerted: PropTypes.object.isRequired
 }
 
 const styles = theme => ({
   item: {
+    alignItems: 'center',
     display: 'flex',
-    alignItems: 'center'
+    marginLeft: '-12px'
   },
   titleLabel: theme.typography.title,
   frequencyOptions: {
     alignItems: 'center',
-    flexDirection: 'row',
-    marginLeft: '-12px'
+    flexDirection: 'row'
   },
   checkAtText: {
     cursor: 'pointer',
@@ -101,6 +129,10 @@ const styles = theme => ({
   },
   dailyOption: {
     marginRight: 0
+  },
+  releaseLink: {
+    fontSize: '0.8em',
+    marginLeft: '12px'
   }
 })
 
@@ -110,7 +142,8 @@ export default connect(
     shownRepos: state.shownRepos,
     watching: state.watching,
     frequency: state.frequency,
-    checkAt: state.checkAt
+    checkAt: state.checkAt,
+    alerted: state.alerted
   }),
   mapDispatchToProps()
 )(withStyles(styles)(Repos))

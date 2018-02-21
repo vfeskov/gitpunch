@@ -2,8 +2,7 @@ export function styles (theme) {
   return {
     container: {
       flexGrow: 1,
-      position: 'relative',
-      paddingRight: theme.spacing.unit
+      position: 'relative'
     },
     suggestionsContainerOpen: {
       position: 'absolute',
@@ -50,9 +49,16 @@ export function styles (theme) {
       alignItems: 'center',
       display: 'flex',
       flex: 1,
+      position: 'relative',
       [theme.breakpoints.down('xs')]: {
         marginBottom: theme.spacing.unit
       }
+    },
+    addButton: {
+      bottom: 0,
+      minWidth: '32px',
+      position: 'absolute',
+      right: 0
     },
     starredLink: {
       [theme.breakpoints.down('xs')]: {

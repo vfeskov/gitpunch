@@ -12,6 +12,7 @@ import frequency from './frequency'
 import checkAt from './checkAt'
 import serverRendered from './serverRendered'
 import starredOpen from './starredOpen'
+import alerted from './alerted'
 
 export default combineReducers({
   email,
@@ -26,5 +27,6 @@ export default combineReducers({
   frequency,
   checkAt,
   serverRendered,
-  starredOpen
+  starredOpen,
+  alerted
 })

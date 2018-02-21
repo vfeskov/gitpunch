@@ -25,7 +25,7 @@ class SignIn extends Component {
     const { bufferRepos, className, classes } = this.props
     const { email, password } = this.state
     return (
-      <Paper className={className}>
+      <div className={className}>
         <GitHubButton bufferRepos={bufferRepos} text="Sign In with GitHub"/>
         <div className={classes.or}>or</div>
         <form onSubmit={e => this.signIn(e)} className={classes.form}>
@@ -41,7 +41,7 @@ class SignIn extends Component {
             Sign In
           </Button>
         </form>
-      </Paper>
+      </div>
     )
   }
 

@@ -1,0 +1,79 @@
+.first {
+  animation: first 1000ms 1 linear;
+}
+
+@keyframes first {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.second {
+  animation: second 1000ms 1 linear;
+}
+
+@keyframes second {
+  0% { opacity: 0; }
+  80% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.third {
+  animation: third 2000ms 1 linear;
+}
+
+@keyframes third {
+  0% { opacity: 0; }
+  90% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.fourth {
+  animation: fourth 3000ms 1 linear;
+}
+
+@keyframes fourth {
+  0% { opacity: 0; }
+  93.33% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.fifth {
+  animation: fifth 4000ms 1 linear;
+}
+
+@keyframes fifth {
+  0% { opacity: 0; }
+  95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.sixth {
+  animation: sixth 5000ms 1 linear;
+}
+
+@keyframes sixth {
+  0% { opacity: 0; }
+  96% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.seventh {
+  animation: seventh 6000ms 1 linear;
+}
+
+@keyframes seventh {
+  0% { opacity: 0; }
+  96.66% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.direct-speech {
+  align-items: flex-start;
+  display: flex;
+}
+
+.direct-speech::before {
+  content: "—";
+  display: block;
+  padding-right: 0.5em;
+}
