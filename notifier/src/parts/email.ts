@@ -71,7 +71,6 @@ export default class Email {
             `<div style="margin: 20px 0">
               <div style="font-size: 1.5em; line-height: 1.5em; margin: 0;" word-wrap: "break-word">
                 <a href="https://github.com/${repo}">${repo}</a>
-                &#32;
                 <a href="https://github.com/${repo}/releases/tag/${name}" style="font-weight: bold;">${name}</a>
               </div>
               <div style="padding: 10px; border: 1px dashed #888;">
@@ -81,18 +80,18 @@ export default class Email {
           ).join('')
         ).join('')}
         <br/>
-        Best wishes from&#32;<a href="${appUrl}">Win A Beer</a><br/>
+        Best wishes from <a href="${appUrl}">Win A Beer</a><br/>
         <br/>
         ---<br/>
         <small>
           This is an automated message, reply if you have any questions<br/>
-          To stop getting these emails click&#32;<a href="${this.unsubscribeUrl()}">unsubscribe</a><br/>
-          <a href="https://github.com/vfeskov/win-a-beer">Support&#32;<strong>Win A Beer</strong>&#32;with a star ♥</a>
+          To stop getting these emails click <a href="${this.unsubscribeUrl()}">unsubscribe</a><br/>
+          <a href="https://github.com/vfeskov/win-a-beer">Support <strong>Win A Beer</strong> with a star ♥</a>
         </small>
       </div>`
-        .replace(/\s*\n\s*/g, '')
-        .replace(/\s+</g, '<')
-        .replace(/>\s+/g, '>')
+        .replace(/\s*\n\s*/g, ' ')
+        .replace(/\s+</g, ' <')
+        .replace(/>\s+/g, '> ')
   }
 
   private unsubscribeUrl () {
