@@ -1,10 +1,10 @@
 import { createMuiTheme } from 'material-ui/styles'
-import { indigo, purple } from 'material-ui/colors'
+import { purple, grey } from 'material-ui/colors'
 
 export default () => createMuiTheme({
   palette: {
-    primary: indigo,
+    primary: grey,
     accent: purple,
-    type: 'light',
+    type: 'light'
   },
 })

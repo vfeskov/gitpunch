@@ -1,6 +1,7 @@
 import { all, take, put, call, fork, select } from 'redux-saga/effects'
 import * as actions from '../actions'
 import * as api from '../services/api'
+import * as cookie from '../services/cookie'
 
 function* onApiRequest (actionGroup, api) {
   while (true) {
@@ -51,14 +52,13 @@ function* onRemoveRepo () {
   }
 }
 
-function* onSignedInChanges (once = false) {
+function* onSignedInChanges () {
   while (true) {
-    if (!once) { yield take('*') }
+    yield take('*')
     const { signedIn, savedRepos, bufferRepos, shownRepos } = yield select()
     const newShownRepos = signedIn ? savedRepos : bufferRepos
-    if (newShownRepos === shownRepos && !once) { continue }
+    if (newShownRepos === shownRepos) { continue }
     yield put(actions.setShownRepos(newShownRepos))
-    if (once) { break }
   }
 }
 
@@ -72,7 +72,13 @@ function* onStartup () {
   } catch (error) {
     yield put(actions.fetchProfile.failure(error))
   }
-  yield onSignedInChanges(true)
+  const { signedIn, savedRepos, bufferRepos } = yield select()
+  yield put(actions.setShownRepos(signedIn ? savedRepos : bufferRepos))
+  if (signedIn || cookie.get('dontShowIntro')) {
+    yield put(actions.setShowIntro('n'))
+  } else {
+    yield put(actions.setShowIntro('y'))
+  }
 }
 
 export default function* root () {

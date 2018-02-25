@@ -7,8 +7,7 @@ export function prerenderClient (port) {
   const layout = fs.readFileSync('./public/layout.html').toString()
   return async ({ method, headers }, res, next) => {
     if (method !== 'GET') { return next() }
-    const fetchOpts = { headers: { cookie: headers.cookie } }
-    const { html, state, css } = await renderToStrings(port, fetchOpts)
+    const { html, state, css } = await renderToStrings(port, headers.cookie)
     const content = layout
       .replace(
         '<div id="root"></div>',

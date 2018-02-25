@@ -9,7 +9,7 @@ class GitHubButton extends Component {
     const { bufferRepos: repos, classes, className, text } = this.props
     const link = oauthUrl({ repos })
     return (
-      <Button href={link} variant="raised" className={`${classes.theButton} ${className}`}>
+      <Button href={link} variant="raised" color="secondary" className={`${classes.theButton} ${className}`}>
         {GitHubIcon()}&nbsp;{text}
       </Button>
     )
@@ -18,12 +18,10 @@ class GitHubButton extends Component {
 
 export default withStyles(() => ({
   theButton: {
+    borderRadius: '36px',
+    display: 'inline-flex',
     marginBottom: '16px',
-    backgroundColor: '#24292e',
-    color: 'rgba(255, 255, 255, 0.75)',
-    width: '100%',
     '&:hover, &:focus': {
-      backgroundColor: '#24292e',
       color: '#fff'
     }
   },

@@ -19,6 +19,10 @@ export function styles (theme) {
       padding: 0,
       listStyleType: 'none',
     },
+    title: {
+      ...theme.typography.title,
+      marginTop: 0
+    },
     textField: {
       width: '100%',
     },
@@ -42,13 +46,15 @@ export function styles (theme) {
       alignItems: 'center',
       display: 'flex',
       [theme.breakpoints.down('xs')]: {
-        display: 'block'
+        flexDirection: 'column'
       }
     },
     autosuggestWrapper: {
       alignItems: 'center',
       display: 'flex',
       flex: 1,
+      width: '360px',
+      maxWidth: '100%',
       position: 'relative',
       [theme.breakpoints.down('xs')]: {
         marginBottom: theme.spacing.unit
@@ -69,9 +75,7 @@ export function styles (theme) {
     or: {
       padding: '0 1em',
       [theme.breakpoints.down('xs')]: {
-        marginBottom: theme.spacing.unit,
-        padding: 0,
-        textAlign: 'center'
+        display: 'none'
       }
     }
   }

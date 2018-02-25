@@ -6,7 +6,7 @@ export default function bufferRepos (state = [], action) {
     case FETCH_PROFILE.SUCCESS:
       return []
     case ADD_REPO_TO_BUFFER:
-      return state.includes(action.repo) ? state : state.concat(action.repo)
+      return state.includes(action.repo) ? state : [action.repo, ...state]
     case REMOVE_REPO_FROM_BUFFER:
       return state.includes(action.repo) ? state.filter(r => r !== action.repo) : state
     default:

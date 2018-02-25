@@ -1,44 +1,51 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Repos from './Repos'
 import SignIn from './SignIn'
 import RepoAdd from './RepoAdd'
 import UnwatchMessage from './UnwatchMessage'
 import Starred from './Starred'
-import SignOut from '../components/SignOut'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import Intro from '../components/Intro'
+import * as cookie from '../services/cookie'
 import { withStyles } from 'material-ui/styles'
-import './App.css'
 
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
 
-class App extends Component {
+class App extends PureComponent {
+  skip = () => {
+    cookie.set('dontShowIntro', 1)
+    this.props.setShowIntro('n')
+  }
+
+  showIntro = () => {
+    this.props.setShowIntro('y')
+  }
+
   render () {
-    const { classes, signedIn, email, signOut } = this.props
-    const { app, sectionContainer, container, repos } = classes;
+    const { classes, signedIn, email, signOut, showIntro } = this.props
     return (
-      <div className={app}>
-        <div style={{fontSize: '1.5rem'}}>
-          <div style={{margin: '1em 0'}} className="direct-speech">
-            <div>
-              <span className="first">I bet a <strong>beer</strong>&#32;</span>
-              <span className="second">that you can't watch&#32;</span>
-              <span className="third">for <strong>releases</strong>&#32;</span>
-              <span className="fourth">on <strong>GitHub</strong></span>
+      <div className={classes.app}>
+        <div className={classes.contentContainer + ' ' + (showIntro === 'n' ? classes.contentOn : '')}>
+          <div className={classes.content}>
+            <Header className={classes.block} email={email} signOut={signOut} />
+            <RepoAdd className={`${classes.block} ${classes.maxWidth}`} />
+            <div className={`${classes.container} ${classes.maxWidth}`}>
+              <Repos className={`${classes.block} ${classes.repos}`} />
+              {!signedIn && <SignIn className={classes.block} />}
             </div>
           </div>
-          <div style={{margin: '1em 0'}} className="fifth direct-speech">Game on, sucker!</div>
-          <div style={{margin: '1em 0'}} className="sixth">And then he won that beer.</div>
-        </div>
-        <div style={{fontSize: '1.5rem', margin: '1em 0'}} className="seventh">Win A Beer</div>
-        {/* {SignOut({ className: sectionContainer, email, signOut })}
-        <RepoAdd className={sectionContainer} />
-        <div className={container}>
-          <Repos className={`${sectionContainer} ${repos}`} />
-          {!signedIn && <SignIn className={sectionContainer} />}
+          <Footer className={classes.block} watchIntro={this.showIntro}></Footer>
         </div>
         <Starred />
-        <UnwatchMessage /> */}
+        <UnwatchMessage />
+        <div className={classes.introContainer + ' ' + (showIntro === 'y' ? classes.introOn : classes.introOff)}>
+          <div className={classes.maxWidth}>
+            <Intro onSkip={this.skip} showIntro={showIntro} />
+          </div>
+        </div>
       </div>
     )
   }
@@ -68,51 +75,87 @@ class App extends Component {
 App.propTypes = {
   classes: PropTypes.object.isRequired,
   email: PropTypes.string.isRequired,
+  showIntro: PropTypes.string.isRequired,
   signedIn: PropTypes.bool.isRequired,
-  signOut: PropTypes.func.isRequired
+  accessToken: PropTypes.string.isRequired,
+  signOut: PropTypes.func.isRequired,
+  setShowIntro: PropTypes.func.isRequired
 }
 
-const styles = theme => {
-  return {
-    app: {
-      boxSizing: 'border-box',
-      height: '100%',
-      maxWidth: '800px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      marginTop: -theme.spacing.unit,
-      paddingTop: theme.spacing.unit,
-      [theme.breakpoints.up('sm')]: {
-        marginTop: -theme.spacing.unit * 2,
-        paddingTop: theme.spacing.unit * 2
-      }
+const styles = theme => ({
+  app: {
+    boxSizing: 'border-box',
+    height: '100%',
+    overflow: 'hidden',
+    position: 'relative'
+  },
+  container: {
+    [theme.breakpoints.up('sm')]: {
+      flexDirection: 'row'
     },
-    container: {
-      [theme.breakpoints.up('sm')]: {
-        flexDirection: 'row'
-      },
-      display: 'flex',
-      flexDirection: 'column'
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  block: {
+    [theme.breakpoints.up('sm')]: {
+      marginBottom: theme.spacing.unit * 3,
+      padding: theme.spacing.unit * 4
     },
-    sectionContainer: {
-      [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing.unit * 4,
-        margin: theme.spacing.unit * 2
-      },
-      padding: theme.spacing.unit * 2,
-      margin: theme.spacing.unit
-    },
-    repos: {
-      flex: 1
-    }
+    marginBottom: theme.spacing.unit * 1.5,
+    padding: theme.spacing.unit * 2
+  },
+  maxWidth: {
+    boxSizing: 'border-box',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    maxWidth: '600px',
+    position: 'relative'
+  },
+  repos: {
+    flex: 1
+  },
+  introContainer: {
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    transition: 'all 500ms'
+  },
+  introOn: {
+    opacity: 1,
+    zIndex: 10000
+  },
+  introOff: {
+    opacity: 0,
+    pointerEvents: 'none',
+    top: '-500px',
+    zIndex: 0
+  },
+  contentContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    opacity: 0,
+    overflow: 'auto',
+    position: 'relative',
+    top: '500px',
+    transition: 'opacity 500ms, top 500ms'
+  },
+  contentOn: {
+    opacity: 1,
+    top: 0
+  },
+  content: {
+    flex: '1 0 auto'
   }
-}
+})
 
 export default connect(
   state => ({
     email: state.email,
-    inited: state.inited,
-    signedIn: state.signedIn
+    signedIn: state.signedIn,
+    accessToken: state.accessToken,
+    showIntro: state.showIntro
   }),
   mapDispatchToProps()
 )(withStyles(styles)(App))

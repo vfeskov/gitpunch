@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import moment from 'moment-timezone'
-import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog'
+import Dialog, { DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog'
 import Radio, { RadioGroup } from 'material-ui/Radio'
 import IconButton from 'material-ui/IconButton'
 import CloseIcon from 'material-ui-icons/Close'
 import { FormControl, FormControlLabel } from 'material-ui/Form'
-import Button from 'material-ui/Button'
 import { ampmMode, timeText, fromUTC, toUTC, fromLocal } from './util'
 const { assign } = Object
 const { cos, sin, PI } = Math
@@ -59,14 +58,6 @@ class HourpickerDialog extends Component {
     }
   }
 
-  handleCancel = e => {
-    this.props.onClose(e, this.props.value)
-  }
-
-  handleOk = e => {
-    this.props.onClose(e, toUTC(this.state.value))
-  }
-
   handleValueChange = (value, ampm = this.state.ampm) => {
     value = +value
     if (ampmMode) {
@@ -74,6 +65,7 @@ class HourpickerDialog extends Component {
       if (ampm === 'pm') { value += 12 }
     }
     this.setValue(value)
+    this.props.onChange(toUTC(value))
   }
 
   handleAMPMChange = ampm => {
@@ -115,7 +107,7 @@ class HourpickerDialog extends Component {
         <DialogTitle id="hourpicker-dialog-title">
           <div className={classes.dialogTitle}>
             Watch daily at
-            <IconButton color="inherit" onClick={this.handleCancel} aria-label="Close">
+            <IconButton color="inherit" onClick={this.props.onClose} aria-label="Close">
               <CloseIcon />
             </IconButton>
           </div>
@@ -157,11 +149,6 @@ class HourpickerDialog extends Component {
             )}
           </div>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleOk} color="primary">
-            Save
-          </Button>
-        </DialogActions>
       </Dialog>
     )
   }

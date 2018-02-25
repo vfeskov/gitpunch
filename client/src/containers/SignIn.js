@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { withStyles } from 'material-ui/styles'
 import PropTypes from 'prop-types'
-import Paper from 'material-ui/Paper'
 import Button from 'material-ui/Button'
 import Input, { InputLabel } from 'material-ui/Input'
 import { FormControl } from 'material-ui/Form'
@@ -25,8 +24,8 @@ class SignIn extends Component {
     const { bufferRepos, className, classes } = this.props
     const { email, password } = this.state
     return (
-      <div className={className}>
-        <GitHubButton bufferRepos={bufferRepos} text="Sign In with GitHub"/>
+      <div className={`${className} ${classes.container}`}>
+        <GitHubButton bufferRepos={bufferRepos} text="GitHub Sign In"/>
         <div className={classes.or}>or</div>
         <form onSubmit={e => this.signIn(e)} className={classes.form}>
           <FormControl required className={classes.formControl}>
@@ -37,7 +36,7 @@ class SignIn extends Component {
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input id="password" type="password" required value={password} onChange={ev => this.handlePasswordChange(ev)} />
           </FormControl>
-          <Button type="submit" variant="raised">
+          <Button type="submit" variant="raised" className={classes.signIn}>
             Sign In
           </Button>
         </form>
@@ -78,7 +77,11 @@ SignIn.propTypes = {
 
 function styles (theme) {
   return {
+    container: {
+      textAlign: 'center'
+    },
     form: {
+      alignItems: 'center',
       display: 'flex',
       flexDirection: 'column'
     },
@@ -98,6 +101,9 @@ function styles (theme) {
     },
     dailyOption: {
       marginRight: 0
+    },
+    signIn: {
+      borderRadius: '36px'
     }
   }
 }
