@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { renderInput, renderSuggestion, renderSuggestionsContainer } from './components'
-import Paper from 'material-ui/Paper'
 import Button from 'material-ui/Button'
-import AddIcon from 'material-ui-icons/Add'
+import SendIcon from 'material-ui-icons/Send'
 import { withStyles } from 'material-ui/styles'
-import Typography from 'material-ui/Typography'
 import debounce from 'lodash.debounce'
 import { styles } from './styles'
 import oauthUrl from '../../lib/oauthUrl'
@@ -42,8 +40,8 @@ class RepoAdd extends Component {
     const { suggestions, suggestionsLoading } = this.state
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
     return (
-      <Paper className={className}>
-        <Typography variant="title">Watch repo for new releases</Typography>
+      <div className={className}>
+        {/* <h2 className={classes.title}>Watch repo for new releases</h2> */}
         <div className={classes.contentWrapper}>
           <form className={classes.autosuggestWrapper} onSubmit={this.onSubmit}>
             <Autosuggest
@@ -70,16 +68,16 @@ class RepoAdd extends Component {
                 onChange: (ev, { newValue }) => disabled || this.setValue(newValue),
               }}
             />
-            <Button type="submit" size="small" variant="raised">
-              Watch
+            <Button type="submit" size="small" className={classes.addButton}>
+              <SendIcon />
             </Button>
           </form>
-          <div className={classes.or}>or</div>
+          <div className={classes.or}>/</div>
           <div className={classes.starredLink}>
             <a href={starredLink} onClick={this.starredClicked}>pick starred repos</a>
           </div>
         </div>
-      </Paper>
+      </div>
     )
   }
 

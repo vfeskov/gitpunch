@@ -1,6 +1,5 @@
 import React from 'react'
 import IconButton from 'material-ui/IconButton'
-import Paper from 'material-ui/Paper'
 import DeleteIcon from 'material-ui-icons/Delete'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
@@ -14,7 +13,20 @@ import Hourpicker from '../components/Hourpicker'
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
 
-function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, classes, className, frequency, checkAt, saveFrequency, saveCheckAt }) {
+function Repos ({
+  signedIn,
+  shownRepos,
+  watching,
+  toggleWatching,
+  removeRepo,
+  classes,
+  className,
+  frequency,
+  checkAt,
+  saveFrequency,
+  saveCheckAt,
+  alerted
+}) {
   const title = !shownRepos.length ?
     'Not watching any repo yet' :
     !signedIn ?
@@ -26,7 +38,7 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
     saveFrequency({ frequency, checkAt })
   }
   const header = signedIn && shownRepos.length ? (
-    <div>
+    <div className={classes.controlGroup}>
       <FormControlLabel
         classes={{ label: classes.titleLabel }}
         control={
@@ -38,7 +50,7 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
         label={title}
       />
       {watching && <div>
-        <FormControl component="div" style={{flexDirection: 'row', alignItems: 'center'}}>
+        <FormControl component="div" style={{flexDirection: 'row', alignItems: 'center', marginLeft: '-12px', display: 'flex'}}>
           <RadioGroup
             aria-label="Check for updates"
             name="frequency"
@@ -57,40 +69,68 @@ function Repos ({ signedIn, shownRepos, watching, toggleWatching, removeRepo, cl
     <Typography variant="title">{title}</Typography>
   )
   return (
-    <Paper className={className}>
+    <div className={`${className} ${classes.container}`}>
       {header}
-      {shownRepos.map(repo =>
-        <div className={classes.item} key={repo}>
-          <a href={`https://github.com/${repo}`} target="_blank">{repo}</a>
-          <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
-            <DeleteIcon />
-          </IconButton>
+      {shownRepos.length ? (
+        shownRepos.map(repo =>
+          <div className={classes.item} key={repo}>
+            <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
+              <DeleteIcon />
+            </IconButton>
+            <a className={classes.repoLink} href={`https://github.com/${repo}`} target="_blank">{repo}</a>
+            {/* {alerted[repo] &&
+              <a
+                href={`https://github.com/${repo}/releases/tag/${alerted[repo]}`}
+                target="_blank"
+                className={classes.releaseLink}
+              >
+                {alerted[repo]}
+              </a>
+            } */}
+          </div>
+        )
+      ) : (
+        <div>
+          <p>Add some above and get emails like:</p>
+          <a href="/email.png" target="_blank" style={{border: '2px dotted rgb(153, 153, 153)', display: 'inline-block', padding: '1rem', position: 'relative'}}>
+            <img src="/email-mini.png" alt="email content" style={{width: '280px'}}/>
+          </a>
         </div>
       )}
-    </Paper>
+    </div>
   )
 }
 
 Repos.propTypes = {
+  classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   signedIn: PropTypes.bool.isRequired,
   shownRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
   removeRepo: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
   watching: PropTypes.bool.isRequired,
-  toggleWatching: PropTypes.func.isRequired
+  toggleWatching: PropTypes.func.isRequired,
+  frequency: PropTypes.string.isRequired,
+  checkAt: PropTypes.number.isRequired,
+  saveFrequency: PropTypes.func.isRequired,
+  saveCheckAt: PropTypes.func.isRequired,
+  alerted: PropTypes.object.isRequired
 }
 
 const styles = theme => ({
+  container: {
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center'
+    }
+  },
   item: {
+    alignItems: 'center',
     display: 'flex',
-    alignItems: 'center'
+    marginLeft: '-12px'
   },
   titleLabel: theme.typography.title,
   frequencyOptions: {
     alignItems: 'center',
-    flexDirection: 'row',
-    marginLeft: '-12px'
+    flexDirection: 'row'
   },
   checkAtText: {
     cursor: 'pointer',
@@ -101,6 +141,17 @@ const styles = theme => ({
   },
   dailyOption: {
     marginRight: 0
+  },
+  releaseLink: {
+    fontSize: '0.8em',
+    marginLeft: '12px'
+  },
+  controlGroup: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column'
+    }
   }
 })
 
@@ -110,7 +161,8 @@ export default connect(
     shownRepos: state.shownRepos,
     watching: state.watching,
     frequency: state.frequency,
-    checkAt: state.checkAt
+    checkAt: state.checkAt,
+    alerted: state.alerted
   }),
   mapDispatchToProps()
 )(withStyles(styles)(Repos))

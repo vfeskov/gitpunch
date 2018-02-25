@@ -31,6 +31,7 @@ export const REMOVE_REPO = 'REMOVE_REPO'
 export const TOGGLE_WATCHING = 'TOGGLE_WATCHING'
 export const SET_SHOWN_REPOS = 'SET_SHOWN_REPOS'
 export const SET_STARRED_OPEN = 'SET_STARRED_OPEN'
+export const SET_SHOW_SPLASH = 'SET_SHOW_SPLASH'
 
 function action(type, payload = {}) {
   return { type, ...payload }
@@ -99,6 +100,7 @@ export const removeRepo = repo => action(REMOVE_REPO, { repo })
 export const toggleWatching = () => action(TOGGLE_WATCHING)
 export const setShownRepos = repos => action(SET_SHOWN_REPOS, { repos })
 export const setStarredOpen = value => action(SET_STARRED_OPEN, { value })
+export const setShowIntro = state => action(SET_SHOW_SPLASH, { state })
 
 export const mapDispatchToProps = () => ({
   signIn: signIn.request,
@@ -117,5 +119,6 @@ export const mapDispatchToProps = () => ({
   addRepo,
   removeRepo,
   setShownRepos,
-  setStarredOpen
+  setStarredOpen,
+  setShowIntro
 })

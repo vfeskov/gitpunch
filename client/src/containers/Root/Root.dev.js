@@ -10,7 +10,7 @@ export default class Root extends Component {
 
     return (
       <Provider store={store}>
-        <div>
+        <div style={{ height: '100%' }}>
           <App />
           <DevTools />
         </div>

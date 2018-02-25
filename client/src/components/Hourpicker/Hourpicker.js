@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Tooltip from 'material-ui/Tooltip'
 import moment from 'moment-timezone'
 import { withStyles } from 'material-ui/styles'
-import EditIcon from 'material-ui-icons/Edit'
 import HourpickerDialog from './HourpickerDialog'
 import { timeText, fromUTC } from './util'
 
@@ -15,25 +14,23 @@ class Hourpicker extends Component {
     this.setState({ dialogOpen: true })
   }
 
-  closeDialog = (e, value) => {
+  closeDialog = () => {
     this.setState({ dialogOpen: false })
-    if (value === 'backdropClick') { return }
-    const { utcHour, onSave } = this.props
-    if (value !== utcHour) { onSave(value) }
   }
 
   render() {
-    const { utcHour, classes } = this.props
+    const { utcHour, classes, onSave } = this.props
     const { dialogOpen } = this.state
     return (
       <div className={classes.container}>
         <Tooltip title={`Timezone: ${moment.tz.guess()}`} placement="bottom">
-          <div>&nbsp;at <span className={classes.text} onClick={this.openDialog}>{timeText(fromUTC(utcHour))}<EditIcon className={classes.editIcon}/></span></div>
+          <div>&nbsp;at <a className={classes.text} onClick={this.openDialog}>{timeText(fromUTC(utcHour))}</a></div>
         </Tooltip>
         <HourpickerDialog
           classes={classes}
           open={dialogOpen}
           onClose={this.closeDialog}
+          onChange={onSave}
           value={utcHour}
         />
       </div>
@@ -64,24 +61,24 @@ const styles = theme => ({
   },
   canvasBg: {
     stroke: 'none',
-    fill: '#c0e5f7'
+    fill: '#F8BBD0'
   },
   canvasBearing: {
     stroke: 'none',
-    fill: '#0095dd'
+    fill: theme.palette.secondary.main
   },
   canvasFg: {
     stroke: 'none',
-    fill: '#0095dd'
+    fill: theme.palette.secondary.main
   },
   canvasLine: {
-    stroke: '#0095dd',
+    stroke: theme.palette.secondary.main,
     strokeWidth: 1,
     strokeLinecap: 'round'
   },
   plate: {
     backgroundColor: '#fff',
-    border: '1px solid #ccc',
+    border: '1px solid #000',
     borderRadius: '50%',
     width: '200px',
     height: '200px',
@@ -104,7 +101,7 @@ const styles = theme => ({
   },
   tick: {
     borderRadius: '50%',
-    color: '#666',
+    color: '#000',
     lineHeight: '26px',
     textAlign: 'center',
     width: '26px',
@@ -122,19 +119,10 @@ const styles = theme => ({
   },
   text: {
     cursor: 'pointer',
-    position: 'relative',
-    '&:hover': {
-      textDecoration: 'underline'
-    }
+    position: 'relative'
   },
-  editIcon: {
-    bottom: 0,
-    display: 'none',
-    left: '100%',
-    position: 'absolute',
-    ':hover > &': {
-      display: 'block'
-    }
+  active: {
+    color: '#fff'
   },
   dialogTitle: {
     alignItems: 'center',

@@ -8,12 +8,14 @@ import configureStore from './store/configureStore'
 import rootSaga from './sagas'
 import createTheme from './theme/createTheme'
 import * as api from './services/api'
+import * as cookieSvc from './services/cookie'
 
-export async function renderToStrings (serverPort, fetchOpts) {
+export async function renderToStrings (serverPort, cookie) {
   api.setBase({
     url: `http://localhost:${serverPort}`,
-    opts: fetchOpts
+    opts: { headers: { cookie } }
   })
+  cookieSvc.setSource(cookie)
 
   const store = configureStore()
   const sagaDone = store.runSaga(rootSaga).done

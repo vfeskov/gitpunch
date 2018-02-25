@@ -44,7 +44,7 @@ cd ../client
 npm run build
 cd ../server
 npm run build
-npx dotenv-cli npm start
+source .env && npm start
 ```
 Or build docker image in root of the project and run it:
 ```bash
