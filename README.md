@@ -3,7 +3,7 @@
 Watch for releases on GitHub. [Visit](https://winabeer.com) and learn the origin of the name ;)
 
 ## In action
-<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" width="577px"/><br/>
+<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" width="552px"/><br/>
 
 ## Emails look like this
 <img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/email.png" width="600px" />
