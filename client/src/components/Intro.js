@@ -9,12 +9,17 @@ export class Intro extends Component {
     ds: 0
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.showIntro === this.props.showIntro) { return }
-    if (nextProps.showIntro === 'y') {
+  componentDidMount () {
+    if (this.props.showIntro !== 'y') { return }
+    this.timeoutId = setTimeout(this.scheduleIncDS, 3750)
+  }
+
+  componentWillReceiveProps ({ showIntro }) {
+    if (showIntro === this.props.showIntro) { return }
+    this.timeoutId && clearTimeout(this.timeoutId)
+    if (showIntro === 'y') {
       this.timeoutId = setTimeout(this.scheduleIncDS, 4250)
     } else {
-      clearTimeout(this.timeoutId)
       this.setState({ ds: 0 })
     }
   }

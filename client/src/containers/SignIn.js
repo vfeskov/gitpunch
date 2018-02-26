@@ -25,7 +25,7 @@ class SignIn extends Component {
     const { email, password } = this.state
     return (
       <div className={`${className} ${classes.container}`}>
-        <GitHubButton bufferRepos={bufferRepos} text="GitHub Sign In"/>
+        <GitHubButton bufferRepos={bufferRepos}/>
         <div className={classes.or}>or</div>
         <form onSubmit={e => this.signIn(e)} className={classes.form}>
           <FormControl required className={classes.formControl}>

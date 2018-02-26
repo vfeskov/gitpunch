@@ -52,7 +52,7 @@ class StarredDialog extends Component {
                   checked={repo.winabeering}
                   onChange={() => this.toggleWinabeering(repo)}
                 />
-                <a href={`https://github.com/${repo.full_name}`} target="_blank">{repo.full_name}</a>
+                <a href={`https://github.com/${repo.full_name}`} target="_blank" rel="noopener noreferrer">{repo.full_name}</a>
               </div>
               <div className={classes.description}>{repo.description || 'No description'}</div>
             </div>

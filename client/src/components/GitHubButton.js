@@ -6,11 +6,11 @@ import oauthUrl from '../lib/oauthUrl'
 
 class GitHubButton extends Component {
   render () {
-    const { bufferRepos: repos, classes, className, text } = this.props
+    const { bufferRepos: repos, classes, className } = this.props
     const link = oauthUrl({ repos })
     return (
       <Button href={link} variant="raised" color="secondary" className={`${classes.theButton} ${className}`}>
-        {GitHubIcon()}&nbsp;{text}
+        {GitHubIcon()}&nbsp;GitHub&nbsp;Sign&nbsp;In
       </Button>
     )
   }

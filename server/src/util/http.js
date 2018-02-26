@@ -4,7 +4,7 @@ export function success (res, payload, headers = {}) {
   const content = JSON.stringify(payload)
   res.writeHead(200, assign({
     'Content-Type': 'application/json',
-    'Content-Length' : Buffer.from(content).length
+    'Content-Length' : Buffer.byteLength(content)
   }, headers))
   res.end(content)
 }

@@ -10,7 +10,6 @@ function fetchApi (endpoint, opts = {}) {
   return fetch(`${base.url}/api/${endpoint}`, assign(base.opts, opts))
     .then(response => {
       if (response.status !== 200) { throw response }
-      if (!response.headers.get('Content-Length')) { return '' }
       switch (response.headers.get('Content-Type')) {
         case 'application/json': return response.json()
         default: return response.text()

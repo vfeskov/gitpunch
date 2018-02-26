@@ -115,15 +115,16 @@ const styles = theme => ({
     flex: 1
   },
   introContainer: {
+    height: '100%',
     left: 0,
-    position: 'absolute',
     top: 0,
+    position: 'absolute',
     width: '100%',
-    transition: 'all 500ms'
+    transition: 'opacity 500ms, top 500ms',
   },
   introOn: {
     opacity: 1,
-    zIndex: 10000
+    zIndex: 10
   },
   introOff: {
     opacity: 0,
@@ -132,18 +133,21 @@ const styles = theme => ({
     zIndex: 0
   },
   contentContainer: {
+    boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
     opacity: 0,
     overflow: 'auto',
-    position: 'relative',
-    top: '500px',
-    transition: 'opacity 500ms, top 500ms'
+    pointerEvents: 'none',
+    paddingTop: '500px',
+    transition: 'opacity 500ms, padding-top 500ms',
+    width: '100%'
   },
   contentOn: {
     opacity: 1,
-    top: 0
+    pointerEvents: 'all',
+    paddingTop: 0
   },
   content: {
     flex: '1 0 auto'

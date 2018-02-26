@@ -13,7 +13,7 @@ export class Header extends PureComponent {
       <div className={`${className} ${classes.container}`}>
         <span>
           <a href="" className={classes.logo}>Win A Beer</a>
-          <a href="https://github.com/vfeskov/WinABeer" target="_blank">GitHub</a>
+          <a href="https://github.com/vfeskov/WinABeer" target="_blank" rel="noopener noreferrer">GitHub</a>
         </span>
         <span className={classes.spacer}></span>
         {email && (<span>

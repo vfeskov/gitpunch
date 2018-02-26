@@ -34,6 +34,15 @@ class RepoAdd extends Component {
     )
   }
 
+  componentDidMount () {
+    this.props.showIntro === 'n' && this.inputRef && this.inputRef.focus()
+  }
+
+  componentWillReceiveProps ({ showIntro }) {
+    if (showIntro !== 'n') { return }
+    setTimeout(() => this.inputRef && this.inputRef.focus(), 500)
+  }
+
   render () {
     const { className, classes, repoAdd, accessToken, bufferRepos: repos } = this.props
     const { value, disabled } = repoAdd
@@ -41,7 +50,6 @@ class RepoAdd extends Component {
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
     return (
       <div className={className}>
-        {/* <h2 className={classes.title}>Watch repo for new releases</h2> */}
         <div className={classes.contentWrapper}>
           <form className={classes.autosuggestWrapper} onSubmit={this.onSubmit}>
             <Autosuggest
@@ -61,7 +69,7 @@ class RepoAdd extends Component {
               onSuggestionSelected={(ev, { suggestionValue }) => this.confirm(suggestionValue)}
               renderSuggestion={(...args) => renderSuggestion(classes, ...args)}
               inputProps={{
-                autoFocus: true,
+                inputRef: inputRef => this.inputRef = inputRef,
                 classes,
                 suggestionsLoading,
                 value,
@@ -102,6 +110,8 @@ class RepoAdd extends Component {
     if (disabled) { return }
     if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value)) {
       this.confirm(value)
+    } else {
+      this.inputRef && this.inputRef.focus()
     }
   }
 
@@ -165,14 +175,16 @@ RepoAdd.propTypes = {
   addRepo: PropTypes.func.isRequired,
   setRepoAddValue: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  accessToken: PropTypes.string.isRequired
+  accessToken: PropTypes.string.isRequired,
+  showIntro: PropTypes.string.isRequired
 }
 
 export default connect(
   state => ({
     repoAdd: state.repoAdd,
     accessToken: state.accessToken,
-    bufferRepos: state.bufferRepos
+    bufferRepos: state.bufferRepos,
+    showIntro: state.showIntro
   }),
   mapDispatchToProps()
 )(withStyles(styles)(RepoAdd))

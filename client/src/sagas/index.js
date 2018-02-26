@@ -3,11 +3,11 @@ import * as actions from '../actions'
 import * as api from '../services/api'
 import * as cookie from '../services/cookie'
 
-function* onApiRequest (actionGroup, api) {
+function* onApiRequest (actionGroup, apiMethod) {
   while (true) {
     const { type, ...params } = yield take(actionGroup.requestId)
     try {
-      const response = yield call(api, params)
+      const response = yield call(apiMethod, params)
       yield put(actionGroup.success(response))
     } catch (error) {
       yield put(actionGroup.failure(error))
@@ -15,10 +15,7 @@ function* onApiRequest (actionGroup, api) {
   }
 }
 
-const apiActions = (
-  'signIn signOut saveCheckAt saveFrequency saveWatching ' +
-  'createRepo deleteRepo unwatch'
-).split(' ')
+const apiActions = 'signIn signOut saveCheckAt saveFrequency saveWatching createRepo deleteRepo unwatch'.split(' ')
 
 const genericApiRequests = apiActions.reduce((r, id) =>
   r.concat(onApiRequest.bind(null, actions[id], api[id]))

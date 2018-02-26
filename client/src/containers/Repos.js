@@ -77,11 +77,12 @@ function Repos ({
             <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
               <DeleteIcon />
             </IconButton>
-            <a className={classes.repoLink} href={`https://github.com/${repo}`} target="_blank">{repo}</a>
+            <a className={classes.repoLink} href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">{repo}</a>
             {/* {alerted[repo] &&
               <a
                 href={`https://github.com/${repo}/releases/tag/${alerted[repo]}`}
                 target="_blank"
+                rel="noopener noreferrer"
                 className={classes.releaseLink}
               >
                 {alerted[repo]}
@@ -92,7 +93,7 @@ function Repos ({
       ) : (
         <div>
           <p>Add some above and get emails like:</p>
-          <a href="/email.png" target="_blank" style={{border: '2px dotted rgb(153, 153, 153)', display: 'inline-block', padding: '1rem', position: 'relative'}}>
+          <a href="/email.png" target="_blank" rel="noopener noreferrer" style={{border: '2px dotted rgb(153, 153, 153)', display: 'inline-block', padding: '1rem', position: 'relative'}}>
             <img src="/email-mini.png" alt="email content" style={{width: '280px'}}/>
           </a>
         </div>

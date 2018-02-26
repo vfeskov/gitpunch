@@ -31,7 +31,7 @@ export function renderInput (inputProps) {
           classes: {
             input: classes.input,
           },
-          ...other,
+          ...other
         }}
       />
       {suggestionsLoading ? <LinearProgress className={classes.progress} /> : null}
