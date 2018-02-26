@@ -1,8 +1,9 @@
 # [Win A Beer](https://winabeer.com)
 
-**The** webservice to watch for releases on GitHub: [https://winabeer.com](https://winabeer.com)
+Watch for releases on GitHub: [https://winabeer.com](https://winabeer.com). Visit and learn the origin of the name ;)
 
-<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" width="600px" /><br/>
+In action:
+<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" /><br/>
 
 Emails look like this:
 
