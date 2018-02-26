@@ -1,12 +1,11 @@
 # [Win A Beer](https://winabeer.com)
 
-Watch for releases on GitHub: [https://winabeer.com](https://winabeer.com). Visit and learn the origin of the name ;)
+Watch for releases on GitHub. [Visit](https://winabeer.com) and learn the origin of the name ;)
 
-In action:
-<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" /><br/>
+In action:<br/>
+<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" width="577px"/><br/>
 
-Emails look like this:
-
+Emails look like this:<br/>
 <img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/email.png" width="600px" />
 
 ## How's it better than others
