@@ -27,11 +27,6 @@ function Repos ({
   saveCheckAt,
   alerted
 }) {
-  const title = !shownRepos.length ?
-    'Not watching any repo yet' :
-    !signedIn ?
-      'Sign in to start watching' :
-      watching ? 'Watching' : 'Not watching'
   function handleFrequencyChange (e, frequency) {
     if (frequency !== 'daily') { return saveFrequency({ frequency }) }
     const checkAt = +moment('9', 'H').utc().format('H')
@@ -47,7 +42,7 @@ function Repos ({
             onChange={toggleWatching}
           />
         }
-        label={title}
+        label={watching ? 'Watching' : 'Not watching'}
       />
       {watching && <div>
         <FormControl component="div" style={{flexDirection: 'row', alignItems: 'center', marginLeft: '-12px', display: 'flex'}}>
@@ -66,32 +61,32 @@ function Repos ({
       </div>}
     </div>
   ) : (
-    <h2 className={classes.title}>{title}</h2>
+    shownRepos.length ? (
+      <h2 className={classes.title}>Sign in to start watching</h2>
+    ) : (
+      <h2 className={classes.title}>Get <a href="/email.png" target="_blank" rel="noopener noreferrer">emails</a> in realtime or daily</h2>
+    )
   )
   return (
     <div className={`${className} ${classes.container}`}>
       {header}
-      {shownRepos.length ? (
-        shownRepos.map(repo =>
-          <div className={classes.item} key={repo}>
-            <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
-              <DeleteIcon />
-            </IconButton>
-            <a className={classes.repoLink} href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">{repo}</a>
-            {/* {alerted[repo] &&
-              <a
-                href={`https://github.com/${repo}/releases/tag/${alerted[repo]}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={classes.releaseLink}
-              >
-                {alerted[repo]}
-              </a>
-            } */}
-          </div>
-        )
-      ) : (
-        <div>Add some and get emails like <a href="/email.png" target="_blank" rel="noopener noreferrer">this</a></div>
+      {shownRepos.map(repo =>
+        <div className={classes.item} key={repo}>
+          <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
+            <DeleteIcon />
+          </IconButton>
+          <a className={classes.repoLink} href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">{repo}</a>
+          {/* {alerted[repo] &&
+            <a
+              href={`https://github.com/${repo}/releases/tag/${alerted[repo]}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={classes.releaseLink}
+            >
+              {alerted[repo]}
+            </a>
+          } */}
+        </div>
       )}
     </div>
   )
