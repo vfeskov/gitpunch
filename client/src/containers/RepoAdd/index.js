@@ -50,6 +50,7 @@ class RepoAdd extends Component {
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
     return (
       <div className={className}>
+        <h2 className={classes.title}>Watch GitHub repo for releases</h2>
         <div className={classes.contentWrapper}>
           <form className={classes.autosuggestWrapper} onSubmit={this.onSubmit}>
             <Autosuggest

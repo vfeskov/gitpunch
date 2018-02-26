@@ -26,7 +26,7 @@ export function renderInput (inputProps) {
         className={classes.textField}
         value={value}
         inputRef={ref}
-        placeholder="Enter repo name or link to watch releases of"
+        placeholder="Enter name or paste link"
         InputProps={{
           classes: {
             input: classes.input,

@@ -21,7 +21,11 @@ export function styles (theme) {
     },
     title: {
       ...theme.typography.title,
-      marginTop: 0
+      marginBottom: theme.spacing.unit,
+      marginTop: 0,
+      [theme.breakpoints.down('xs')]: {
+        textAlign: 'center'
+      }
     },
     textField: {
       width: '100%',

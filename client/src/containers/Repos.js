@@ -66,7 +66,7 @@ function Repos ({
       </div>}
     </div>
   ) : (
-    <Typography variant="title">{title}</Typography>
+    <h2 className={classes.title}>{title}</h2>
   )
   return (
     <div className={`${className} ${classes.container}`}>
@@ -91,12 +91,7 @@ function Repos ({
           </div>
         )
       ) : (
-        <div>
-          <p>Add some above and get emails like:</p>
-          <a href="/email.png" target="_blank" rel="noopener noreferrer" style={{border: '2px dotted rgb(153, 153, 153)', display: 'inline-block', padding: '1rem', position: 'relative'}}>
-            <img src="/email-mini.png" alt="email content" style={{width: '280px'}}/>
-          </a>
-        </div>
+        <div>Add some and get emails like <a href="/email.png" target="_blank" rel="noopener noreferrer">this</a></div>
       )}
     </div>
   )
@@ -152,6 +147,14 @@ const styles = theme => ({
     justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column'
+    }
+  },
+  title: {
+    ...theme.typography.title,
+    marginBottom: theme.spacing.unit * 2,
+    marginTop: 0,
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center'
     }
   }
 })
