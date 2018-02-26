@@ -57,7 +57,7 @@ export function styles (theme) {
       alignItems: 'center',
       display: 'flex',
       flex: 1,
-      width: '360px',
+      width: '290px',
       maxWidth: '100%',
       position: 'relative',
       [theme.breakpoints.down('xs')]: {
