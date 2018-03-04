@@ -6,18 +6,20 @@ export function verifyToken (token) {
   return new Promise((r, e) => JWT.verify(
     token,
     process.env.WAB_JWT_SECRET,
+    { algorithms: ['HS256'] },
     (err, data) => err ? e(err) : r(data)
   ))
 }
 
 export function signToken (payload) {
-  return JWT.sign(payload, process.env.WAB_JWT_SECRET)
+  return JWT.sign(payload, process.env.WAB_JWT_SECRET, { algorithm: 'HS256' })
 }
 
 export function verifyUnsubscribeToken (token) {
   return new Promise((r, e) => JWT.verify(
     token,
     LAMBDA_JWT_RSA_PUBLIC_KEY,
+    { algorithms: ['RS256'] },
     (err, data) => err ? e(err) : r(data)
   ))
 }
