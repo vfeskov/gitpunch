@@ -1,7 +1,6 @@
 import { ActionableUser } from './interfaces'
 import fetchThem, { trackFetchErrors } from './fetchThem'
-import { RepoGroupWithTags, RepoGroup, User } from './interfaces'
-import { SEND_EMAIL_AND_UPDATE_ALERTED, ONLY_UPDATE_ALERTED } from './constants'
+import { SEND_EMAIL_AND_UPDATE_ALERTED } from './constants'
 
 export default async function fetchReleaseNotes (users: ActionableUser[]) {
   const repos = users.map(u => u.actionableRepos[SEND_EMAIL_AND_UPDATE_ALERTED])

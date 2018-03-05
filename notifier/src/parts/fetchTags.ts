@@ -1,5 +1,5 @@
 import fetchThem, { trackFetchErrors } from './fetchThem'
-import { RepoGroupWithTags, RepoGroup, User } from './interfaces'
+import { RepoGroup } from './interfaces'
 
 export default async function fetchTags (byRepo: RepoGroup[]) {
   const errors = trackFetchErrors()
