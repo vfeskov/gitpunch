@@ -1,8 +1,10 @@
 import * as JWT from 'jsonwebtoken'
+import { minify } from 'html-minifier'
 import { decode } from 'he'
 import { SES } from 'aws-sdk'
 import log from './log'
 import { ActionableUser, RepoWithTags } from './interfaces'
+const { byteLength } = Buffer;
 const privateKey = process.env.JWT_RSA_PRIVATE_KEY.replace(/\\n/g, '\n')
 const appUrl = process.env.APP_URL
 const from = process.env.FROM
@@ -14,6 +16,8 @@ const ses = new SES({
 
 export default class Email {
   private oneRelease: boolean
+  private bodyBytes: number
+  private compression: number
 
   constructor (private email: string, private repos: RepoWithTags[]) {
     this.oneRelease = repos.length === 1 && repos[0].tags.length === 1
@@ -35,7 +39,13 @@ export default class Email {
         }
       }
     }
-    log('alert', { params })
+    log('alert', {
+      email: this.email,
+      subject: params.Message.Subject.Data,
+      body: params.Message.Body.Html.Data,
+      bodyBytes: this.bodyBytes,
+      compression: this.compression
+    })
     return new Promise((r, e) =>
       ses.sendEmail(params, (err, data) => err ? e(err) : r(data))
     )
@@ -61,7 +71,7 @@ export default class Email {
 
   body () {
     const { repos, oneRelease } = this
-    return `
+    const raw = `
       <div>
         Greetings :)<br/>
         <br/>
@@ -69,7 +79,7 @@ export default class Email {
         ${repos.map(({ repo, tags }) =>
           tags.map(({ name, entry }) => '' +
             `<div style="margin: 20px 0">
-              <div style="font-size: 1.5em; line-height: 1.5em; margin: 0;" word-wrap: "break-word">
+              <div style="font-size: 1.5em; line-height: 1.5em; margin: 0; word-wrap: break-word;">
                 <a href="https://github.com/${repo}">${repo}</a>
                 <a href="https://github.com/${repo}/releases/tag/${name}" style="font-weight: bold;">${name}</a>
               </div>
@@ -88,10 +98,12 @@ export default class Email {
           To stop getting these emails click <a href="${this.unsubscribeUrl()}">unsubscribe</a><br/>
           <a href="https://github.com/vfeskov/win-a-beer">Support <strong>Win A Beer</strong> with a star ♥</a>
         </small>
-      </div>`
-        .replace(/\s*\n\s*/g, ' ')
-        .replace(/\s+</g, ' <')
-        .replace(/>\s+/g, '> ')
+      </div>
+    `
+    const body = minifyHtml(raw)
+    this.bodyBytes = byteLength(body)
+    this.compression = 1 - this.bodyBytes / byteLength(raw)
+    return body
   }
 
   private unsubscribeUrl () {
@@ -111,5 +123,33 @@ function description (entry: string) {
     return type === 'html' ? decode(raw, { strict: true }) : raw
   } catch (e) {
     return 'No description'
+  }
+}
+
+function minifyHtml (html: string) {
+  try {
+    return minify(html, {
+      collapseBooleanAttributes: true,
+      collapseWhitespace: true,
+      decodeEntities: true,
+      html5: true,
+      minifyCSS: true,
+      minifyJS: true,
+      processConditionalComments: true,
+      removeAttributeQuotes: true,
+      removeComments: true,
+      removeEmptyAttributes: true,
+      removeOptionalTags: true,
+      removeRedundantAttributes: true,
+      removeScriptTypeAttributes: true,
+      removeStyleLinkTypeAttributes: true,
+      removeTagWhitespace: true,
+      sortAttributes: true,
+      sortClassName: true,
+      trimCustomFragments: true,
+      useShortDoctype: true
+    })
+  } catch (e) {
+    return html
   }
 }

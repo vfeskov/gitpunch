@@ -11,12 +11,14 @@
   "license": "MIT",
   "dependencies": {
     "he": "^1.1.1",
+    "html-minifier": "^3.5.10",
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.1",
     "node-fetch": "^1.7.3"
   },
   "devDependencies": {
     "@types/he": "^0.5.29",
+    "@types/html-minifier": "^3.5.1",
     "@types/mongodb": "^3.0.5",
     "@types/node-fetch": "^1.6.7",
     "awesome-typescript-loader": "^3.4.1",
