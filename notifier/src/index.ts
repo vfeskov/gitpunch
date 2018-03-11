@@ -6,7 +6,7 @@ import backToUsers from './parts/backToUsers'
 import findUsersToAlert from './parts/findUsersToAlert'
 import fetchReleaseNotes from './parts/fetchReleaseNotes'
 import sendEmailAndUpdateDb from './parts/sendEmailAndUpdateDb'
-import log from './parts/log'
+import log from './lib/log'
 const url = process.env.MONGODB_URL
 const dbName = process.env.MONGODB_DBNAME
 const collectionName = process.env.MONGODB_COLLECTIONNAME

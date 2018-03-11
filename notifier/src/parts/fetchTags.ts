@@ -1,5 +1,5 @@
-import fetchThem, { trackFetchErrors } from './fetchThem'
-import { RepoGroup } from './interfaces'
+import fetchAtom, { trackFetchErrors } from '../lib/fetchAtom'
+import { RepoGroup } from '../lib/interfaces'
 
 export default async function fetchTags (byRepo: RepoGroup[]) {
   const errors = trackFetchErrors()
@@ -7,7 +7,7 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
     byRepo.map(async ({ repo, users }) => {
       try {
         const url = `https://github.com/${repo}/tags.atom`
-        const tags = await fetchThem(url, false)
+        const tags = await fetchAtom(url, false)
         return { repo, users, tags }
       } catch (error) {
         errors.push(repo, error)

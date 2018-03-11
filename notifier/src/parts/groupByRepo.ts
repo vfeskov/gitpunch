@@ -1,5 +1,5 @@
-import { DBUser, RepoGroup } from './interfaces'
-import log from './log'
+import { DBUser, RepoGroup } from '../lib/interfaces'
+import log from '../lib/log'
 const { keys } = Object
 
 export default function groupByRepo (users: DBUser[]): RepoGroup[] {

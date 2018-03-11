@@ -4,7 +4,7 @@ import log from './log'
 const ATTEMPTS = 3
 const FETCH_OPTIONS = { timeout: 5000 }
 
-export default async function fetchThem (url: string, includeEntry: boolean) {
+export default async function fetchAtom (url: string, includeEntry: boolean) {
   let error
   for (let i = 0; i < ATTEMPTS; i++) {
     try {

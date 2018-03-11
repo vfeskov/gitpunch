@@ -1,8 +1,8 @@
 import { Collection } from 'mongodb'
-import Email from './email'
-import { ActionableUser, Alerted, RepoWithTags } from './interfaces'
-import { SEND_EMAIL_AND_UPDATE_ALERTED, ONLY_UPDATE_ALERTED } from './constants'
-import log from './log'
+import Email from '../lib/email'
+import { ActionableUser, Alerted, RepoWithTags } from '../lib/interfaces'
+import { SEND_EMAIL_AND_UPDATE_ALERTED, ONLY_UPDATE_ALERTED } from '../lib/constants'
+import log from '../lib/log'
 const { assign, keys } = Object
 
 export default function sendEmailAndUpdateDb (users: ActionableUser[], collection: Collection) {

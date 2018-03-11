@@ -1,6 +1,6 @@
-import { ActionableUser } from './interfaces'
-import fetchThem, { trackFetchErrors } from './fetchThem'
-import { SEND_EMAIL_AND_UPDATE_ALERTED } from './constants'
+import { ActionableUser } from '../lib/interfaces'
+import fetchAtom, { trackFetchErrors } from '../lib/fetchAtom'
+import { SEND_EMAIL_AND_UPDATE_ALERTED } from '../lib/constants'
 
 export default async function fetchReleaseNotes (users: ActionableUser[]) {
   const repos = users.map(u => u.actionableRepos[SEND_EMAIL_AND_UPDATE_ALERTED])
@@ -16,7 +16,7 @@ export default async function fetchReleaseNotes (users: ActionableUser[]) {
     reposToFetch.map(async repo => {
       try {
         const url = `https://github.com/${repo}/releases.atom`
-        const releases = await fetchThem(url, true)
+        const releases = await fetchAtom(url, true)
         const map = releases.reduce((res, { name, entry }) => ({ ...res, [name]: entry }), {})
         return { repo, releases: map }
       } catch (error) {
