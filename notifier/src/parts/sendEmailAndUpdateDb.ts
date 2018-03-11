@@ -11,7 +11,7 @@ export default function sendEmailAndUpdateDb (users: ActionableUser[], collectio
       await sendEmail(user)
       await updateDb(user, collection)
     } catch (error) {
-      log('alertAndUpdateDbError', { user, error })
+      log('alertAndUpdateDbError', { user, error: error.message })
     }
   }))
 }

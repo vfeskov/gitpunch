@@ -130,12 +130,10 @@ const tagsWithAttrsToStrip = /<[^>]+\s+[^>]*(data-[\w\d\-]+|class|id)="[^">]*"[^
 const attrsToStrip = /(data-[\w\d\-]+|class|id)="[^">]*"/g
 function minifyHtml (html: string) {
   // strip data-*, class and id attributes
-  html
-    .match(tagsWithAttrsToStrip)
-    .forEach(match => {
-      const stripped = match.replace(attrsToStrip, '')
-      html = html.replace(match, stripped)
-    })
+  (html.match(tagsWithAttrsToStrip) || []).forEach(match => {
+    const stripped = match.replace(attrsToStrip, '')
+    html = html.replace(match, stripped)
+  })
   try {
     return minify(html, {
       collapseBooleanAttributes: true,
