@@ -21,8 +21,6 @@ Watch for releases on GitHub. [Visit](https://winabeer.com) and learn the origin
 AWS CloudWatch dashboard showing data for 1 day:<br/>
 <img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/monitoring.png" width="828px" />
 
-Errors were caused by insufficient memory, fixed by [`5923782`](https://github.com/vfeskov/WinABeer/commit/592378272ab7d91d6e4822640a5ce845af056019) and increasing memory limit by 3 times
-
 ----------
 
 Support Win A Beer with a [&#9733; star](https://github.com/vfeskov/WinABeer) ♥
