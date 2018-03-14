@@ -1,14 +1,16 @@
+import { Agent } from 'https'
 import fetch from 'node-fetch'
 import log from './log'
 
 const ATTEMPTS = 3
-const FETCH_OPTIONS = { timeout: 5000 }
+const agent = new Agent({ keepAlive: true, keepAliveMsecs: 30000 })
+const fetchOptions = { agent, timeout: 5000 }
 
 export default async function fetchAtom (url: string, includeEntry: boolean) {
   let error
   for (let i = 0; i < ATTEMPTS; i++) {
     try {
-      const response = await fetch(url, FETCH_OPTIONS)
+      const response = await fetch(url, fetchOptions)
       const { status } = response
       if (status >= 400 && status < 500) { break }
       if (status !== 200) { throw new BadStatus(status) }
@@ -22,6 +24,10 @@ export default async function fetchAtom (url: string, includeEntry: boolean) {
   }
   if (error) { throw error }
   throw new NoTags()
+}
+
+export function closeHttpsConnections () {
+  agent.destroy()
 }
 
 const ENTRY_REGEXP = /<entry>[\s\S]*?<\/entry>/gm

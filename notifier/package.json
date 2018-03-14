@@ -14,7 +14,7 @@
     "html-minifier": "^3.5.10",
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.1",
-    "node-fetch": "^1.7.3"
+    "node-fetch": "github:vfeskov/node-fetch#master"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
