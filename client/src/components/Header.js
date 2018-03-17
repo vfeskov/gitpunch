@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { withStyles } from 'material-ui/styles'
+import { GitHubIcon, SignOutIcon } from './icons'
 
 export class Header extends PureComponent {
   onClick = e => {
@@ -11,15 +12,17 @@ export class Header extends PureComponent {
     const { className, classes, email } = this.props
     return (
       <div className={`${className} ${classes.container}`}>
-        <span>
+        <span style={{ display: 'flex', alignItems: 'center' }}>
           <a href="" className={classes.logo}>Win A Beer</a>
-          <a href="https://github.com/vfeskov/WinABeer" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a style={{ display: 'inline-flex' }} href="https://github.com/vfeskov/WinABeer" className="soft" target="_blank" rel="noopener noreferrer">{GitHubIcon()}</a>
         </span>
         <span className={classes.spacer}></span>
-        {email && (<span>
-          <span style={{display: 'inline-block', paddingRight: '1em'}}>{email}</span>
-          <a href="" onClick={this.onClick}>Sign Out</a>
-        </span>)}
+        {email && (
+        <span style={{ display: 'flex' }}>
+          <span style={{ display: 'inline-block', paddingRight: '1em' }}>{email}</span>
+          <a style={{ display: 'inline-flex' }} className="soft" onClick={this.onClick}>{SignOutIcon()}</a>
+        </span>
+        )}
       </div>
     )
   }
@@ -28,7 +31,7 @@ export class Header extends PureComponent {
 export default withStyles(theme => ({
   container: {
     alignItems: 'center',
-    background: 'linear-gradient(to bottom, rgba(216,216,216,0.65) 0%, rgba(214,214,214,0.65) 1%, rgba(0,0,0,0) 100%)',
+    background: 'linear-gradient(to bottom, rgba(216,216,216,0.65) 0%, rgba(0,0,0,0) 100%)',
     display: 'flex',
     marginBottom: theme.spacing.unit * 6,
     [theme.breakpoints.down('xs')]: {

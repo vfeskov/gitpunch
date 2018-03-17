@@ -16,8 +16,16 @@ a {
   text-decoration: none;
 }
 
+a.soft {
+  border: none;
+}
+
 a:hover {
   border-color: #f50057 !important;
   color: #f50057;
   cursor: pointer;
+}
+
+svg {
+  fill: currentColor;
 }

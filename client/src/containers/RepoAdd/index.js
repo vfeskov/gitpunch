@@ -8,6 +8,7 @@ import { withStyles } from 'material-ui/styles'
 import debounce from 'lodash.debounce'
 import { styles } from './styles'
 import oauthUrl from '../../lib/oauthUrl'
+import { StarIcon } from '../../components/icons'
 
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../../actions'
@@ -82,8 +83,8 @@ class RepoAdd extends Component {
             </Button>
           </form>
           <div className={classes.or}>/</div>
-          <div className={classes.starredLink}>
-            <a href={starredLink} onClick={this.starredClicked}>pick starred repos</a>
+          <div className={classes.starredLinkContainer}>
+            <a href={starredLink} className={classes.starredLink} onClick={this.starredClicked}>watch {StarIcon()} starred</a>
           </div>
         </div>
       </div>

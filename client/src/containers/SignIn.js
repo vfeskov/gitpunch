@@ -15,6 +15,7 @@ class SignIn extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      enteringEmail: false,
       email: '',
       password: ''
     }
@@ -22,11 +23,11 @@ class SignIn extends Component {
 
   render () {
     const { bufferRepos, className, classes } = this.props
-    const { email, password } = this.state
+    const { email, password, enteringEmail } = this.state
     return (
       <div className={`${className} ${classes.container}`}>
         <GitHubButton bufferRepos={bufferRepos}/>
-        <div className={classes.or}>or</div>
+        {enteringEmail ? (
         <form onSubmit={e => this.signIn(e)} className={classes.form}>
           <FormControl required className={classes.formControl}>
             <InputLabel htmlFor="email">Email</InputLabel>
@@ -40,6 +41,11 @@ class SignIn extends Component {
             Sign In / Sign Up
           </Button>
         </form>
+        ): (
+        <div>
+          or <a onClick={() => this.setState({ enteringEmail: true })}>enter email</a>
+        </div>
+        )}
       </div>
     )
   }

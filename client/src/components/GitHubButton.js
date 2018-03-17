@@ -24,10 +24,5 @@ export default withStyles(() => ({
     '&:hover, &:focus': {
       color: '#fff'
     }
-  },
-  svg: {
-    fill: 'currentColor',
-    width: '1em',
-    height: '1em'
   }
 }))(GitHubButton)

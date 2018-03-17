@@ -70,11 +70,15 @@ export function styles (theme) {
       position: 'absolute',
       right: 0
     },
-    starredLink: {
+    starredLinkContainer: {
       [theme.breakpoints.down('xs')]: {
-        marginBottom: theme.spacing.unit,
+        margin: `${theme.spacing.unit}px 0`,
         textAlign: 'center'
       }
+    },
+    starredLink: {
+      display: 'inline-flex',
+      whiteSpace: 'pre'
     },
     or: {
       padding: '0 1em',
