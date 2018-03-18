@@ -61,14 +61,15 @@ export function styles (theme) {
       maxWidth: '100%',
       position: 'relative',
       [theme.breakpoints.down('xs')]: {
-        marginBottom: theme.spacing.unit
+        marginBottom: theme.spacing.unit * 4
       }
     },
     addButton: {
-      bottom: 0,
       minWidth: '32px',
+      padding: 0,
       position: 'absolute',
-      right: 0
+      right: 0,
+      top: 0
     },
     starredLinkContainer: {
       [theme.breakpoints.down('xs')]: {
@@ -85,6 +86,13 @@ export function styles (theme) {
       [theme.breakpoints.down('xs')]: {
         display: 'none'
       }
+    },
+    error: {
+      paddingTop: theme.spacing.unit,
+      position: 'absolute',
+      top: '100%',
+      color: '#f00',
+      fontSize: '90%'
     }
   }
 }

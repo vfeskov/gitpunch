@@ -25,7 +25,7 @@ export async function loadSuggestions ({ value, accessToken }) {
 }
 
 function makeReqOpts (accessToken) {
-  return { headers: { Authorization: `token ${accessToken}` } }
+  return accessToken ? { headers: { Authorization: `token ${accessToken}` } } : {}
 }
 
 const parseRegexp = /<([^>]+)>; rel="([^"]+)"/

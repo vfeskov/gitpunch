@@ -30,8 +30,8 @@ class RepoAdd extends PureComponent {
 
   render () {
     const { className, classes, repoAdd, accessToken, bufferRepos: repos, suggestions } = this.props
-    const { value, disabled } = repoAdd
-    const { loading, error, items } = suggestions
+    const { value, disabled, error } = repoAdd
+    const { loading, items } = suggestions
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
     return (
       <div className={className}>
@@ -62,6 +62,7 @@ class RepoAdd extends PureComponent {
                 onChange: (ev, { newValue }) => disabled || this.setValue(newValue),
               }}
             />
+            {error && <div className={classes.error}>{error}</div>}
             <Button type="submit" size="small" className={classes.addButton}>
               <SendIcon />
             </Button>

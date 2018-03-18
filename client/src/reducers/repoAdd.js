@@ -25,7 +25,22 @@ function disabled (state = false, action) {
   }
 }
 
+function error (state = null, action) {
+  switch (action.type) {
+    case SET_REPO_ADD_VALUE:
+    case CREATE_REPO[REQUEST]:
+    case CREATE_REPO[SUCCESS]:
+    case ADD_REPO_TO_BUFFER:
+      return null
+    case CREATE_REPO[FAILURE]:
+      return action.error.headers.get('x-error-message')
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   value,
-  disabled
+  disabled,
+  error
 })
