@@ -74,7 +74,7 @@ function Repos ({
           <IconButton aria-label="Delete" onClick={() => removeRepo(repo)}>
             <DeleteIcon />
           </IconButton>
-          <a className={classes.repoLink} className="soft" href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">{repo}</a>
+          <a className={`${classes.repoLink} soft`} href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">{repo}</a>
           {/* {alerted[repo] &&
             <a
               href={`https://github.com/${repo}/releases/tag/${alerted[repo]}`}

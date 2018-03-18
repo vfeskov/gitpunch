@@ -1,7 +1,9 @@
-import { all, take, put, call, fork, select } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import { all, take, takeLatest, put, call, fork, select } from 'redux-saga/effects'
 import * as actions from '../actions'
 import * as api from '../services/api'
 import * as cookie from '../services/cookie'
+import * as github from '../services/github'
 
 function* onApiRequest (actionGroup, apiMethod) {
   while (true) {
@@ -59,6 +61,27 @@ function* onSignedInChanges () {
   }
 }
 
+function* fetchSuggestions({ value }) {
+  const { repoAdd } = yield select()
+  if (!value || value.trim().length < 2 || repoAdd.disabled) {
+    yield put(actions.fetchSuggestions.success({ items: [] }))
+    return
+  }
+  yield call(delay, 300)
+  yield put(actions.fetchSuggestions.request({ value }))
+  const { accessToken } = yield select()
+  try {
+    const response = yield call(github.loadSuggestions, { value, accessToken })
+    yield put(actions.fetchSuggestions.success(response))
+  } catch (error) {
+    yield put(actions.fetchSuggestions.failure(error))
+  }
+}
+
+function* onSetRepoAddValue() {
+  yield takeLatest([actions.SET_REPO_ADD_VALUE, actions.createRepo.requestId], fetchSuggestions);
+}
+
 function* onStartup () {
   const { serverRendered } = yield select()
   if (serverRendered) { return }
@@ -85,6 +108,7 @@ export default function* root () {
     fork(onToggleWatching),
     fork(onAddRepo),
     fork(onRemoveRepo),
+    fork(onSetRepoAddValue),
     fork(onStartup)
   ])
 }

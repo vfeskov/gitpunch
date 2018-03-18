@@ -22,6 +22,7 @@ export const CREATE_REPO = createRequestTypes('CREATE_REPO')
 export const DELETE_REPO = createRequestTypes('DELETE_REPO')
 export const UNWATCH = createRequestTypes('UNWATCH')
 export const SAVE_WATCHING = createRequestTypes('SAVE_WATCHING')
+export const FETCH_SUGGESTIONS = createRequestTypes('FETCH_SUGGESTIONS')
 
 export const SET_REPO_ADD_VALUE = 'SET_REPO_ADD_VALUE'
 export const ADD_REPO_TO_BUFFER =  'ADD_REPO_TO_BUFFER'
@@ -91,6 +92,12 @@ export const saveWatching = {
   success: ({ watching }) => action(SAVE_WATCHING[SUCCESS], { watching }),
   failure: error => action(SAVE_WATCHING[FAILURE], { error }),
 }
+export const fetchSuggestions = {
+  requestId: FETCH_SUGGESTIONS[REQUEST],
+  request: ({ value }) => action(FETCH_SUGGESTIONS[REQUEST], { value }),
+  success: ({ items }) => action(FETCH_SUGGESTIONS[SUCCESS], { items }),
+  failure: error => action(FETCH_SUGGESTIONS[FAILURE], { error }),
+}
 
 export const setRepoAddValue = value => action(SET_REPO_ADD_VALUE, { value })
 export const addRepoToBuffer = repo => action(ADD_REPO_TO_BUFFER, { repo })
@@ -112,6 +119,7 @@ export const mapDispatchToProps = () => ({
   deleteRepo: deleteRepo.request,
   unwatch: unwatch.request,
   saveWatching: saveWatching.request,
+  fetchSuggestions: fetchSuggestions.request,
   toggleWatching,
   setRepoAddValue,
   addRepoToBuffer,

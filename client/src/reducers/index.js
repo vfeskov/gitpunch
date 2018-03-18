@@ -14,6 +14,7 @@ import serverRendered from './serverRendered'
 import starredOpen from './starredOpen'
 import alerted from './alerted'
 import showIntro from './showIntro'
+import suggestions from './suggestions'
 
 export default combineReducers({
   email,
@@ -30,5 +31,6 @@ export default combineReducers({
   serverRendered,
   starredOpen,
   alerted,
-  showIntro
+  showIntro,
+  suggestions
 })

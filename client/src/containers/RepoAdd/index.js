@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { renderInput, renderSuggestion, renderSuggestionsContainer } from './components'
 import Button from 'material-ui/Button'
 import SendIcon from 'material-ui-icons/Send'
 import { withStyles } from 'material-ui/styles'
-import debounce from 'lodash.debounce'
 import { styles } from './styles'
 import oauthUrl from '../../lib/oauthUrl'
 import { StarIcon } from '../../components/icons'
@@ -13,28 +12,13 @@ import { StarIcon } from '../../components/icons'
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../../actions'
 
-const { assign } = Object
 const valueReplaceArgs = [
   [new RegExp('^https?://'), ''],
   [new RegExp('^github.com/'), ''],
   [new RegExp('^([^/]+/[^/]+)[/#?].*'), '$1'],
 ]
 
-class RepoAdd extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      latestReqTimestamp: 0,
-      suggestions: [],
-      suggestionsError: null,
-      suggestionsLoading: false
-    }
-    this.fetchSuggestionsDebounced = debounce(
-      ({ value }) => this.fetchSuggestions(value),
-      300
-    )
-  }
-
+class RepoAdd extends PureComponent {
   componentDidMount () {
     this.props.showIntro === 'n' && this.inputRef && this.inputRef.focus()
   }
@@ -45,9 +29,9 @@ class RepoAdd extends Component {
   }
 
   render () {
-    const { className, classes, repoAdd, accessToken, bufferRepos: repos } = this.props
+    const { className, classes, repoAdd, accessToken, bufferRepos: repos, suggestions } = this.props
     const { value, disabled } = repoAdd
-    const { suggestions, suggestionsLoading } = this.state
+    const { loading, error, items } = suggestions
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
     return (
       <div className={className}>
@@ -62,9 +46,9 @@ class RepoAdd extends Component {
                 suggestion: classes.suggestion,
               }}
               renderInputComponent={renderInput}
-              suggestions={suggestions}
-              onSuggestionsFetchRequested={this.fetchSuggestionsDebounced}
-              onSuggestionsClearRequested={this.clearSuggestions}
+              suggestions={items}
+              onSuggestionsFetchRequested={() => {}}
+              onSuggestionsClearRequested={() => {}}
               shouldRenderSuggestions={value => value.trim().length > 1}
               renderSuggestionsContainer={renderSuggestionsContainer}
               getSuggestionValue={suggestion => suggestion.full_name}
@@ -73,7 +57,7 @@ class RepoAdd extends Component {
               inputProps={{
                 inputRef: inputRef => this.inputRef = inputRef,
                 classes,
-                suggestionsLoading,
+                loading: loading || disabled,
                 value,
                 onChange: (ev, { newValue }) => disabled || this.setValue(newValue),
               }}
@@ -92,13 +76,7 @@ class RepoAdd extends Component {
   }
 
   confirm (repo) {
-    this.clearSuggestions()
     this.props.addRepo(repo)
-  }
-
-  clearSuggestions = () => {
-    this.fetchSuggestionsDebounced.cancel()
-    this.receiveSuggestions(Date.now(), [])
   }
 
   setValue(value) {
@@ -122,50 +100,6 @@ class RepoAdd extends Component {
     ev.preventDefault()
     this.props.setStarredOpen(true)
   }
-
-  fetchSuggestions (value) {
-    const reqTimestamp = Date.now()
-    this.requestSuggestions(reqTimestamp)
-    fetch(`https://api.github.com/search/repositories?q=${value}`)
-      .then(response => {
-        if (response.status === 200) {
-          return response.json()
-        }
-        throw new Error(response.statusText)
-      })
-      .then(
-        json => this.receiveSuggestions(reqTimestamp, json.items),
-        error => this.errorSuggestions(reqTimestamp, error)
-      )
-  }
-
-  requestSuggestions (reqTimestamp) {
-    this.setState(state => assign({}, state, {
-      latestReqTimestamp: reqTimestamp,
-      suggestionsError: null,
-      suggestionsLoading: true
-    }))
-  }
-
-  receiveSuggestions (reqTimestamp, suggestions) {
-    // ignore responses if there's a more recent request pending
-    if (this.state.latestReqTimestamp > reqTimestamp) { return }
-    this.setState(state => assign({}, state, {
-      suggestionsLoading: false,
-      suggestionsError: null,
-      suggestions
-    }))
-  }
-
-  errorSuggestions (reqTimestamp, error) {
-    // ignore errors if there's a more recent request pending
-    if (this.state.latestReqTimestamp > reqTimestamp) { return }
-    this.setState(state => assign({}, state, {
-      suggestionsLoading: false,
-      suggestionsError: error,
-      suggestions: []
-    }))
-  }
 }
 
 RepoAdd.propTypes = {
@@ -178,7 +112,8 @@ RepoAdd.propTypes = {
   setRepoAddValue: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   accessToken: PropTypes.string.isRequired,
-  showIntro: PropTypes.string.isRequired
+  showIntro: PropTypes.string.isRequired,
+  suggestions: PropTypes.object.isRequired
 }
 
 export default connect(
@@ -186,7 +121,8 @@ export default connect(
     repoAdd: state.repoAdd,
     accessToken: state.accessToken,
     bufferRepos: state.bufferRepos,
-    showIntro: state.showIntro
+    showIntro: state.showIntro,
+    suggestions: state.suggestions
   }),
   mapDispatchToProps()
 )(withStyles(styles)(RepoAdd))

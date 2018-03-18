@@ -18,14 +18,17 @@ export function renderSuggestionsContainer (options) {
 }
 
 export function renderInput (inputProps) {
-  const { classes, autoFocus, value, ref, suggestionsLoading, ...other } = inputProps
+  const { classes, autoFocus, value, ref, inputRef, loading, ...other } = inputProps
   return (
     <div>
       <TextField
         autoFocus={autoFocus}
         className={classes.textField}
         value={value}
-        inputRef={ref}
+        inputRef={input => {
+          inputRef(input)
+          ref(input)
+        }}
         placeholder="Enter name or paste link"
         InputProps={{
           classes: {
@@ -34,7 +37,7 @@ export function renderInput (inputProps) {
           ...other
         }}
       />
-      {suggestionsLoading ? <LinearProgress className={classes.progress} /> : null}
+      {loading ? <LinearProgress className={classes.progress} /> : null}
     </div>
   )
 }
