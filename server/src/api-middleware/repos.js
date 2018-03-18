@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import { success, unauthorized, badRequest, logErrAndNext500, internalServerError } from '../util/http'
 import { validRepos, validRepo } from '../util/validations'
+import { checkTags } from '../util/repos'
 import { update as updateDb, load as loadDb } from '../db'
 
 export async function create ({ body, token }, res, next) {
@@ -22,20 +23,6 @@ export async function create ({ body, token }, res, next) {
     success(res, attrs)
   } catch (error) {
     next(error)
-  }
-}
-
-async function checkTags (repo) {
-  const response = await fetch(`https://github.com/${repo}/tags.atom`)
-  if (response.status >= 500) {
-    throw internalServerError('Try again')
-  }
-  if (response.status !== 200) {
-    throw badRequest('Repo doesn\'t exist')
-  }
-  const xml = await response.text()
-  if (!xml.includes('<entry>')) {
-    throw badRequest('Repo has no releases')
   }
 }
 

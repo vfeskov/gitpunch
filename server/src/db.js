@@ -1,4 +1,5 @@
 import { MongoClient, ObjectID } from 'mongodb'
+import { filterWatchable } from './util/repos'
 const url = process.env.WAB_MONGODB_URL
 const dbName = process.env.WAB_MONGODB_DBNAME
 const collectionName = process.env.WAB_MONGODB_COLLECTIONNAME
@@ -22,6 +23,9 @@ export async function create (params) {
     _id,
     watching: true
   })
+  if (params.repos) {
+    user.repos = await filterWatchable(params.repos)
+  }
   await collection.insertOne(user)
   return withId(user)
 }
