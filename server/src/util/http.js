@@ -14,20 +14,23 @@ export function logErrAndNext500 (err, next) {
   next(internalServerError())
 }
 
-export function internalServerError () {
-  return makeError(500)
+export function internalServerError (message = null) {
+  return makeError(500, message)
 }
 
 export function unauthorized () {
   return makeError(401)
 }
 
-export function badRequest () {
-  return makeError(400)
+export function badRequest (message = null) {
+  return makeError(400, message)
 }
 
-function makeError (code) {
+function makeError (code, message) {
   const err = new Error()
   err.statusCode = code
+  if (message) {
+    err.headers = { 'x-error-message': message }
+  }
   return err
 }
