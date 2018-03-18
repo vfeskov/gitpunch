@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import { internalServerError, badRequest } from './http'
 
 export async function checkTags (repo) {
   const response = await fetch(`https://github.com/${repo}/tags.atom`)
