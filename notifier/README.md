@@ -4,7 +4,9 @@ AWS Lambda that runs periodically, sends notifications and updates database
 
 ## Development
 
-First create `.env` file:
+First link the library as described [here](https://github.com/vfeskov/win-a-beer/blob/master/lib/README.md)
+
+Create `.env` file:
 
 ```bash
 cp .env.example .env

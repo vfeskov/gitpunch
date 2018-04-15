@@ -5,9 +5,11 @@ import Button from 'material-ui/Button'
 import IconButton from 'material-ui/IconButton'
 import CloseIcon from 'material-ui-icons/Close'
 import Switch from 'material-ui/Switch'
+import { CircularProgress } from 'material-ui/Progress';
 import { connect } from 'react-redux'
-import { setStarredOpen, addRepo, removeRepo } from '../actions'
-import { loadStarred, load } from '../services/github'
+import { StarIcon } from '../components/icons'
+import { setStarredOpen, addRepo, removeRepo, watchAllStarredRepos } from '../actions'
+import { loadStarredFirstPage, loadStarredLink } from '../services/github'
 const { assign } = Object
 
 const emptyState = {
@@ -26,8 +28,8 @@ class StarredDialog extends Component {
   }
 
   render () {
-    const { classes, starredOpen, setStarredOpen, fullScreen, width } = this.props
-    const { starred, links } = this.state
+    const { classes, starredOpen, starredWorking, setStarredOpen, fullScreen, width, watchAllStarredRepos } = this.props
+    const { starred, links, loading } = this.state
     return (
       <Dialog
         aria-labelledby="starred-dialog-title"
@@ -38,7 +40,8 @@ class StarredDialog extends Component {
       >
         <DialogTitle id="starred-dialog-title">
           <div className={classes.title}>
-            Watch starred
+            <span>Watch {StarIcon()} Starred</span>
+            <span style={{ flex: 1 }}></span>
             <IconButton color="inherit" onClick={() => setStarredOpen(false)} aria-label="Close">
               <CloseIcon />
             </IconButton>
@@ -47,26 +50,38 @@ class StarredDialog extends Component {
         <DialogContent id="starred-dialog-content">
           {starred.map(repo => (
             <div key={repo.id}>
-              <div>
+              <div style={ { display: 'flex', alignItems: 'center' } }>
                 <Switch
                   checked={repo.winabeering}
                   onChange={() => this.toggleWinabeering(repo)}
                 />
                 <a href={`https://github.com/${repo.full_name}`} className="soft" target="_blank" rel="noopener noreferrer">{repo.full_name}</a>
               </div>
-              <div className={classes.description}>{repo.description || 'No description'}</div>
+              <div className={classes.description} style={ { color: '#777' } }>{repo.description || 'No description'}</div>
             </div>
           ))}
+          {!starred.length && !loading && 'Looks like you haven\'t starred anything on GitHub yet'}
         </DialogContent>
-        <DialogActions classes={{ root: classes.actions }}>
-          {['first', 'prev', 'next', 'last'].map(rel => (
-            <Button key={rel} disabled={!links[rel]}
-              onClick={() => links[rel] && this.load(links[rel])}
-            >
-              {rel}
+        {!!starred.length && ([
+          <DialogActions key="pagination" classes={{ root: classes.centered }}>
+            {['first', 'prev', 'next', 'last'].map(rel => (
+              <Button key={rel} disabled={!links[rel]}
+                onClick={() => links[rel] && this.load(links[rel])}
+              >
+                {rel}
+              </Button>
+            ))}
+          </DialogActions>,
+          <DialogActions key="select-all" classes={{ root: classes.centered }}>
+            <Button variant="raised" color="secondary" style={{ minWidth: '110px' }} onClick={watchAllStarredRepos} disabled={starredWorking}>
+              {starredWorking ? (
+                <CircularProgress size={19} color="secondary"/>
+              ) : (
+                <span>Select all</span>
+              )}
             </Button>
-          ))}
-        </DialogActions>
+          </DialogActions>
+        ])}
       </Dialog>
     )
   }
@@ -85,7 +100,7 @@ class StarredDialog extends Component {
     try {
       if (!accessToken) { throw new Error() }
       this.persist({ loading: true })
-      const { links, items = [] } = await loadStarred(accessToken)
+      const { links, items = [] } = await loadStarredFirstPage(accessToken)
       this.persist({
         links,
         loading: false,
@@ -116,7 +131,7 @@ class StarredDialog extends Component {
 
   async load (link) {
     try {
-      const { items, links } = await load({ link, accessToken: this.state.accessToken })
+      const { items, links } = await loadStarredLink({ link, accessToken: this.state.accessToken })
       this.persist({
         starred: this.appendWinabeering(items, this.props.repos),
         links
@@ -137,11 +152,9 @@ function styles(theme) {
     },
     title: {
       alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'space-between'
+      display: 'flex'
     },
-    actions: {
-      display: 'flex',
+    centered: {
       justifyContent: 'center'
     }
   }
@@ -151,11 +164,13 @@ export default connect(
   state => ({
     accessToken: state.accessToken,
     repos: state.shownRepos,
-    starredOpen: state.starredOpen
+    starredOpen: state.starredOpen,
+    starredWorking: state.starredWorking
   }),
   {
     setStarredOpen,
     addRepo,
-    removeRepo
+    removeRepo,
+    watchAllStarredRepos: watchAllStarredRepos.request
   }
 )(withMobileDialog({ breakpoint: 'xs' })(withStyles(styles)(StarredDialog)))

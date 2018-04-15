@@ -17,7 +17,10 @@ function* onApiRequest (actionGroup, apiMethod) {
   }
 }
 
-const apiActions = 'signIn signOut saveCheckAt saveFrequency saveWatching createRepo deleteRepo unwatch'.split(' ')
+const apiActions = (
+  'signIn signOut saveCheckAt saveFrequency saveWatching ' +
+  'createRepo createRepos deleteRepo unwatch'
+).split(' ')
 
 const genericApiRequests = apiActions.reduce((r, id) =>
   r.concat(onApiRequest.bind(null, actions[id], api[id]))
@@ -61,7 +64,7 @@ function* onSignedInChanges () {
   }
 }
 
-function* fetchSuggestions({ value }) {
+function* fetchSuggestions ({ value }) {
   const { repoAdd } = yield select()
   if (!value || value.trim().length < 2 || repoAdd.disabled) {
     yield put(actions.fetchSuggestions.success({ items: [] }))
@@ -78,8 +81,58 @@ function* fetchSuggestions({ value }) {
   }
 }
 
-function* onSetRepoAddValue() {
+function* onSetRepoAddValue () {
   yield takeLatest([actions.SET_REPO_ADD_VALUE, actions.createRepo.requestId], fetchSuggestions);
+}
+
+function* watchStarred ({ loadStarredArgs, accessToken, savedRepos}) {
+  let starred, next
+  try {
+    const { items, links } = yield call(...loadStarredArgs)
+    starred = items.map(i => i.full_name)
+    next = links.next
+  } catch (e) {
+    yield put(actions.watchAllStarredRepos.failure(new Error(`Error loading starred repos: ${e.message}`)))
+    return
+  }
+  const newRepos = starred.filter(r => !savedRepos.includes(r))
+  try {
+    const successEvent = {}
+    if (newRepos.length) {
+      const { repos } = yield call(api.createRepos, { repos: newRepos })
+      successEvent.repos = repos
+    } else {
+      successEvent.repos = savedRepos
+    }
+    yield put(actions.createRepos.success(successEvent))
+  } catch (e) {
+    yield put(actions.watchAllStarredRepos.failure(new Error(`Error saving repos: ${e.message}`)))
+    return
+  }
+  if (!next) {
+    yield put(actions.watchAllStarredRepos.success())
+    return
+  }
+  yield watchStarred({
+    loadStarredArgs: [github.loadStarredLink, { link: next, accessToken }],
+    accessToken,
+    savedRepos
+  })
+}
+
+function* onWatchAllStarredRepos () {
+  while (true) {
+    yield take(actions.watchAllStarredRepos.requestId)
+    const { signedIn, savedRepos, accessToken } = yield select()
+    if (!signedIn || !accessToken) {
+      continue
+    }
+    yield watchStarred({
+      loadStarredArgs: [github.loadStarredFirstPage, accessToken],
+      accessToken,
+      savedRepos
+    })
+  }
 }
 
 function* onStartup () {
@@ -109,6 +162,7 @@ export default function* root () {
     fork(onAddRepo),
     fork(onRemoveRepo),
     fork(onSetRepoAddValue),
+    fork(onWatchAllStarredRepos),
     fork(onStartup)
   ])
 }

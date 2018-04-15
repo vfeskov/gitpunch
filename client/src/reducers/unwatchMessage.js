@@ -1,10 +1,10 @@
-import { UNWATCH } from '../actions'
+import { UNWATCH, FAILURE, SUCCESS } from '../actions'
 
 export default function unwatchMessage (state = null, action) {
   switch (action.type) {
-    case UNWATCH.FAILURE:
+    case UNWATCH[FAILURE]:
       return { success: false }
-    case UNWATCH.SUCCESS:
+    case UNWATCH[SUCCESS]:
       return {
         sameUser: action.sameUser,
         success: true

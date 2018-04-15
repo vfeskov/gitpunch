@@ -13,6 +13,7 @@ export const routes = {
     'POST /api/sign_in'     : signIn,
   'DELETE /api/sign_out'    : signOut,
     'POST /api/repos'       : repos.create,
+    'POST /api/repos/bulk'  : repos.createBulk,
   'DELETE /api/repos/:repo' : repos.remove,
      'PUT /api/watching'    : watching,
      'PUT /api/frequency'   : frequency,

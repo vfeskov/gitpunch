@@ -5,7 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "bundle": "webpack && time sh ./npm-scripts/bundle.sh",
-    "start": "webpack && source .env && node -e \"require('./build').handler(null, null, console.log)\"",
+    "postinstall": "npm link win-a-beer-lib",
+    "start": "webpack && node -r dotenv/config -e \"require('./build').handler(null, null, console.log)\"",
     "test": "mocha -r ts-node/register src/**/*.spec.ts"
   },
   "license": "MIT",
@@ -14,7 +15,7 @@
     "html-minifier": "^3.5.10",
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.1",
-    "node-fetch": "github:vfeskov/node-fetch#master"
+    "node-fetch": "^2.1.2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
@@ -27,6 +28,7 @@
     "awesome-typescript-loader": "^3.4.1",
     "aws-sdk": "^2.188.0",
     "chai": "^4.1.2",
+    "dotenv": "^5.0.1",
     "mocha": "^5.0.4",
     "nock": "^9.2.3",
     "ts-node": "^5.0.1",

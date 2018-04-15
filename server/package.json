@@ -5,8 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
+    "postinstall": "npm link win-a-beer-lib",
     "start": "NODE_ENV=production node build/index",
-    "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"source .env && nodemon --watch build/index.js build/index.js\""
+    "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"nodemon --watch build/index.js --exec node -r dotenv/config build/index.js\""
   },
   "author": "Vladimir Feskov",
   "license": "MIT",
@@ -19,7 +20,7 @@
     "finalhandler": "^1.1.0",
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.1",
-    "node-fetch": "^1.7.3",
+    "node-fetch": "^2.1.2",
     "react": "^16.2.0",
     "serve-static": "^1.13.1"
   },
@@ -27,6 +28,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-react-app": "^3.1.1",
     "concurrently": "^3.5.1",
+    "dotenv": "^5.0.1",
     "json-loader": "^0.5.7",
     "nodemon": "^1.14.11",
     "webpack": "^3.10.0",

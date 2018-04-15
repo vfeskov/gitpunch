@@ -15,6 +15,7 @@ import starredOpen from './starredOpen'
 import alerted from './alerted'
 import showIntro from './showIntro'
 import suggestions from './suggestions'
+import starredWorking from './starredWorking'
 
 export default combineReducers({
   email,
@@ -32,5 +33,6 @@ export default combineReducers({
   starredOpen,
   alerted,
   showIntro,
-  suggestions
+  suggestions,
+  starredWorking
 })

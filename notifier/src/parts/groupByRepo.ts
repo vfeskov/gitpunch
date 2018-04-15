@@ -1,5 +1,5 @@
 import { DBUser, RepoGroup } from '../lib/interfaces'
-import log from '../lib/log'
+import log from 'win-a-beer-lib/log'
 const { keys } = Object
 
 export default function groupByRepo (users: DBUser[]): RepoGroup[] {

@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import log from '../lib/log'
+import log from 'win-a-beer-lib/log'
 import { DBUser } from '../lib/interfaces'
 
 export default async function loadUsers (collection: Collection) {

@@ -2,7 +2,7 @@ import * as JWT from 'jsonwebtoken'
 import { minify } from 'html-minifier'
 import { decode } from 'he'
 import { SES } from 'aws-sdk'
-import log from './log'
+import log from 'win-a-beer-lib/log'
 import { ActionableUser, RepoWithTags } from './interfaces'
 const { byteLength } = Buffer;
 const privateKey = process.env.JWT_RSA_PRIVATE_KEY.replace(/\\n/g, '\n')

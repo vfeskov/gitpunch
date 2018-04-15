@@ -1,4 +1,4 @@
-export async function loadStarred (accessToken) {
+export async function loadStarredFirstPage (accessToken) {
   const reqOpts = makeReqOpts(accessToken)
   const userResp = await fetch('https://api.github.com/user', reqOpts)
   if (userResp.status !== 200) { throw new Error('Failed loading user') }
@@ -10,12 +10,23 @@ export async function loadStarred (accessToken) {
   return { items, links }
 }
 
-export async function load ({ link, accessToken }) {
+export async function loadStarredLink ({ link, accessToken }) {
   const response = await fetch(link, makeReqOpts(accessToken))
   if (response.status !== 200) { throw new Error() }
   const links = extractLinks(response.headers.get('Link'))
   const items = await response.json()
-  return { links, items }
+  return { items, links }
+}
+
+export async function loadAllStarredRepos (accessToken) {
+  let { items, links } = await loadStarredFirstPage(accessToken)
+  let { next } = links
+  while (next) {
+    const response = await loadStarredLink({ link: next, accessToken })
+    items = [...items, ...response.items]
+    next = response.links.next
+  }
+  return items.map(item => item.full_name)
 }
 
 export async function loadSuggestions ({ value, accessToken }) {

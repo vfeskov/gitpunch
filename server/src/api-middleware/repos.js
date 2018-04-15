@@ -1,7 +1,6 @@
-import fetch from 'node-fetch'
-import { success, unauthorized, badRequest, logErrAndNext500, internalServerError } from '../util/http'
+import { success, unauthorized, badRequest, internalServerError } from '../util/http'
 import { validRepos, validRepo } from '../util/validations'
-import { checkTags } from '../util/repos'
+import { checkTags, filterWatchable } from '../util/githubAtom'
 import { update as updateDb, load as loadDb } from '../db'
 
 export async function create ({ body, token }, res, next) {
@@ -22,6 +21,28 @@ export async function create ({ body, token }, res, next) {
     await updateDb(token, attrs)
     success(res, attrs)
   } catch (error) {
+    next(error)
+  }
+}
+
+export async function createBulk ({ body, token }, res, next) {
+  try {
+    if (!token) {
+      throw unauthorized()
+    }
+    if (!body || !validRepos(body.repos)) {
+      throw badRequest('Invalid repos')
+    }
+    const reqRepos = await filterWatchable(body.repos)
+    const { repos } = await loadDb(token)
+    if (reqRepos.every(repo => repos.includes(repo))) {
+      return success(res, { repos })
+    }
+    const newRepos = reqRepos.filter(repo => !repos.includes(repo));
+    const attrs = { repos: [...newRepos, ...repos] }
+    await updateDb(token, attrs)
+    success(res, attrs)
+  } catch (error)   {
     next(error)
   }
 }

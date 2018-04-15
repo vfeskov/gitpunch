@@ -7,3 +7,9 @@ ADD ./node_modules ./node_modules
 ADD ./package.json ./package.json
 ADD ./package-lock.json ./package-lock.json
 RUN npm prune --production
+ADD ./lib ./lib
+RUN cd node_modules && \
+    rm -rf win-a-beer-lib && \
+    mv ../lib . && \
+    mv lib win-a-beer-lib && \
+    rm -rf win-a-beer-lib/node_modules

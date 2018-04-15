@@ -1,4 +1,3 @@
-import 'isomorphic-fetch'
 const { assign } = Object
 
 let base = { url: '', opts: { credentials: 'same-origin' } }
@@ -7,7 +6,12 @@ export function setBase (_base) {
 }
 
 function fetchApi (endpoint, opts = {}) {
-  return fetch(`${base.url}/api/${endpoint}`, assign(base.opts, opts))
+  opts = assign({
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }, base.opts, opts)
+  return fetch(`${base.url}/api/${endpoint}`, opts)
     .then(response => {
       if (response.status !== 200) { throw response }
       switch (response.headers.get('Content-Type')) {
@@ -26,9 +30,6 @@ export function signOut () {
 export function signIn ({ email, password, repos }) {
   return fetchApi('sign_in', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({
       email,
       password,
@@ -40,9 +41,6 @@ export function signIn ({ email, password, repos }) {
 export function saveCheckAt ({ checkAt }) {
   return fetchApi('check_at', {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({ checkAt })
   })
 }
@@ -50,9 +48,6 @@ export function saveCheckAt ({ checkAt }) {
 export function saveFrequency (params) {
   return fetchApi('frequency', {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify(params)
   })
 }
@@ -64,28 +59,26 @@ export function fetchProfile () {
 export function createRepo ({ repo }) {
   return fetchApi('repos', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({ repo })
+  })
+}
+
+export function createRepos ({ repos }) {
+  return fetchApi('repos/bulk', {
+    method: 'POST',
+    body: JSON.stringify({ repos })
   })
 }
 
 export function deleteRepo ({ repo }) {
   return fetchApi(`repos/${encodeURIComponent(repo)}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    method: 'DELETE'
   })
 }
 
 export function unwatch ({ lambdajwt }) {
   return fetchApi('unsubscribe', {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({ lambdajwt })
   })
 }
@@ -93,9 +86,6 @@ export function unwatch ({ lambdajwt }) {
 export function saveWatching ({ watching }) {
   return fetchApi('watching', {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({ watching })
   })
 }

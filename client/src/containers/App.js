@@ -1,3 +1,4 @@
+import 'isomorphic-fetch'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Repos from './Repos'

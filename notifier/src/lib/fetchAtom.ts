@@ -1,6 +1,6 @@
 import { Agent } from 'https'
 import fetch from 'node-fetch'
-import log from './log'
+import log from 'win-a-beer-lib/log'
 
 const ATTEMPTS = 3
 const agent = new Agent({ keepAlive: true, keepAliveMsecs: 30000 })

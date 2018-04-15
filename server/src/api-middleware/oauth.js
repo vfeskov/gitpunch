@@ -1,8 +1,9 @@
-import { randomBytes } from 'crypto'
 import fetch from 'node-fetch'
+import { randomBytes } from 'crypto'
 import { load, create, update } from '../db'
 import { signToken, setCookieTokenHeader } from '../util/token'
 import { validRepos } from '../util/validations'
+import { filterWatchable } from '../util/githubAtom'
 const clientId = process.env.WAB_OAUTH_CLIENT_ID
 const clientSecret = process.env.WAB_OAUTH_CLIENT_SECRET
 const clientHost = process.env.WAB_CLIENT_HOST
@@ -52,6 +53,7 @@ async function authToken (code, state, repos) {
       await update({ id: user.id }, { accessToken })
     } else {
       repos = parseRepos(repos)
+      repos = await filterWatchable(repos)
       user = await create({ email, accessToken, repos })
     }
     return signToken({ id: user.id })

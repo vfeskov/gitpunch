@@ -23,6 +23,8 @@ export const DELETE_REPO = createRequestTypes('DELETE_REPO')
 export const UNWATCH = createRequestTypes('UNWATCH')
 export const SAVE_WATCHING = createRequestTypes('SAVE_WATCHING')
 export const FETCH_SUGGESTIONS = createRequestTypes('FETCH_SUGGESTIONS')
+export const CREATE_REPOS = createRequestTypes('CREATE_REPOS')
+export const WATCH_ALL_STARRED_REPOS = createRequestTypes('WATCH_ALL_STARRED_REPOS')
 
 export const SET_REPO_ADD_VALUE = 'SET_REPO_ADD_VALUE'
 export const ADD_REPO_TO_BUFFER =  'ADD_REPO_TO_BUFFER'
@@ -98,6 +100,18 @@ export const fetchSuggestions = {
   success: ({ items }) => action(FETCH_SUGGESTIONS[SUCCESS], { items }),
   failure: error => action(FETCH_SUGGESTIONS[FAILURE], { error }),
 }
+export const createRepos = {
+  requestId: CREATE_REPOS[REQUEST],
+  request: ({ repos }) => action(CREATE_REPOS[REQUEST], { repos }),
+  success: ({ repos }) => action(CREATE_REPOS[SUCCESS], { repos }),
+  failure: error => action(CREATE_REPOS[FAILURE], { error }),
+}
+export const watchAllStarredRepos = {
+  requestId: WATCH_ALL_STARRED_REPOS[REQUEST],
+  request: () => action(WATCH_ALL_STARRED_REPOS[REQUEST]),
+  success: () => action(WATCH_ALL_STARRED_REPOS[SUCCESS]),
+  failure: error => action(WATCH_ALL_STARRED_REPOS[FAILURE], { error }),
+}
 
 export const setRepoAddValue = value => action(SET_REPO_ADD_VALUE, { value })
 export const addRepoToBuffer = repo => action(ADD_REPO_TO_BUFFER, { repo })
@@ -120,6 +134,7 @@ export const mapDispatchToProps = () => ({
   unwatch: unwatch.request,
   saveWatching: saveWatching.request,
   fetchSuggestions: fetchSuggestions.request,
+  watchAllStarredRepos: watchAllStarredRepos.request,
   toggleWatching,
   setRepoAddValue,
   addRepoToBuffer,

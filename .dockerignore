@@ -1,4 +1,6 @@
 */.env
 */build
 */node_modules
+lib/*.js
+lib/*.ts
 server/public
