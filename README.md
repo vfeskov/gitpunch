@@ -14,7 +14,7 @@ Watch for releases on GitHub. [Visit](https://winabeer.com) and learn the origin
 <img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/email.png" width="600px" />
 
 ## How it's monitored
-AWS CloudWatch dashboard showing data for 1 day:<br/>
+AWS CloudWatch dashboard showing data for 1 week:<br/>
 <img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/monitoring.png" width="828px" />
 
 ----------
