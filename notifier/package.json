@@ -1,6 +1,6 @@
 {
   "name": "win-a-beer-notifier",
-  "version": "1.7"
+  "version": "1.7",
   "description": "",
   "main": "build/index.js",
   "scripts": {
