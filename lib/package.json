@@ -21,6 +21,6 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "node-fetch": "^2.1.2"
+    "node-fetch": "github:vfeskov/node-fetch#master"
   }
 }
