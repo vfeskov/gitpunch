@@ -5,14 +5,10 @@ Watch for releases on GitHub. [Visit](https://winabeer.com) and learn the origin
 ## How it's better than others
 
 - Completely **open-source**
-- **Realtime** updates: as soon as release happens you will get an email
-- **Free** option to get emails **daily** instead of realtime
-- Register with multiple emails (e.g., email+important@example.com) and have **different watching lists** with their own settigns
-- **Star** any repo you want, no need to withhold affection if you don't care about releases
-- More features to come: weekly emails, browser extensions, dashboard
-
-## In action
-<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/in-action.gif" width="552px"/>
+- **Realtime** updates
+- **Free** option to get emails **daily**
+- Register with multiple emails (e.g., email+important@example.com) to have **more than one list**
+- Optionally **watch starred** repos
 
 ## Emails look like this
 <img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/email.png" width="600px" />
