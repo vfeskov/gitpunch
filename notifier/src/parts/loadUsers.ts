@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import log from 'win-a-beer-lib/log'
-import { DBUser } from '../lib/interfaces'
+import { DBUser } from './interfaces'
 
 export default async function loadUsers (collection: Collection) {
   const query = {

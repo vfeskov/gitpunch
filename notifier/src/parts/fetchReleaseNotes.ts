@@ -1,6 +1,6 @@
-import { ActionableUser } from '../lib/interfaces'
-import fetchAtom, { trackFetchErrors } from '../lib/fetchAtom'
-import { SEND_EMAIL_AND_UPDATE_ALERTED } from '../lib/constants'
+import { ActionableUser } from './interfaces'
+import { fetchAtom, trackFetchErrors } from 'win-a-beer-lib/githubAtom'
+import { SEND_EMAIL_AND_UPDATE_ALERTED } from './constants'
 
 export default async function fetchReleaseNotes (users: ActionableUser[]) {
   const repos = users.map(u => u.actionableRepos[SEND_EMAIL_AND_UPDATE_ALERTED])

@@ -1,4 +1,4 @@
-import { RepoGroupWithTags, FullUser } from '../lib/interfaces'
+import { RepoGroupWithTags, FullUser } from './interfaces'
 
 export default function backToUsers (byRepoWithTags: RepoGroupWithTags[]): FullUser[] {
   const usersMap = byRepoWithTags.reduce((usersMap, { repo, users, tags }) => {

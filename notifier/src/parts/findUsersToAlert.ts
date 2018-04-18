@@ -1,5 +1,5 @@
-import { SEND_EMAIL_AND_UPDATE_ALERTED, ONLY_UPDATE_ALERTED } from '../lib/constants'
-import { FullUser, ActionableUser, User } from '../lib/interfaces'
+import { SEND_EMAIL_AND_UPDATE_ALERTED, ONLY_UPDATE_ALERTED } from './constants'
+import { FullUser, ActionableUser, User } from './interfaces'
 
 export default function findUsersToAlert (users: FullUser[]): ActionableUser[] {
   return users

@@ -1,4 +1,4 @@
-import { DBUser, RepoGroup } from '../lib/interfaces'
+import { DBUser, RepoGroup } from './interfaces'
 import log from 'win-a-beer-lib/log'
 const { keys } = Object
 

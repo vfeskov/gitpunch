@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb'
-import Email from '../lib/email'
-import { ActionableUser, Alerted, RepoWithTags } from '../lib/interfaces'
-import { SEND_EMAIL_AND_UPDATE_ALERTED, ONLY_UPDATE_ALERTED } from '../lib/constants'
+import Email from './email'
+import { ActionableUser, Alerted, RepoWithTags } from './interfaces'
+import { SEND_EMAIL_AND_UPDATE_ALERTED, ONLY_UPDATE_ALERTED } from './constants'
 import log from 'win-a-beer-lib/log'
 const { assign, keys } = Object
 

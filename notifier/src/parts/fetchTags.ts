@@ -1,5 +1,5 @@
 import { fetchAtom, trackFetchErrors } from 'win-a-beer-lib/githubAtom'
-import { RepoGroup } from '../lib/interfaces'
+import { RepoGroup } from './interfaces'
 
 export default async function fetchTags (byRepo: RepoGroup[]) {
   const errors = trackFetchErrors()
