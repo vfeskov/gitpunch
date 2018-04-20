@@ -1,6 +1,6 @@
 {
   "name": "win-a-beer-lib",
-  "version": "1.7",
+  "version": "1.7.0",
   "description": "Reusable code for other WinABeer services",
   "main": "githubAtom.js",
   "scripts": {

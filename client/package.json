@@ -1,6 +1,6 @@
 {
   "name": "win-a-beer-client",
-  "version": "1.7",
+  "version": "1.7.0",
   "license": "MIT",
   "private": true,
   "dependencies": {
