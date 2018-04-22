@@ -21,8 +21,8 @@ export async function fetchAtom (url: string, includeEntry: boolean) {
   let attempts = 0
   while (attempts < FETCH_ATTEMPTS) {
     try {
-      if (attempts > 0) { await timeout(DELAY_BETWEEN_ATTEMPTS) }
       attempts++
+      if (attempts > 1) { await timeout(DELAY_BETWEEN_ATTEMPTS) }
       const response = await fetch(url, fetchOptions)
       const { status } = response
       if (status >= 400 && status < 500) { throw new NotFound() }

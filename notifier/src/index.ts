@@ -9,13 +9,13 @@ import fetchReleaseNotes from './parts/fetchReleaseNotes'
 import sendEmailAndUpdateDb from './parts/sendEmailAndUpdateDb'
 import log from 'win-a-beer-lib/log'
 import { closeHttpsConnections, trackTotalRequests, totalRequests } from 'win-a-beer-lib/githubAtom'
-trackTotalRequests()
 const url = process.env.MONGODB_URL
 const dbName = process.env.MONGODB_DBNAME
 const collectionName = process.env.MONGODB_COLLECTIONNAME
 
 export async function handler (event, context, callback) {
   let client
+  trackTotalRequests()
   try {
     client = await MongoClient.connect(url)
     const collection = client.db(dbName).collection(collectionName)
