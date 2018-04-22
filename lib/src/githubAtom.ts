@@ -2,10 +2,14 @@
 import fetch from 'node-fetch'
 import { Agent } from 'https'
 import log from './log'
+import timeout from './timeout'
 
-const FETCH_ATTEMPTS = 3
+export const FETCH_ATTEMPTS = 5
+export const DELAY_BETWEEN_ATTEMPTS = 1000
 const agent = new Agent({ keepAlive: true, keepAliveMsecs: 30000 })
 const fetchOptions = { agent, timeout: 5000 }
+let _totalRequests = 0
+let _trackTotalRequests = false
 
 export function checkTags (repo: string) {
   return fetchAtom(`https://github.com/${repo}/tags.atom`, false)
@@ -13,8 +17,12 @@ export function checkTags (repo: string) {
 
 export async function fetchAtom (url: string, includeEntry: boolean) {
   let error = new Unknown()
-  for (let i = 0; i < FETCH_ATTEMPTS; i++) {
+  let success
+  let attempts = 0
+  while (attempts < FETCH_ATTEMPTS) {
     try {
+      if (attempts > 0) { await timeout(DELAY_BETWEEN_ATTEMPTS) }
+      attempts++
       const response = await fetch(url, fetchOptions)
       const { status } = response
       if (status >= 400 && status < 500) { throw new NotFound() }
@@ -22,13 +30,25 @@ export async function fetchAtom (url: string, includeEntry: boolean) {
       const xml = await response.text()
       const entries = parse(xml, includeEntry)
       if (!entries.length) { throw new NoTags() }
-      return entries
+      success = entries
+      break
     } catch (e) {
       error = e
       if (isClientError(e)) { break }
     }
   }
+  if (_trackTotalRequests) { _totalRequests += attempts }
+  if (success) { return success }
   throw error
+}
+
+export function trackTotalRequests () {
+  _trackTotalRequests = true
+  _totalRequests = 0
+}
+
+export function totalRequests () {
+  return _totalRequests
 }
 
 export function trackFetchErrors () {
