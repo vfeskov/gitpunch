@@ -9,6 +9,6 @@ export default function redirectToMainDomain (req, res, next) {
   ) {
     return next()
   }
-  res.writeHead(301, { Location: CLIENT_HOST + req.url })
+  res.writeHead(301, { Location: clientHost + req.url })
   res.end()
 }
