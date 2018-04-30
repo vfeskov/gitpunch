@@ -1,5 +1,6 @@
 import url from 'url'
-const clientHost = url.parse(process.env.WAB_CLIENT_HOST).host
+const clientUrl = process.env.WAB_CLIENT_HOST
+const clientHost = url.parse(clientUrl).host
 
 export default function redirectToMainDomain (req, res, next) {
   const { host = '' } = req.headers
@@ -9,6 +10,6 @@ export default function redirectToMainDomain (req, res, next) {
   ) {
     return next()
   }
-  res.writeHead(301, { Location: clientHost + req.url })
+  res.writeHead(301, { Location: clientUrl + req.url })
   res.end()
 }
