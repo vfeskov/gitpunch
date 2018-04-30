@@ -1,5 +1,5 @@
 import { ActionableUser } from './interfaces'
-import { fetchAtom, trackFetchErrors } from 'win-a-beer-lib/githubAtom'
+import { fetchAtom, trackFetchErrors } from 'gitpunch-lib/githubAtom'
 import { SEND_EMAIL_AND_UPDATE_ALERTED } from './constants'
 
 export default async function fetchReleaseNotes (users: ActionableUser[]) {

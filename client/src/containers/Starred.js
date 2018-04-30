@@ -52,8 +52,8 @@ class StarredDialog extends Component {
             <div key={repo.id}>
               <div style={ { display: 'flex', alignItems: 'center' } }>
                 <Switch
-                  checked={repo.winabeering}
-                  onChange={() => this.toggleWinabeering(repo)}
+                  checked={repo.gitpunching}
+                  onChange={() => this.toggleGitpunching(repo)}
                 />
                 <a href={`https://github.com/${repo.full_name}`} className="soft" target="_blank" rel="noopener noreferrer">{repo.full_name}</a>
               </div>
@@ -92,7 +92,7 @@ class StarredDialog extends Component {
     if (accessToken === this.state.accessToken) {
       if (repos !== this.props.repos) {
         this.persist({
-          starred: this.appendWinabeering(this.state.starred, repos)
+          starred: this.appendGitpunching(this.state.starred, repos)
         })
       }
       return
@@ -105,7 +105,7 @@ class StarredDialog extends Component {
         links,
         loading: false,
         accessToken,
-        starred: this.appendWinabeering(items, repos)
+        starred: this.appendGitpunching(items, repos)
       })
     } catch (e) {
       this.persist(emptyState)
@@ -116,15 +116,15 @@ class StarredDialog extends Component {
     this.setState(state => assign(state, part))
   }
 
-  toggleWinabeering (repo) {
-    const { full_name, winabeering } = repo
-    winabeering ? this.props.removeRepo(full_name) : this.props.addRepo(full_name)
+  toggleGitpunching (repo) {
+    const { full_name, gitpunching } = repo
+    gitpunching ? this.props.removeRepo(full_name) : this.props.addRepo(full_name)
   }
 
-  appendWinabeering (starred, repos) {
+  appendGitpunching (starred, repos) {
     if (!starred.length) { return starred }
     return starred.map(repo => {
-      repo.winabeering = repos.indexOf(repo.full_name) > -1
+      repo.gitpunching = repos.indexOf(repo.full_name) > -1
       return repo
     })
   }
@@ -133,7 +133,7 @@ class StarredDialog extends Component {
     try {
       const { items, links } = await loadStarredLink({ link, accessToken: this.state.accessToken })
       this.persist({
-        starred: this.appendWinabeering(items, this.props.repos),
+        starred: this.appendGitpunching(items, this.props.repos),
         links
       })
       document.getElementById('starred-dialog-content').scrollTop = 0

@@ -2,7 +2,7 @@ import * as JWT from 'jsonwebtoken'
 import { minify } from 'html-minifier'
 import { decode } from 'he'
 import { SES } from 'aws-sdk'
-import log from 'win-a-beer-lib/log'
+import log from 'gitpunch-lib/log'
 import { ActionableUser, RepoWithTags } from './interfaces'
 const { byteLength } = Buffer;
 const privateKey = process.env.JWT_RSA_PRIVATE_KEY.replace(/\\n/g, '\n')
@@ -90,13 +90,13 @@ export default class Email {
           ).join('')
         ).join('')}
         <br/>
-        Best wishes from <a href="${appUrl}">Win A Beer</a><br/>
+        Best wishes from <a href="${appUrl}">GitPunch</a><br/>
         <br/>
         ---<br/>
         <small>
           This is an automated message, reply if you have any questions<br/>
           To stop getting these emails click <a href="${this.unsubscribeUrl()}">unsubscribe</a><br/>
-          <a href="https://github.com/vfeskov/win-a-beer">Support <strong>Win A Beer</strong> with a star ♥</a>
+          <a href="https://github.com/vfeskov/gitpunch">Support <strong>GitPunch</strong> with a star ♥</a>
         </small>
       </div>
     `

@@ -1,5 +1,5 @@
 import { DBUser, RepoGroup } from './interfaces'
-import log from 'win-a-beer-lib/log'
+import log from 'gitpunch-lib/log'
 const { keys } = Object
 
 export default function groupByRepo (users: DBUser[]): RepoGroup[] {

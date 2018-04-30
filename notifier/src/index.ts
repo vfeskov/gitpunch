@@ -7,8 +7,8 @@ import backToUsers from './parts/backToUsers'
 import findUsersToAlert from './parts/findUsersToAlert'
 import fetchReleaseNotes from './parts/fetchReleaseNotes'
 import sendEmailAndUpdateDb from './parts/sendEmailAndUpdateDb'
-import log from 'win-a-beer-lib/log'
-import { closeHttpsConnections, trackTotalRequests, totalRequests } from 'win-a-beer-lib/githubAtom'
+import log from 'gitpunch-lib/log'
+import { closeHttpsConnections, trackTotalRequests, totalRequests } from 'gitpunch-lib/githubAtom'
 const url = process.env.MONGODB_URL
 const dbName = process.env.MONGODB_DBNAME
 const collectionName = process.env.MONGODB_COLLECTIONNAME

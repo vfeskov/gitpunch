@@ -69,10 +69,10 @@ export class Intro extends Component {
             <strong className={author}>some_dude</strong> commented
           </div>
           <div className={content}>
-            <div className={a(second)}>I bet a BEER</div>
-            <div className={a(third)}>that you can't</div>
-            <div className={a(fourth)}>WATCH RELEASES</div>
-            <div className={a(fifth)}>on GitHub</div>
+            <div className={a(second)}>PUNCH me if I'm wrong</div>
+            <div className={a(third)}>but there's no way to</div>
+            <div className={a(fourth)}>get EMAILED when</div>
+            <div className={a(fifth)}>RELEASES happen on GitHub</div>
           </div>
         </div>
       </div>
@@ -86,10 +86,10 @@ export class Intro extends Component {
             <span>&#32;commented</span>
           </div>
           <div className={content}>
-            <span className={a(seventh)}>DUDE</span>
+            <span className={a(seventh)}>Dude</span>
             <span className={a(eighth)}>&#32;→&#32;</span>
             <div className={`${a(eighth)} ${thelinkContainer}`}>
-              <a href="" onClick={this.skip} className={thelink}>Win A Beer</a>
+              <a href="" onClick={this.skip} className={thelink}>GitPunch</a>
               <CircularProgress size={20} variant="static" value={this.state.ds * 2} />
             </div>
           </div>

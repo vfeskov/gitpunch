@@ -1,7 +1,7 @@
-# Win A Beer Client
+# GitPunch Client
 
 React client to talk to the server's API.
 
 ## Development
 
-See [server/README.md](https://github.com/vfeskov/win-a-beer/blob/master/server/README.md)
+See [server/README.md](https://github.com/vfeskov/gitpunch/blob/master/server/README.md)

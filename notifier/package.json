@@ -1,11 +1,11 @@
 {
-  "name": "win-a-beer-notifier",
+  "name": "gitpunch-notifier",
   "version": "1.7.0",
   "description": "",
   "main": "build/index.js",
   "scripts": {
     "bundle": "webpack && time sh ./npm-scripts/bundle.sh",
-    "postinstall": "npm link win-a-beer-lib",
+    "postinstall": "npm link gitpunch-lib",
     "start": "webpack && node -r dotenv/config -e \"require('./build').handler(null, null, console.log)\"",
     "test": "mocha -r ts-node/register src/**/*.spec.ts"
   },

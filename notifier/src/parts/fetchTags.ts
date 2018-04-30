@@ -1,6 +1,6 @@
-import { fetchAtom, trackFetchErrors } from 'win-a-beer-lib/githubAtom'
-import shuffle from 'win-a-beer-lib/shuffle'
-import timeout from 'win-a-beer-lib/timeout'
+import { fetchAtom, trackFetchErrors } from 'gitpunch-lib/githubAtom'
+import shuffle from 'gitpunch-lib/shuffle'
+import timeout from 'gitpunch-lib/timeout'
 import { RepoGroup } from './interfaces'
 
 const DELAY_EVERY = 50 // repos

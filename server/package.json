@@ -1,11 +1,11 @@
 {
-  "name": "win-a-beer-server",
+  "name": "gitpunch-server",
   "version": "1.7.0",
   "description": "",
   "main": "build/index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "postinstall": "npm link win-a-beer-lib",
+    "postinstall": "npm link gitpunch-lib",
     "start": "NODE_ENV=production node build/index",
     "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"nodemon --watch build/index.js --exec node -r dotenv/config build/index.js\""
   },

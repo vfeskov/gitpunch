@@ -1,10 +1,10 @@
-# Win A Beer Server
+# GitPunch Server
 
 The server that serves client and API to access MongoDB.
 
 ## Development
 
-First link the library as described [here](https://github.com/vfeskov/win-a-beer/blob/master/lib/README.md)
+First link the library as described [here](https://github.com/vfeskov/gitpunch/blob/master/lib/README.md)
 
 Create `.env` file:
 ```bash
@@ -50,8 +50,8 @@ source .env && npm start
 ```
 Or build docker image in root of the project and run it:
 ```bash
-docker build -t win-a-beer .
-docker run --env-file server/.env -p 3000:3000 --rm -it win-a-beer
+docker build -t gitpunch .
+docker run --env-file server/.env -p 3000:3000 --rm -it gitpunch
 ```
 
 Server will be accessible at http://localhost:3000.

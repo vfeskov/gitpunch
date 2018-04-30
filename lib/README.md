@@ -1,6 +1,6 @@
-# Win A Beer Library
+# GitPunch Library
 
-Reusable code for other Win A Beer services
+Reusable code for other GitPunch services
 
 It **must** be built and linked for the services to work:
 

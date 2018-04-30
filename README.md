@@ -1,6 +1,6 @@
-# [Win A Beer](https://winabeer.com)
+# [GitPunch](https://gitpunch.com)
 
-Watch for releases on GitHub. [Visit](https://winabeer.com) and learn the origin of the name ;)
+Watch for releases on GitHub. [Visit](https://gitpunch.com) and learn the origin of the name ;)
 
 ## How it's better than others
 
@@ -11,12 +11,12 @@ Watch for releases on GitHub. [Visit](https://winabeer.com) and learn the origin
 - Optionally **watch starred** repos
 
 ## Emails look like this
-<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/email.png" width="600px" />
+<img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/client/public/email.png" width="600px" />
 
 ## How it's monitored
 AWS CloudWatch dashboard showing data for 1 week:<br/>
-<img src="https://raw.githubusercontent.com/vfeskov/win-a-beer/master/monitoring.png" width="828px" />
+<img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/monitoring.png" width="828px" />
 
 ----------
 
-Support Win A Beer with a [&#9733; star](https://github.com/vfeskov/WinABeer) ♥
+Support GitPunch with a [&#9733; star](https://github.com/vfeskov/gitpunch) ♥

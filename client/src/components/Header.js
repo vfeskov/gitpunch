@@ -13,8 +13,8 @@ export class Header extends PureComponent {
     return (
       <div className={`${className} ${classes.container}`}>
         <span style={{ display: 'flex', alignItems: 'center' }}>
-          <a href="" className={classes.logo}>Win A Beer</a>
-          <a style={{ display: 'inline-flex' }} href="https://github.com/vfeskov/WinABeer" className="soft" target="_blank" rel="noopener noreferrer">{GitHubIcon()}</a>
+          <a href="" className={classes.logo}>GitPunch</a>
+          <a style={{ display: 'inline-flex' }} href="https://github.com/vfeskov/gitpunch" className="soft" target="_blank" rel="noopener noreferrer">{GitHubIcon()}</a>
         </span>
         <span className={classes.spacer}></span>
         {email && (

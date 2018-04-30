@@ -1,5 +1,5 @@
 import { internalServerError, badRequest } from './http'
-import * as lib from 'win-a-beer-lib/githubAtom'
+import * as lib from 'gitpunch-lib/githubAtom'
 
 const { NotFound, NoTags, BadStatus } = lib
 

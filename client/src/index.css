@@ -21,8 +21,8 @@ a.soft {
 }
 
 a:hover {
-  border-color: #f50057 !important;
-  color: #f50057;
+  border-color: #ff3d00 !important;
+  color: #ff3d00;
   cursor: pointer;
 }
 

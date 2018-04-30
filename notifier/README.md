@@ -1,10 +1,10 @@
-# Win A Beer Notifier
+# GitPunch Notifier
 
 AWS Lambda that runs periodically, sends notifications and updates database
 
 ## Development
 
-First link the library as described [here](https://github.com/vfeskov/win-a-beer/blob/master/lib/README.md)
+First link the library as described [here](https://github.com/vfeskov/gitpunch/blob/master/lib/README.md)
 
 Create `.env` file:
 
@@ -15,7 +15,7 @@ Open `.env` in a text editor and fill in the variables:
 
 |Name|Description|
 |-|-|
-|`APP_URL`|URL of the Win A Beer server to put in emails|
+|`APP_URL`|URL of the GitPunch server to put in emails|
 |`AWS_ACCESS_KEY_ID`,<br/>`AWS_SECRET_ACCESS_KEY`|AWS credentials with `SendEmail` permission for SES|
 |`FROM`|Sender email address|
 |`JWT_RSA_PRIVATE_KEY`|Lambda's RSA **private** key to sign links inside emails. You can make a key pair like [this](https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9). IMPORTANT: newlines in it have to be replaced with `\n` characters|

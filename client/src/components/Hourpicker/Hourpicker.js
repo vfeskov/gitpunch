@@ -61,7 +61,7 @@ const styles = theme => ({
   },
   canvasBg: {
     stroke: 'none',
-    fill: '#F8BBD0'
+    fill: theme.palette.secondary[100]
   },
   canvasBearing: {
     stroke: 'none',
