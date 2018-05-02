@@ -4,7 +4,7 @@ import timeout from 'gitpunch-lib/timeout'
 import { RepoGroup } from './interfaces'
 
 const DELAY_EVERY = 50 // repos
-const DELAY_DURATION = 125 // ms
+const DELAY_DURATION = 200 // ms
 
 export default async function fetchTags (byRepo: RepoGroup[]) {
   const errors = trackFetchErrors()

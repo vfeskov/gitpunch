@@ -4,10 +4,12 @@ import { Agent } from 'https'
 import log from './log'
 import timeout from './timeout'
 
-export const FETCH_ATTEMPTS = 5
-export const DELAY_BETWEEN_ATTEMPTS = 1000
-const agent = new Agent({ keepAlive: true, keepAliveMsecs: 30000 })
-const fetchOptions = { agent, timeout: 5000 }
+export const FETCH_ATTEMPTS = 3
+export const DELAY_BETWEEN_ATTEMPTS = 10000
+export const FETCH_TIMEOUT = 5000
+export const KEEP_ALIVE_MSECS = 120000
+
+let agent: Agent
 let _totalRequests = 0
 let _trackTotalRequests = false
 
@@ -19,11 +21,12 @@ export async function fetchAtom (url: string, includeEntry: boolean) {
   let error = new Unknown()
   let success
   let attempts = 0
+  agent = agent || new Agent({ keepAlive: true, keepAliveMsecs: KEEP_ALIVE_MSECS })
   while (attempts < FETCH_ATTEMPTS) {
     try {
       attempts++
       if (attempts > 1) { await timeout(DELAY_BETWEEN_ATTEMPTS) }
-      const response = await fetch(url, fetchOptions)
+      const response = await fetch(url, { agent, timeout: FETCH_TIMEOUT })
       const { status } = response
       if (status >= 400 && status < 500) { throw new NotFound() }
       if (status !== 200) { throw new BadStatus(status) }
@@ -77,18 +80,17 @@ export function trackFetchErrors () {
           r.Other.push([e.repo, e.message])
         }
       })
-      Object.keys(r).forEach(k =>
-        r[k].length && log(logPrefix + k, {
-          errors: r[k],
-          count: r[k].length
-        })
-      )
+      Object.keys(r).filter(k => r[k].length).forEach(k => {
+        log(logPrefix + k + 'Details', { errors: r[k] })
+        log(logPrefix + k, { count: r[k].length })
+      })
     }
   }
 }
 
 export function closeHttpsConnections () {
   agent.destroy()
+  agent = null
 }
 
 export class BaseError extends Error {
