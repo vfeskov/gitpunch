@@ -52,30 +52,18 @@ export default class Email {
   }
 
   subject () {
-    const { repos, oneRelease } = this
-    let result = `New GitHub Release${oneRelease ? ': ' : 's: '}`
-    if (repos.length === 1){
-      result += repos[0].repo + ' - '
-      const tagNames = repos[0].tags.map(t => t.name)
-      if (tagNames.length < 4) {
-        return result + tagNames.join(', ')
-      }
-      return result + tagNames.slice(0, 3).join(', ') + ' and more'
-    }
-    const repoNames = repos.map(r => r.repo)
-    if (repos.length < 4) {
-      return result + repoNames.join(', ')
-    }
-    return result + repoNames.slice(0, 3).join(', ') + ' and more'
+    return this.repos
+      .map(({repo, tags}) =>
+        tags.map(tag =>
+          `${repo}@${tag.name.replace(/^v(\d)/, '$1')}`
+        ).join(', ')
+      ).join(', ')
   }
 
   body () {
     const { repos, oneRelease } = this
     const raw = `
       <div>
-        Greetings :)<br/>
-        <br/>
-        Happy to tell you that a ${oneRelease ? 'new release has' : 'few new releases have'} happened:
         ${repos.map(({ repo, tags }) =>
           tags.map(({ name, entry }) => '' +
             `<div style="margin: 20px 0">
