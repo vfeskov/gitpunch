@@ -30,6 +30,7 @@ export default async function loadUsers (collection: Collection) {
       }, {})
     return user
   }) as DBUser[]
-  log('dbUsers', { users })
+  log('dbUsers', { count: users.length })
+  log('dbUsersDetails', { users })
   return users
 }

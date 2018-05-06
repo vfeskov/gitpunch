@@ -79,8 +79,8 @@ export function trackFetchErrors () {
         }
       })
       Object.keys(r).filter(k => r[k].length).forEach(k => {
-        log(logPrefix + k + 'Details', { errors: r[k] })
         log(logPrefix + k, { count: r[k].length })
+        log(logPrefix + k + 'Details', { errors: r[k] })
       })
     }
   }

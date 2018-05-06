@@ -11,6 +11,7 @@ export default function groupByRepo (users: DBUser[]): RepoGroup[] {
     return byRepo
   }, {})
   const repos = keys(byRepo)
-  log('uniqueRepos', { repos, count: repos.length })
+  log('uniqueRepos', { count: repos.length })
+  log('uniqueReposDetails', { repos })
   return repos.map(r => byRepo[r])
 }
