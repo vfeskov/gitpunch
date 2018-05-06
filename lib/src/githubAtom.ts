@@ -5,8 +5,7 @@ import log from './log'
 import timeout from './timeout'
 
 export const FETCH_ATTEMPTS = 3
-export const DELAY_BETWEEN_ATTEMPTS = 10000
-export const FETCH_TIMEOUT = 5000
+export const FETCH_TIMEOUT = 3000
 export const KEEP_ALIVE_MSECS = 120000
 
 let agent: Agent
@@ -25,7 +24,6 @@ export async function fetchAtom (url: string, includeEntry: boolean) {
   while (attempts < FETCH_ATTEMPTS) {
     try {
       attempts++
-      if (attempts > 1) { await timeout(DELAY_BETWEEN_ATTEMPTS) }
       const response = await fetch(url, { agent, timeout: FETCH_TIMEOUT })
       const { status } = response
       if (status >= 400 && status < 500) { throw new NotFound() }
