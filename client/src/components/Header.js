@@ -31,7 +31,7 @@ export class Header extends PureComponent {
 export default withStyles(theme => ({
   container: {
     alignItems: 'center',
-    background: 'linear-gradient(to bottom, rgba(216,216,216,0.65) 0%, rgba(0,0,0,0) 100%)',
+    background: 'linear-gradient(to bottom, rgba(207,207,207,0.65) 1%,rgba(207,207,207,0) 100%)',
     display: 'flex',
     marginBottom: theme.spacing.unit * 6,
     [theme.breakpoints.down('xs')]: {
