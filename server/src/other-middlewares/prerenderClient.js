@@ -22,7 +22,7 @@ export function prerenderClient (port) {
         `<body><style id="jss-server-side">${css}</style>`
       )
     res.writeHead(200, {
-      'Content-Type': 'text-html',
+      'Content-Type': 'text/html; charset=UTF-8',
       'Content-Length': Buffer.from(content).length
     })
     res.end(content)
