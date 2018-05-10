@@ -14,7 +14,7 @@ Watch for releases on GitHub. [Visit](https://gitpunch.com) and learn the origin
 <img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/client/public/email.png" width="600px" />
 
 ## How it's monitored
-AWS CloudWatch dashboard showing data for 1 week:<br/>
+AWS CloudWatch dashboard showing data for 3 days:<br/>
 <img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/monitoring.png" width="828px" />
 
 ----------
