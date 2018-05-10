@@ -3,7 +3,6 @@ import parseCookies from 'cookie-parser'
 import parseBody from 'body-parser'
 import compression from 'compression'
 import api from './api-middleware'
-import redirectToMainDomain from './other-middlewares/redirectToMainDomain'
 import parseParams from './other-middlewares/parseParams'
 import parseToken from './other-middlewares/parseToken'
 import error from './other-middlewares/error'
@@ -15,16 +14,12 @@ const production = process.env.NODE_ENV === 'production'
 
 const middlewares = []
 
-if (production) {
-  middlewares.push(redirectToMainDomain)
-}
-
 middlewares.push(
-  compression(),
   parseParams,
   parseCookies(),
   parseBody.json(),
   parseToken,
+  compression(),
   api()
 )
 

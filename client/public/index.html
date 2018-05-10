@@ -35,6 +35,13 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="GitPunch: Watch Releases On GitHub">
     <meta name="twitter:description" content="GitPunch lets you subscribe to releases of any project on GitHub. Make a list of repos and get updates in realtime or daily">
+    <script>
+      // redirecting on client, because server redirect doesn't work for user's with cache, because of service worker
+      var l = window.location;
+      if (l.host !== 'gitpunch.com' && l.host.indexOf('localhost') !== 0) {
+        window.location = 'https://gitpunch.com' + l.pathname + l.search;
+      }
+    </script>
   </head>
   <body>
     <noscript>
