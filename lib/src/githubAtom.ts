@@ -5,7 +5,7 @@ import log from './log'
 import timeout from './timeout'
 
 export const FETCH_ATTEMPTS = 3
-export const FETCH_TIMEOUT = 3000
+export const FETCH_TIMEOUT = 10000
 export const KEEP_ALIVE_MSECS = 120000
 
 let agent: Agent
