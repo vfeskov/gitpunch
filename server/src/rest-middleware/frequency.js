@@ -1,4 +1,4 @@
-import { update } from '../db'
+import { updateUser } from '../db'
 import { success, unauthorized, badRequest, logErrAndNext500 } from '../util/http'
 import { validFrequency, validCheckAt } from '../util/validations'
 
@@ -15,6 +15,6 @@ export default async function frequency ({ body, token }, res, next) {
     finalCheckAt = 0
     attrs.$unset = { checkAt: finalCheckAt }
   }
-  await update(token, attrs)
+  await updateUser(token, attrs)
   success(res, { frequency, checkAt: finalCheckAt })
 }

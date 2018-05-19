@@ -11,7 +11,7 @@ import log from 'gitpunch-lib/log'
 import { closeHttpsConnections, trackTotalRequests, totalRequests } from 'gitpunch-lib/githubAtom'
 const url = process.env.MONGODB_URL
 const dbName = process.env.MONGODB_DBNAME
-const collectionName = process.env.MONGODB_COLLECTIONNAME
+const collectionName = 'users'
 
 export async function handler (event, context, callback) {
   let client

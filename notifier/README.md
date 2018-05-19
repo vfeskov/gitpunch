@@ -20,7 +20,6 @@ Open `.env` in a text editor and fill in the variables:
 |`FROM`|Sender email address|
 |`JWT_RSA_PRIVATE_KEY`|Lambda's RSA **private** key to sign links inside emails. You can make a key pair like [this](https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9). IMPORTANT: newlines in it have to be replaced with `\n` characters|
 |`MONGODB_DBNAME`|MongoDB database name|
-|`MONGODB_COLLECTIONNAME`|MongoDB collection name|
 |`MONGODB_URL`|MongoDB connection string|
 |`SES_REGION`|SES region|
 

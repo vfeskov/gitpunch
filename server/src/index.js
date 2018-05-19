@@ -2,7 +2,7 @@ import http from 'http'
 import parseCookies from 'cookie-parser'
 import parseBody from 'body-parser'
 import compression from 'compression'
-import api from './api-middleware'
+import rest from './rest-middleware'
 import parseParams from './other-middlewares/parseParams'
 import parseToken from './other-middlewares/parseToken'
 import error from './other-middlewares/error'
@@ -20,7 +20,7 @@ middlewares.push(
   parseBody.json(),
   parseToken,
   compression(),
-  api()
+  rest()
 )
 
 if (production) {

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { randomBytes } from 'crypto'
-import { load, create, update } from '../db'
+import { load, createUser, updateUser } from '../db'
 import { signToken, setCookieTokenHeader } from '../util/token'
 import { validRepos } from '../util/validations'
 import { filterWatchable } from '../util/githubAtom'
@@ -48,13 +48,13 @@ async function authToken (code, state, repos) {
   try {
     const accessToken = await getAccessToken(code, state)
     const email = await getEmail(accessToken)
-    let user = await load({ email })
+    let user = await loadUser({ email })
     if (user) {
-      await update({ id: user.id }, { accessToken })
+      await updateUser({ id: user.id }, { accessToken })
     } else {
       repos = parseRepos(repos)
       repos = await filterWatchable(repos)
-      user = await create({ email, accessToken, repos })
+      user = await createUser({ email, accessToken, repos })
     }
     return signToken({ id: user.id })
   } catch (error) {

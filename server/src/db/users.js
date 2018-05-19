@@ -1,22 +1,18 @@
-import { MongoClient, ObjectID } from 'mongodb'
-const url = process.env.WAB_MONGODB_URL
-const dbName = process.env.WAB_MONGODB_DBNAME
-const collectionName = process.env.WAB_MONGODB_COLLECTIONNAME
+import { ObjectID } from 'mongodb'
+import { connection } from './connection'
+const USERS_COLLECTION_NAME = 'users'
 const { assign, keys } = Object
 
-const collectionPrms = (async () => {
-  const client = await MongoClient.connect(url)
-  return client.db(dbName).collection(collectionName)
-})()
+const usersCollection = connection.then(db => db.collection(USERS_COLLECTION_NAME))
 
-export async function load (params) {
-  const collection = await collectionPrms
+export async function loadUser (params) {
+  const collection = await usersCollection
   const user = await collection.findOne(query(params))
   return withId(user)
 }
 
-export async function create (params) {
-  const collection = await collectionPrms
+export async function createUser (params) {
+  const collection = await usersCollection
   const user = assign({}, params, {
     _id: ObjectID(),
     watching: true
@@ -25,8 +21,8 @@ export async function create (params) {
   return withId(user)
 }
 
-export async function update (params, attrs) {
-  const collection = await collectionPrms
+export async function updateUser (params, attrs) {
+  const collection = await usersCollection
   const update = {}
   if (keys(attrs).some(k => k === '$unset' || k === '$set')) {
     const { $set, $unset } = attrs
