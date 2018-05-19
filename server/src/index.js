@@ -7,6 +7,7 @@ import parseParams from './other-middlewares/parseParams'
 import parseToken from './other-middlewares/parseToken'
 import error from './other-middlewares/error'
 import chain from './util/chain'
+import * as publicEvents from './public-events'
 
 const port = process.env.PORT || 3000
 
@@ -38,3 +39,5 @@ middlewares.push(error)
 const server = http.createServer(chain(middlewares))
 
 server.listen(port)
+
+publicEvents.monitor()

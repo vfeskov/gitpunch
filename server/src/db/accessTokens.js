@@ -5,16 +5,16 @@ const CACHE_TTL = 600000 // ms
 let prevLoadTS = 0;
 let cachePromise;
 
-export function accessTokens () {
+export function loadAccessTokens () {
   const now = new Date().getTime()
   if (!cachePromise || now - prevLoadTS > CACHE_TTL){
-    cachePromise = loadAccessTokens()
+    cachePromise = load()
   }
-  return cachePromise
+  return cachePromise.then(items => items.map(i => i.accessToken))
 }
 
-async function loadAccessTokens () {
+async function load () {
   const db = await connection
   const collection = await db.collection(ACCESS_TOKENS_COLLECTION_NAME)
-  return collection.find({}, { projection: { accessTokens: 1 } }).toArray()
+  return collection.find({}, { projection: { accessToken: 1 } }).toArray()
 }

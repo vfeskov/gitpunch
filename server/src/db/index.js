@@ -1,2 +1,2 @@
 export { loadUser, createUser, updateUser } from './users'
-export { accessTokens } from './accessTokens'
+export { loadAccessTokens } from './accessTokens'
