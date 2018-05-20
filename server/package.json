@@ -12,6 +12,7 @@
   "author": "Vladimir Feskov",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.243.1",
     "babel-core": "^6.26.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",

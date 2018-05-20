@@ -1,11 +1,13 @@
 import { loadAccessTokens } from '../db'
 import fetch from 'node-fetch'
+import AWS from 'aws-sdk'
 // how often to fetch events in seconds
 const INTERVAL = process.env.WAB_EVENTS_MONITORING_INTERVAL || 1
 // how many pages of events to fetch every iteration (30 per page)
 const PAGES = process.env.WAB_EVENTS_MONITORING_PAGES || 5
 // how often github resets rate limit in seconds
 const CYCLE = process.env.WAB_EVENTS_MONITORING_CYCLE || 3600
+const SQS_QUEUE_URL = process.env.WAB_SQS_QUEUE_URL
 
 let prevEvents = []
 export async function monitor () {
@@ -14,12 +16,14 @@ export async function monitor () {
     const accessToken = await pickAccessToken()
     const events = await fetchEvents(accessToken)
     events
-      .filter(e => e.type === 'ReleaseEvent')
+      // keep only release/tag events
+      .filter(e =>
+        e.type === 'ReleaseEvent' ||
+        e.type === 'CreateEvent' && e.payload.ref_type === 'tag'
+      )
+      // filter out duplicates
       .filter(e => prevEvents.every(prevE => prevE.id !== e.id))
-      .forEach(e => {
-        // TODO: send emails to users instead of console.log
-        console.log(`New Release: ${e.repo.name}@${e.payload.release.tag_name}`)
-      })
+      .forEach(sendMessageToQueue)
     prevEvents = events
   } catch (e) {
     console.log('Error' + e.message, e.stack)
@@ -38,7 +42,7 @@ async function fetchEvents (accessToken) {
     try {
       const response = await fetch(url, {
         headers: { Authorization: `token ${accessToken}` },
-        timeout: INTERVAL * 2000
+        timeout: 5000
       })
       if (response.status !== 200) {
         throw new Error(`GitHub says ${response.status}`)
@@ -65,6 +69,22 @@ async function pickAccessToken () {
   const cycleSecondIndex = nowInSeconds % (CYCLE / INTERVAL)
   const turn = cycleSecondIndex % accessTokens.length
   return accessTokens[turn]
+}
+
+const sqs = new AWS.SQS()
+function sendMessageToQueue ({ id, type, repo, payload, created_at }) {
+  const tagName = type === 'ReleaseEvent' ? payload.release.tag_name : payload.ref;
+  const message = {
+    id,
+    type,
+    repoName: repo.name,
+    tagName,
+    createdAt: created_at
+  }
+  sqs.sendMessage({
+    MessageBody: JSON.stringify(message),
+    QueueUrl: SQS_QUEUE_URL
+  }, (err, data) => err && console.error('Can\'t send message to queue', message, err))
 }
 
 function timeUntilNextFetch (fetchStartTime) {
