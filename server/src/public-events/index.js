@@ -1,6 +1,6 @@
 import { loadAccessTokens } from '../db'
 import fetch from 'node-fetch'
-import AWS from 'aws-sdk'
+import { SQS } from 'aws-sdk'
 // how often to fetch events in seconds
 const INTERVAL = process.env.WAB_EVENTS_MONITORING_INTERVAL || 1
 // how many pages of events to fetch every iteration (30 per page)
@@ -71,7 +71,10 @@ async function pickAccessToken () {
   return accessTokens[turn]
 }
 
-const sqs = new AWS.SQS()
+const sqs = new SQS({
+  apiVersion: '2012-11-05',
+  region: process.env.WAB_SQS_REGION
+})
 function sendMessageToQueue ({ id, type, repo, payload, created_at }) {
   const tagName = type === 'ReleaseEvent' ? payload.release.tag_name : payload.ref;
   const message = {
