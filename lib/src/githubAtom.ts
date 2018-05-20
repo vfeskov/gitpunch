@@ -87,7 +87,7 @@ export function trackFetchErrors () {
 }
 
 export function closeHttpsConnections () {
-  agent.destroy()
+  agent && agent.destroy()
   agent = null
 }
 

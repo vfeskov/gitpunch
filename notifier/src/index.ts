@@ -2,6 +2,7 @@ import { MongoClient } from 'mongodb'
 import { Agent } from 'https'
 import loadUsers from './parts/loadUsers'
 import groupByRepo from './parts/groupByRepo'
+import getRelevantRepos from './parts/getRelevantRepos'
 import fetchTags from './parts/fetchTags'
 import backToUsers from './parts/backToUsers'
 import findUsersToAlert from './parts/findUsersToAlert'
@@ -9,17 +10,17 @@ import fetchReleaseNotes from './parts/fetchReleaseNotes'
 import sendEmailAndUpdateDb from './parts/sendEmailAndUpdateDb'
 import log from 'gitpunch-lib/log'
 import { closeHttpsConnections, trackTotalRequests, totalRequests } from 'gitpunch-lib/githubAtom'
-const url = process.env.MONGODB_URL
-const dbName = process.env.MONGODB_DBNAME
-const collectionName = 'users'
+const { MONGODB_URL, MONGODB_DBNAME } = process.env
+const MONGODB_COLLECTION_NAME = 'users'
 
 export async function handler (event, context, callback) {
   let client
   trackTotalRequests()
   try {
-    client = await MongoClient.connect(url)
-    const collection = client.db(dbName).collection(collectionName)
-    const dbUsers = await loadUsers(collection)
+    const relevantRepos = await getRelevantRepos()
+    client = await MongoClient.connect(MONGODB_URL)
+    const collection = client.db(MONGODB_DBNAME).collection(MONGODB_COLLECTION_NAME)
+    const dbUsers = await loadUsers(collection, relevantRepos)
     const byRepo = groupByRepo(dbUsers)
     const byRepoWithTags = await fetchTags(byRepo)
     const fullUsers = backToUsers(byRepoWithTags)

@@ -2,13 +2,13 @@ import { Collection } from 'mongodb'
 import log from 'gitpunch-lib/log'
 import { DBUser } from './interfaces'
 
-export default async function loadUsers (collection: Collection) {
-  const query = {
+export default async function loadUsers (collection: Collection, relevantRepos: String[]) {
+  const query: any = {
     watching: true,
     $or: [
       { frequency: { $exists: false } },
       { frequency: 'realtime' }
-    ] as any
+    ]
   }
 
   const date = new Date()
@@ -18,6 +18,14 @@ export default async function loadUsers (collection: Collection) {
       checkAt: date.getUTCHours()
     })
   }
+
+  if (relevantRepos) {
+    query.repos = {
+      '$in': relevantRepos
+    }
+  }
+
+  console.log(JSON.stringify(query, null, 2))
 
   const dbUsers = await collection.find(query, {
     projection: { passwordEncrypted: 0 }
