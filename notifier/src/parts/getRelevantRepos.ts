@@ -22,9 +22,11 @@ export default async function getRelevantRepos () {
     }
     // otherwise fetch only those for which there are messages in the queue
     const messages = await receiveQueuedMesages()
-    return messages
+    const repos = messages
       .map(e => e.repoName)
       .filter((r, i, self) => self.indexOf(r) === i)
+    log('relevantRepos', { repos, count: repos.length })
+    return repos
   } catch (e) {
     log('error', { error: e })
     return []

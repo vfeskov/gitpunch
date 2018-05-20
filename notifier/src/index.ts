@@ -18,7 +18,6 @@ export async function handler (event, context, callback) {
   if (relevantRepos && !relevantRepos.length) {
     return callback()
   }
-  log('relevantRepos', { repos: relevantRepos })
   let client
   trackTotalRequests()
   try {
