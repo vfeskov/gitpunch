@@ -32,7 +32,7 @@ Relevant repos are those that:
 - have their release events in the queue or
 - it's time to fetch all of them - happens every hour
 
-Details can be found in [Notifier's README](https://raw.githubusercontent.com/vfeskov/gitpunch/master/notifier/README.md)
+Details can be found in [Notifier's README](https://github.com/vfeskov/gitpunch/blob/master/notifier/README.md)
 
 ## How it's monitored
 AWS CloudWatch dashboard showing data for 3 days:<br/>
