@@ -1,10 +1,18 @@
 # GitPunch Server
 
-The server that serves client and API to access MongoDB.
+The server that serves client and API to access the database
+
+It also fetches GitHub public events every second and sends new release/tag events to SQS queue where they stay invisible for 30 seconds and then are picked up by [GitPunch Notifier](https://raw.githubusercontent.com/vfeskov/gitpunch/master/notifier)
 
 ## Development
 
-First link the library as described [here](https://github.com/vfeskov/gitpunch/blob/master/lib/README.md)
+Install dependencies:
+
+```bash
+npm install
+```
+
+Link the library as described [here](https://github.com/vfeskov/gitpunch/blob/master/lib/README.md)
 
 Create `.env` file:
 ```bash
@@ -35,6 +43,7 @@ npm run watch
 
 Open another terminal, go to `client/` folder and start the client:
 ```bash
+npm install
 npm start
 ```
 
@@ -45,6 +54,7 @@ Client will be accessible on http://localhost:3000, it will proxy `/api*` reques
 Build client, build server then start the server:
 ```bash
 cd ../client
+npm install
 npm run build
 cd ../server
 npm run build
