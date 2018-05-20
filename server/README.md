@@ -15,6 +15,7 @@ Then open `.env` in a text editor and fill in the variables:
 
 | Name | Description |
 |-|-|
+|`AWS_ACCESS_KEY_ID`,<br/>`AWS_SECRET_ACCESS_KEY`|AWS credentials with `SendMessage` permission for SQS|
 |`WAB_CLIENT_HOST`|Url of the client to redirect to when signing in with GitHub|
 |`WAB_JWT_SECRET`|Key to sign auth tokens with, you can generate one using: `node -p "require('crypto').randomBytes(256).toString('base64')"` ([from](https://github.com/dwyl/hapi-auth-jwt2#generating-your-secret-key))|
 |`WAB_LAMBDA_JWT_RSA_PUBLIC_KEY`|Lambda's RSA **public** key to verify authenticity of email links, you can make a key pair like [this](https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9). IMPORTANT: newlines in it has to  be replaced with `\n` characters.|
@@ -22,6 +23,8 @@ Then open `.env` in a text editor and fill in the variables:
 |`WAB_MONGODB_URL`|MongoDB connection string|
 |`WAB_OAUTH_CLIENT_ID`|GitHub OAuth client_id|
 |`WAB_OAUTH_CLIENT_SECRET`|GitHub OAuth client_secret|
+|`WAB_SQS_QUEUE_URL`|AWS SQS queue URL to send new release events to|
+|`WAB_SQS_REGION`|AWS region where SQS queue resides|
 
 ### Development mode
 
