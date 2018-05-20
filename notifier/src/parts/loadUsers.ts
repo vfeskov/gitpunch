@@ -25,11 +25,12 @@ export default async function loadUsers (collection: Collection, relevantRepos: 
     }
   }
 
-  console.log(JSON.stringify(query, null, 2))
-
   const dbUsers = await collection.find(query, {
     projection: { passwordEncrypted: 0 }
   }).toArray()
+  if (!dbUsers.length) {
+    return []
+  }
   const users = dbUsers.map(user => {
     user.alerted = (user.alerted || [])
       .reduce((alerted, [repo, tag]) => {

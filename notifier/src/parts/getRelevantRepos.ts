@@ -1,4 +1,5 @@
 import { RepoGroup } from './interfaces'
+import log from 'gitpunch-lib/log'
 import { SQS } from 'aws-sdk'
 
 // how often to fetch all repos, ignoring message queue
@@ -11,24 +12,30 @@ const sqs = new SQS({
 })
 
 export default async function getRelevantRepos () {
-  const now = new Date()
-  const minutes = now.getUTCHours() * 60 + now.getUTCMinutes()
-  // if it's time to fetch all repos
-  if (minutes % FETCH_ALL_REPOS_INTERVAL === 0) {
-    await purgeMessageQueue()
-    return null // means all are relevant
+  try {
+    const now = new Date()
+    const minutes = now.getUTCHours() * 60 + now.getUTCMinutes()
+    // if it's time to fetch all repos
+    if (minutes % FETCH_ALL_REPOS_INTERVAL === 0) {
+      await purgeMessageQueue()
+      return null // means all are relevant
+    }
+    // otherwise fetch only those for which there are messages in the queue
+    const messages = await receiveQueuedMesages()
+    return messages
+      .map(e => e.repoName)
+      .filter((r, i, self) => self.indexOf(r) === i)
+  } catch (e) {
+    log('error', { error: e })
+    return []
   }
-  // otherwise fetch only those for which there are messages in the queue
-  const messages = await receiveQueuedMesages()
-  return messages
-    .map(e => e.repoName)
-    .filter((r, i, self) => self.indexOf(r) === i)
 }
 
 async function purgeMessageQueue () {
   await sqs.purgeQueue({
     QueueUrl: SQS_QUEUE_URL
   }).promise()
+    .catch(e => log('purgeQueueError', { error: e }))
 }
 
 async function receiveQueuedMesages () {
@@ -56,6 +63,7 @@ async function receiveQueuedMesages () {
           ReceiptHandle: message.ReceiptHandle
         }))
       }).promise()
+        .catch(e => log('deleteMessageBatchError', { error: e }))
     }))
     const messages = responses.reduce((r, i) => r.concat(i.Messages || []), []);
     return messages.map(m => {

@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { Agent } from 'https'
 import loadUsers from './parts/loadUsers'
-import groupByRepo from './parts/groupByRepo'
+import groupByRelevantRepo from './parts/groupByRelevantRepo'
 import getRelevantRepos from './parts/getRelevantRepos'
 import fetchTags from './parts/fetchTags'
 import backToUsers from './parts/backToUsers'
@@ -14,14 +14,18 @@ const { MONGODB_URL, MONGODB_DBNAME } = process.env
 const MONGODB_COLLECTION_NAME = 'users'
 
 export async function handler (event, context, callback) {
+  const relevantRepos = await getRelevantRepos()
+  if (relevantRepos && !relevantRepos.length) {
+    return callback()
+  }
+  log('relevantRepos', { repos: relevantRepos })
   let client
   trackTotalRequests()
   try {
-    const relevantRepos = await getRelevantRepos()
     client = await MongoClient.connect(MONGODB_URL)
     const collection = client.db(MONGODB_DBNAME).collection(MONGODB_COLLECTION_NAME)
     const dbUsers = await loadUsers(collection, relevantRepos)
-    const byRepo = groupByRepo(dbUsers)
+    const byRepo = groupByRelevantRepo(dbUsers, relevantRepos)
     const byRepoWithTags = await fetchTags(byRepo)
     const fullUsers = backToUsers(byRepoWithTags)
     const usersToAlert = findUsersToAlert(fullUsers)
@@ -32,6 +36,6 @@ export async function handler (event, context, callback) {
   }
   client && client.close()
   closeHttpsConnections()
-  log('totalRequests', { count: totalRequests() })
+  totalRequests() && log('totalRequests', { count: totalRequests() })
   callback()
 }

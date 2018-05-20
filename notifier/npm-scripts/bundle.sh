@@ -1,6 +1,5 @@
-rm -rf lib
+rm -rf lib bundle bundle.zip
 cp -rf ../lib lib
-rm -rf bundle
 mkdir bundle
 cp build/index.js bundle
 docker build -f npm-scripts/Dockerfile.bundle -t wab-lambda .
