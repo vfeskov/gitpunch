@@ -21,8 +21,9 @@ Watch for releases on GitHub
 - Recurrent script is run by: **AWS Lambda**
 - Email server: **AWS Simple Email Service**
 - Queue: **AWS Simple Queue Service**
+- Logs: **AWS CloudWatch**
 
-The server, besides providing API endpoints to the database, also fetches GitHub public events every second and sends new release/tag events to the queue
+The server, besides providing REST endpoints to the database, also fetches GitHub public events every second and sends new release/tag events to the queue
 
 Recurrent script (Notifier) fetches releases of relevant repos every minute, sends emails to users and updates those users in the database to prevent duplicate emails
 
