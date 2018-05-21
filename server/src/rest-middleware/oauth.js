@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { randomBytes } from 'crypto'
-import { load, createUser, updateUser } from '../db'
+import { loadUser, createUser, updateUser } from '../db'
 import { signToken, setCookieTokenHeader } from '../util/token'
 import { validRepos } from '../util/validations'
 import { filterWatchable } from '../util/githubAtom'
