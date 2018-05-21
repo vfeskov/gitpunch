@@ -54,10 +54,10 @@ export default class Email {
   subject () {
     return this.repos
       .map(({repo, tags}) =>
-        tags.map(tag =>
-          `${repo}@${tag.name.replace(/^v(\d)/, '$1')}`
-        ).join(', ')
-      ).join(', ')
+        `${repo.split('/')[1]}@${tags.map(tag =>
+          `${tag.name.replace(/^v(\d)/, '$1')}`
+        ).join(', ')}`
+      ).join('; ')
   }
 
   body () {
@@ -68,8 +68,7 @@ export default class Email {
           tags.map(({ name, entry }) => '' +
             `<div style="margin: 20px 0">
               <div style="font-size: 1.5em; line-height: 1.5em; margin: 0; word-wrap: break-word;">
-                <a href="https://github.com/${repo}">${repo}</a>
-                <a href="https://github.com/${repo}/releases/tag/${name}" style="font-weight: bold;">${name}</a>
+                <a href="https://github.com/${repo}">${repo}</a>@<a href="https://github.com/${repo}/releases/tag/${name}" style="font-weight: bold;">${name}</a>
               </div>
               <div style="padding: 10px; border: 1px dashed #888;">
                 ${description(entry)}
