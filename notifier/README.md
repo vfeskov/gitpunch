@@ -2,25 +2,25 @@
 
 AWS Lambda function that runs every minute. It behaves differently depending on the time it runs:
 
-1. Every hour it fetches releases of all repos that are being watched in realtime or at that hour, it also purges all release events from SQS queue
-2. Any other time it fetches releases of watched repos, for which there are release events in SQS queue
+1. Every hour it fetches releases of all repos that are being watched in realtime or at that hour simultaneously purging SQS queue
+2. Any other time it fetches releases of watched repos that also have their release events in SQS queue
 
-These releases are then used to send emails and update that which users were emailed about in the database
+These releases are then used to send emails and update users in the database to prevent duplicate emails
 
 Example 1:
-- Start at 15:03
-- Read 3 release events in SQS queue: `facebook/react`, `vuejs/vue` & `angular/angular`
-- 4 users watch `facebook/react` & `vuejs/vue` in realtime
+- Start at `15:03`
+- Read `3` release events in SQS queue: `facebook/react`, `vuejs/vue` & `angular/angular`
+- `4` users watch `facebook/react` & `vuejs/vue` in realtime
 - Users watching daily are ignored
 - Fetch releases of `facebook/react` & `vuejs/vue`
-- Send emails to those 4 users
+- Send emails to those `4` users
 
 Example 2:
-- Start at 16:00
-- Load all users that watch in realtime or daily at 16:00
+- Start at `16:00`
+- Load all users that watch in realtime or daily at `16:00`
 - Fetch releases of all their repos
 - Send emails if there's anything new
-- Purge all previous release events in SQS queue since all watched repos were fetched anyway
+- Delete all previous release events in SQS queue since all watched repos were fetched anyway
 
 
 ## Development
