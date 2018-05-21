@@ -35,10 +35,11 @@ export default async function getRelevantRepos () {
 }
 
 async function purgeMessageQueue () {
-  await sqs.purgeQueue({
+  const request = sqs.purgeQueue({
     QueueUrl: SQS_QUEUE_URL
-  }).promise()
-    .catch(e => log('purgeQueueError', { error: e }))
+  })
+  setTimeout(() => request.abort(), SQS_REQUEST_TIMEOUT)
+  return request.promise().catch(e => log('purgeQueueError', { error: e }))
 }
 
 async function receiveQueuedMesages () {
