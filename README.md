@@ -36,8 +36,8 @@ Relevant repos are those that:
 Details can be found in [Notifier's README](https://github.com/vfeskov/gitpunch/blob/master/notifier/README.md)
 
 ## How it's monitored
-AWS CloudWatch dashboard showing data for 3 days:<br/>
-<img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/monitoring.png" width="828px" />
+AWS CloudWatch dashboard showing data for 1 day:<br/>
+<img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/monitoring.png" width="800px" />
 
 ----------
 
