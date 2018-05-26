@@ -122,7 +122,7 @@ function parseReturnTo (returnTo) {
 }
 
 function hex (string) {
-  return new Buffer(string).toString('hex')
+  return Buffer.from(string).toString('hex')
 }
 
 function fromHex (string) {
