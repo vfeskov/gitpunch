@@ -17,7 +17,7 @@ import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
 
-const homePath = '/(starred|unsubscribe\/.+)?'
+const homePath = '/(starred|unsubscribe/.+)?'
 const homePathRegExp = new RegExp(`^${homePath}$`)
 class App extends PureComponent {
   skip = () => {
