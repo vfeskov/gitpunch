@@ -9,8 +9,9 @@ import rootSaga from './sagas'
 import createTheme from './theme/createTheme'
 import * as api from './services/api'
 import * as cookieSvc from './services/cookie'
+import { StaticRouter } from 'react-router-dom'
 
-export async function renderToStrings (serverPort, cookie) {
+export async function renderToStrings (serverPort, cookie, url) {
   api.setBase({
     url: `http://localhost:${serverPort}`,
     opts: { headers: { cookie } }
@@ -25,11 +26,14 @@ export async function renderToStrings (serverPort, cookie) {
   const theme = createTheme()
   const generateClassName = createGenerateClassName()
 
+  const routerContext = {}
   const html = renderToString(
     <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
-      <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
-        <Root store={store} />
-      </MuiThemeProvider>
+      <StaticRouter location={url} context={routerContext}>
+        <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
+          <Root store={store} />
+        </MuiThemeProvider>
+      </StaticRouter>
     </JssProvider>
   )
   const css = sheetsRegistry.toString()

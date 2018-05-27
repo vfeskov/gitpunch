@@ -1,4 +1,4 @@
-importScripts('workbox-sw.prod.v2.1.2.js')
+importScripts('workbox-sw.prod.v2.1.3.js')
 
 const workbox = new WorkboxSW({
   skipWaiting: true,
@@ -10,7 +10,7 @@ const workbox = new WorkboxSW({
 workbox.precache([])
 
 // cache index.html when service worker gets installed
-self.addEventListener('install', updateIndexCache)
+self.addEventListener('install', () => updateCache(indexRequest()))
 
 // listen to all http requests coming from
 // the browser on my website
@@ -30,26 +30,29 @@ self.addEventListener('fetch', event => {
   ) { return }
 
   // when an API action happens, e.g., "DELETE /sign_out" that signs user out,
-  // I let the request through and update index.html cache after it's done.
+  // let the request through and update index.html cache after it's done.
   if (event.request.method !== 'GET') {
     return event.respondWith(
       fetch(event.request)
         .then(response => {
-          updateIndexCache()
+          updateCache(indexRequest())
           return response
         })
     )
   }
 
-  // I serve index.html network-first on any request that
-  // reaches this line
+  // serve any other request network-first updating cache
   event.respondWith(
-    fetch(indexRequest())
+    fetch(event.request)
       .then(response => {
-        updateIndexCache()
+        updateCache(
+          /\/(starred|unsubscribe)/.test(event.request.pathname) ?
+            indexRequest() :
+            event.request
+        )
         return response
       })
-      .catch(() => caches.match(indexRequest()))
+      .catch(() => caches.match(event.request))
   )
 })
 
@@ -69,11 +72,11 @@ function isGetApi({ request }, { pathname }) {
   return request.method === 'GET' && /^\/api\/.+/.test(pathname)
 }
 
-async function updateIndexCache() {
+async function updateCache(request) {
   const cache = await caches.open('dynamic-v1')
-  cache.add(indexRequest())
+  cache.add(request)
 }
 
 function indexRequest() {
-  return new Request('index.html', { credentials: 'same-origin' })
+  return new Request('/', { credentials: 'same-origin' })
 }

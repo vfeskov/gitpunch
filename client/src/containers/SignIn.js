@@ -5,6 +5,7 @@ import Button from 'material-ui/Button'
 import Input, { InputLabel } from 'material-ui/Input'
 import { FormControl } from 'material-ui/Form'
 import GitHubButton from '../components/GitHubButton'
+import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
@@ -46,6 +47,7 @@ class SignIn extends Component {
           or <a onClick={() => this.setState({ enteringEmail: true })}>enter email</a>
         </div>
         )}
+        <div className={classes.conditions}>By signing in, you agree to our <Link to="/privacy">Privacy Policy</Link></div>
       </div>
     )
   }
@@ -110,6 +112,11 @@ function styles (theme) {
     },
     signIn: {
       borderRadius: '36px'
+    },
+    conditions: {
+      fontSize: '12px',
+      width: '180px',
+      marginTop: '32px'
     }
   }
 }

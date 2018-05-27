@@ -8,6 +8,7 @@ import { withStyles } from 'material-ui/styles'
 import { styles } from './styles'
 import oauthUrl from '../../lib/oauthUrl'
 import { StarIcon } from '../../components/icons'
+import Tooltip from 'material-ui/Tooltip'
 
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../../actions'
@@ -33,6 +34,7 @@ class RepoAdd extends PureComponent {
     const { value, disabled, error } = repoAdd
     const { loading, items } = suggestions
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
+    const watchStarredLink = <a href={starredLink} className={classes.starredLink} onClick={this.starredClicked}>watch {StarIcon()} starred</a>
     return (
       <div className={className}>
         <h2 className={classes.title}>Watch GitHub repo for releases</h2>
@@ -69,7 +71,12 @@ class RepoAdd extends PureComponent {
           </form>
           <div className={classes.or}>/</div>
           <div className={classes.starredLinkContainer}>
-            <a href={starredLink} className={classes.starredLink} onClick={this.starredClicked}>watch {StarIcon()} starred</a>
+            {accessToken ?
+              watchStarredLink :
+              <Tooltip title={'It\'ll also sign you in'}>
+                {watchStarredLink}
+              </Tooltip>
+            }
           </div>
         </div>
       </div>

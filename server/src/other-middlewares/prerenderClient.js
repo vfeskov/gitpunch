@@ -5,9 +5,9 @@ import globalLocation from '../util/globalLocation'
 export function prerenderClient (port) {
   globalLocation()
   const layout = fs.readFileSync('./public/layout.html').toString()
-  return async ({ method, headers }, res, next) => {
+  return async ({ method, headers, url }, res, next) => {
     if (method !== 'GET') { return next() }
-    const { html, state, css } = await renderToStrings(port, headers.cookie)
+    const { html, state, css } = await renderToStrings(port, headers.cookie, url)
     const content = layout
       .replace(
         '<div id="root"></div>',

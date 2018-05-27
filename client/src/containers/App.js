@@ -9,8 +9,10 @@ import Starred from './Starred'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Intro from '../components/Intro'
+import Privacy from '../components/Privacy'
 import * as cookie from '../services/cookie'
 import { withStyles } from 'material-ui/styles'
+import { Route, withRouter } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
@@ -32,11 +34,16 @@ class App extends PureComponent {
         <div className={classes.contentContainer + ' ' + (showIntro === 'n' ? classes.contentOn : '')}>
           <div className={classes.content}>
             <Header className={classes.block} email={email} signOut={signOut} />
-            <RepoAdd className={`${classes.block} ${classes.maxWidth}`} />
-            <div className={`${classes.container} ${classes.maxWidth}`}>
-              <Repos className={`${classes.block} ${classes.repos}`} />
-              {!signedIn && <SignIn className={classes.block} />}
-            </div>
+            <Route exact path="/(starred|unsubscribe\/.+)?" render={() => <div>
+              <RepoAdd className={`${classes.block} ${classes.maxWidth}`} />
+              <div className={`${classes.container} ${classes.maxWidth}`}>
+                <Repos className={`${classes.block} ${classes.repos}`} />
+                {!signedIn && <SignIn className={classes.block} />}
+              </div>
+            </div>}/>
+            <Route path="/privacy" render={() =>
+              <Privacy className={`${classes.block} ${classes.maxWidthWide}`}/>
+            }/>
           </div>
           <Footer className={classes.block} watchIntro={this.showIntro}></Footer>
         </div>
@@ -57,8 +64,8 @@ class App extends PureComponent {
       jssStyles.parentNode.removeChild(jssStyles)
     }
     this.possiblyUnwatch()
-    this.possiblyShowStarred()
-    window.location.pathname === '/' || window.history.pushState(null, '', '/')
+    this.possiblyShowStarred();
+    window.location.pathname.match(/^\/(privacy)?$/) || window.history.pushState(null, '', '/')
   }
 
   possiblyUnwatch () {
@@ -83,84 +90,90 @@ App.propTypes = {
   setShowIntro: PropTypes.func.isRequired
 }
 
-const styles = theme => ({
-  app: {
-    boxSizing: 'border-box',
-    height: '100%',
-    overflow: 'hidden',
-    position: 'relative'
-  },
-  container: {
-    [theme.breakpoints.up('sm')]: {
-      flexDirection: 'row'
-    },
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  block: {
-    [theme.breakpoints.up('sm')]: {
-      marginBottom: theme.spacing.unit * 3,
-      padding: theme.spacing.unit * 4
-    },
-    marginBottom: theme.spacing.unit * 1.5,
-    padding: theme.spacing.unit * 2
-  },
-  maxWidth: {
+const styles = theme => {
+  const maxWidth = {
     boxSizing: 'border-box',
     marginLeft: 'auto',
     marginRight: 'auto',
     maxWidth: '600px',
     position: 'relative'
-  },
-  repos: {
-    flex: 1
-  },
-  introContainer: {
-    height: '100%',
-    left: 0,
-    top: 0,
-    position: 'absolute',
-    width: '100%',
-    transition: 'opacity 500ms, top 500ms',
-  },
-  introOn: {
-    opacity: 1,
-    zIndex: 10
-  },
-  introOff: {
-    opacity: 0,
-    pointerEvents: 'none',
-    top: '-500px',
-    zIndex: 0
-  },
-  contentContainer: {
-    boxSizing: 'border-box',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    opacity: 0,
-    overflow: 'auto',
-    pointerEvents: 'none',
-    paddingTop: '500px',
-    transition: 'opacity 500ms, padding-top 500ms',
-    width: '100%'
-  },
-  contentOn: {
-    opacity: 1,
-    pointerEvents: 'all',
-    paddingTop: 0
-  },
-  content: {
-    flex: '1 0 auto'
   }
-})
+  return ({
+    app: {
+      boxSizing: 'border-box',
+      height: '100%',
+      overflow: 'hidden',
+      position: 'relative'
+    },
+    container: {
+      [theme.breakpoints.up('sm')]: {
+        flexDirection: 'row'
+      },
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    block: {
+      [theme.breakpoints.up('sm')]: {
+        marginBottom: theme.spacing.unit * 3,
+        padding: theme.spacing.unit * 4
+      },
+      marginBottom: theme.spacing.unit * 1.5,
+      padding: theme.spacing.unit * 2
+    },
+    maxWidth,
+    maxWidthWide: { ...maxWidth, maxWidth: '1000px' },
+    repos: {
+      flex: 1
+    },
+    introContainer: {
+      height: '100%',
+      left: 0,
+      top: 0,
+      position: 'absolute',
+      width: '100%',
+      transition: 'opacity 500ms, top 500ms',
+    },
+    introOn: {
+      opacity: 1,
+      zIndex: 10
+    },
+    introOff: {
+      opacity: 0,
+      pointerEvents: 'none',
+      top: '-500px',
+      zIndex: 0
+    },
+    contentContainer: {
+      boxSizing: 'border-box',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      opacity: 0,
+      overflow: 'auto',
+      pointerEvents: 'none',
+      paddingTop: '500px',
+      transition: 'opacity 500ms, padding-top 500ms',
+      width: '100%'
+    },
+    contentOn: {
+      opacity: 1,
+      pointerEvents: 'all',
+      paddingTop: 0
+    },
+    content: {
+      flex: '1 0 auto'
+    }
+  })
+}
 
-export default connect(
-  state => ({
-    email: state.email,
-    signedIn: state.signedIn,
-    accessToken: state.accessToken,
-    showIntro: state.showIntro
-  }),
-  mapDispatchToProps()
-)(withStyles(styles)(App))
+export default withRouter(
+  connect(
+    state => ({
+      email: state.email,
+      signedIn: state.signedIn,
+      accessToken: state.accessToken,
+      showIntro: state.showIntro
+    }),
+    mapDispatchToProps()
+  )(withStyles(styles)(App))
+)

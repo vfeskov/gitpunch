@@ -17,7 +17,8 @@ const emptyState = {
   repos: [],
   accessToken: '',
   starred: [],
-  loading: false
+  loading: false,
+  loadedOnce: false
 }
 
 class StarredDialog extends Component {
@@ -29,7 +30,7 @@ class StarredDialog extends Component {
 
   render () {
     const { classes, starredOpen, starredWorking, setStarredOpen, fullScreen, width, watchAllStarredRepos } = this.props
-    const { starred, links, loading } = this.state
+    const { starred, links, loading, loadedOnce } = this.state
     return (
       <Dialog
         aria-labelledby="starred-dialog-title"
@@ -60,7 +61,7 @@ class StarredDialog extends Component {
               <div className={classes.description} style={ { color: '#777' } }>{repo.description || 'No description'}</div>
             </div>
           ))}
-          {!starred.length && !loading && 'Looks like you haven\'t starred anything on GitHub yet'}
+          {!starred.length && !loading && loadedOnce && 'Looks like you haven\'t starred anything on GitHub yet'}
         </DialogContent>
         {!!starred.length && ([
           <DialogActions key="pagination" classes={{ root: classes.centered }}>
@@ -105,10 +106,11 @@ class StarredDialog extends Component {
         links,
         loading: false,
         accessToken,
-        starred: this.appendGitpunching(items, repos)
+        starred: this.appendGitpunching(items, repos),
+        loadedOnce: true
       })
     } catch (e) {
-      this.persist(emptyState)
+      this.persist({ ...emptyState, loadedOnce: true })
     }
   }
 
