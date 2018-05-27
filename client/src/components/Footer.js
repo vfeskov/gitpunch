@@ -8,7 +8,7 @@ export class Footer extends PureComponent {
     const { className, classes } = this.props
     return (
       <div className={`${className} ${classes.container}`}>
-        Made with ♥ by <a href="https://github.com/vfeskov" target="_bank" className="soft">vfeskov</a>&nbsp;|&nbsp;
+        Made with ♥ by <a href="https://github.com/vfeskov" target="_bank" className="soft">vfeskov</a><br/>
         <Link to="/privacy" className="soft">Privacy</Link>&nbsp;|&nbsp;
         <a href='m&#97;ilt&#111;&#58;v&#64;vla&#100;im&#105;rfeskov&#46;com' className="soft">Contact</a>&nbsp;|&nbsp;
         <a onClick={this.props.watchIntro} className="soft">Watch&nbsp;Intro</a>
@@ -26,6 +26,7 @@ export default withStyles(theme => ({
   container: {
     flexShrink: 0,
     fontSize: '0.9rem',
+    lineHeight: '1.5',
     marginBottom: '0 !important',
     textAlign: 'center',
     [theme.breakpoints.down('xs')]: {

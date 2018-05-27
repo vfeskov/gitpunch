@@ -17,6 +17,8 @@ import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
 
+const homePath = '/(starred|unsubscribe\/.+)?'
+const homePathRegExp = new RegExp(`^${homePath}$`)
 class App extends PureComponent {
   skip = () => {
     cookie.set('dontShowIntro', 1)
@@ -28,13 +30,14 @@ class App extends PureComponent {
   }
 
   render () {
-    const { classes, signedIn, email, signOut, showIntro } = this.props
+    const { classes, signedIn, email, signOut, showIntro, location } = this.props
+    const isHome = homePathRegExp.test(location.pathname)
     return (
       <div className={classes.app}>
-        <div className={classes.contentContainer + ' ' + (showIntro === 'n' ? classes.contentOn : '')}>
+        <div className={classes.contentContainer + ' ' + (showIntro === 'n' || !isHome ? classes.contentOn : '')}>
           <div className={classes.content}>
             <Header className={classes.block} email={email} signOut={signOut} />
-            <Route exact path="/(starred|unsubscribe\/.+)?" render={() => <div>
+            <Route exact path={homePath} render={() => <div>
               <RepoAdd className={`${classes.block} ${classes.maxWidth}`} />
               <div className={`${classes.container} ${classes.maxWidth}`}>
                 <Repos className={`${classes.block} ${classes.repos}`} />
@@ -49,7 +52,13 @@ class App extends PureComponent {
         </div>
         <Starred />
         <UnwatchMessage />
-        <div className={classes.introContainer + ' ' + (showIntro === 'y' ? classes.introOn : classes.introOff)}>
+        <div className={
+          classes.introContainer + ' ' +
+          (showIntro === 'y' && isHome ?
+            classes.introOn :
+            classes.introOff
+          )
+        }>
           <div className={classes.maxWidth}>
             <Intro onSkip={this.skip} showIntro={showIntro} />
           </div>

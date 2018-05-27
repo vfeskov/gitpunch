@@ -31,13 +31,13 @@ export class Privacy extends PureComponent {
                 </ol>
               </td>
               <td>Update you with news from GitHub.com and occasionally GitPunch.com</td>
-              <td rowspan="2">
+              <td rowSpan="2">
                 <ul>
                   <li><a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer">AWS</a> to run server and scripts</li>
                   <li><a href="https://www.mongodb.com/cloud/atlas" target="_blank" rel="noopener noreferrer">MongoDB Atlas</a> is the database</li>
                 </ul>
               </td>
-              <td rowspan="2">
+              <td rowSpan="2">
                 Upon request
               </td>
             </tr>
@@ -53,7 +53,7 @@ export class Privacy extends PureComponent {
             </tr>
             <tr>
               <td>IP Address</td>
-              <td rowspan="2" className={classes.nowrap}>Visiting website</td>
+              <td rowSpan="2" className={classes.nowrap}>Visiting website</td>
               <td>System health monitoring</td>
               <td>Access logs at <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer">AWS</a></td>
               <td className={classes.nowrap}>
