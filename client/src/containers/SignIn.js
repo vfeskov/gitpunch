@@ -47,7 +47,7 @@ class SignIn extends Component {
           or <a onClick={() => this.setState({ enteringEmail: true })}>enter email</a>
         </div>
         )}
-        <div className={classes.conditions}>By signing in, you agree to our <Link to="/privacy">Privacy Policy</Link></div>
+        <div className={classes.conditions}>By signing in, you agree to our <Link to="/privacy" className="soft">Privacy Policy</Link></div>
       </div>
     )
   }
@@ -114,9 +114,17 @@ function styles (theme) {
       borderRadius: '36px'
     },
     conditions: {
+      color: '#888',
+      display: 'inline-block',
       fontSize: '12px',
       width: '180px',
-      marginTop: '32px'
+      marginTop: '32px',
+      maxWidth: '158px',
+      '@global': {
+        'a:not(:hover)': {
+          color: '#888'
+        }
+      }
     }
   }
 }
