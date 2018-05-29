@@ -1,27 +1,22 @@
 import { internalServerError, badRequest } from './http'
-import * as lib from 'gitpunch-lib/githubAtom'
+import * as githubAtom from 'gitpunch-lib/githubAtom'
 
-const { NotFound, NoTags, BadStatus } = lib
-
-export async function filterWatchable (repos) {
+export async function withTags (repos) {
   repos = await Promise.all(
     repos.map(
-      repo => lib.checkTags(repo).then(() => repo, () => null)
+      repo => githubAtom.fetchTags(repo).then(tags => ({ repo, tags }), () => null)
     )
   )
   return repos.filter(Boolean)
 }
 
-export async function checkTags (repo) {
+export async function fetchTags (repo) {
   try {
-    await lib.checkTags(repo)
+    await githubAtom.fetchTags(repo)
   } catch (e) {
-    if (e instanceof BadStatus) {
-      throw internalServerError('Try again')
-    } else if (e instanceof NotFound) {
+    if (e instanceof githubAtom.BadRequest) {
       throw badRequest('Repo doesn\'t exist')
-    } else if (e instanceof NoTags) {
-      throw badRequest('Repo has no releases')
     }
+    throw internalServerError('Try again')
   }
 }

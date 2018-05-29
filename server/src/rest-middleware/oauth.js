@@ -3,7 +3,7 @@ import { randomBytes } from 'crypto'
 import { loadUser, createUser, updateUser } from '../db'
 import { signToken, setCookieTokenHeader } from '../util/token'
 import { validRepos } from '../util/validations'
-import { filterWatchable } from '../util/githubAtom'
+import { withTags } from '../util/githubAtom'
 const clientId = process.env.WAB_OAUTH_CLIENT_ID
 const clientSecret = process.env.WAB_OAUTH_CLIENT_SECRET
 const clientHost = process.env.WAB_CLIENT_HOST
@@ -53,8 +53,8 @@ async function authToken (code, state, repos) {
       await updateUser({ id: user.id }, { accessToken })
     } else {
       repos = parseRepos(repos)
-      repos = await filterWatchable(repos)
-      user = await createUser({ email, accessToken, repos })
+      repos = await withTags(repos)
+      user = await createUser({ email, accessToken, repos: repos.map(r => r.repo) })
     }
     return signToken({ id: user.id })
   } catch (error) {

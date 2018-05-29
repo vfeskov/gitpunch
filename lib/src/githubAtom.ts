@@ -12,7 +12,7 @@ let agent: Agent
 let _totalRequests = 0
 let _trackTotalRequests = false
 
-export function checkTags (repo: string) {
+export function fetchTags (repo: string) {
   return fetchAtom(`https://github.com/${repo}/tags.atom`, false)
 }
 
@@ -26,16 +26,13 @@ export async function fetchAtom (url: string, includeEntry: boolean) {
       attempts++
       const response = await fetch(url, { agent, timeout: FETCH_TIMEOUT })
       const { status } = response
-      if (status >= 400 && status < 500) { throw new NotFound() }
-      if (status !== 200) { throw new BadStatus(status) }
+      if (status >= 400 && status < 500) { throw new BadRequest() }
+      if (status !== 200) { throw new BadResponse(status) }
       const xml = await response.text()
-      const entries = parse(xml, includeEntry)
-      if (!entries.length) { throw new NoTags() }
-      success = entries
-      break
+      success = parse(xml, includeEntry)
     } catch (e) {
       error = e
-      if (isClientError(e)) { break }
+      if (e instanceof BadRequest) { break }
     }
   }
   if (_trackTotalRequests) { _totalRequests += attempts }
@@ -48,8 +45,8 @@ export function trackTotalRequests () {
   _totalRequests = 0
 }
 
-export function totalRequests () {
-  return _totalRequests
+export function logTotalRequests () {
+  _totalRequests && log('totalRequests', { count: _totalRequests })
 }
 
 export function trackFetchErrors () {
@@ -65,15 +62,15 @@ export function trackFetchErrors () {
     log (logPrefix: string) {
       if (!errors.length) { return }
       const r: { [key: string]: any[] } = {
-        BadStatus: [],
-        NoTags: [],
+        BadResponse: [],
+        BadRequest: [],
         Other: []
       }
       errors.forEach(e => {
-        if (e instanceof BadStatus) {
-          r.BadStatus.push([e.repo, e.status])
-        } else if (e instanceof NoTags || e instanceof NotFound) {
-          r.NoTags.push(e.repo)
+        if (e instanceof BadResponse) {
+          r.BadResponse.push([e.repo, e.status])
+        } else if (e instanceof BadRequest) {
+          r.BadRequest.push(e.repo)
         } else {
           r.Other.push([e.repo, e.message])
         }
@@ -86,7 +83,7 @@ export function trackFetchErrors () {
   }
 }
 
-export function closeHttpsConnections () {
+export function closeConnections () {
   agent && agent.destroy()
   agent = null
 }
@@ -99,22 +96,14 @@ export class Unknown extends BaseError {
   message = 'unknown'
 }
 
-export class BadStatus extends BaseError {
+export class BadResponse extends BaseError {
   constructor (public status: number) {
-    super('bad status')
+    super('bad response')
   }
 }
 
-export class NotFound extends BaseError {
-  message = 'not found'
-}
-
-export class NoTags extends BaseError {
-  message = 'no tags'
-}
-
-function isClientError (err: BaseError) {
-  return [NotFound, NoTags].some(type => err instanceof type)
+export class BadRequest extends BaseError {
+  message = 'bad request'
 }
 
 const ENTRY_REGEXP = /<entry>[\s\S]*?<\/entry>/gm

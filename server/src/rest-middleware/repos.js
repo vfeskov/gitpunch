@@ -1,6 +1,6 @@
 import { success, unauthorized, badRequest, internalServerError } from '../util/http'
 import { validRepos, validRepo } from '../util/validations'
-import { checkTags, filterWatchable } from '../util/githubAtom'
+import { fetchTags, withTags } from '../util/githubAtom'
 import { updateUser, loadUser } from '../db'
 
 export async function create ({ body, token }, res, next) {
@@ -12,7 +12,7 @@ export async function create ({ body, token }, res, next) {
       throw badRequest('Invalid repo')
     }
     const { repo } = body
-    await checkTags(repo)
+    await fetchTags(repo)
     const { repos } = await loadUser(token)
     if (repos.includes(repo)) {
       return success(res, { repos })
@@ -33,12 +33,12 @@ export async function createBulk ({ body, token }, res, next) {
     if (!body || !validRepos(body.repos)) {
       throw badRequest('Invalid repos')
     }
-    const reqRepos = await filterWatchable(body.repos)
+    const reqRepos = await withTags(body.repos)
     const { repos } = await loadUser(token)
-    if (reqRepos.every(repo => repos.includes(repo))) {
+    if (reqRepos.every(({ repo }) => repos.includes(repo))) {
       return success(res, { repos })
     }
-    const newRepos = reqRepos.filter(repo => !repos.includes(repo));
+    const newRepos = reqRepos.filter(({ repo }) => !repos.includes(repo));
     const attrs = { repos: [...newRepos, ...repos] }
     await updateUser(token, attrs)
     success(res, attrs)

@@ -10,12 +10,13 @@ export default function findUsersToAlert (users: FullUser[]): ActionableUser[] {
     )
 }
 
-function withActionableRepos ({ _id, email, alerted, repos }) {
+function withActionableRepos ({ _id, email, alerted, repos }: FullUser) {
   const base = {
     [SEND_EMAIL_AND_UPDATE_ALERTED]: [],
     [ONLY_UPDATE_ALERTED]: []
   }
   const actionableRepos = repos.reduce((result, { repo, tags }) => {
+    tags = tags.length ? tags : [{ name: '', entry: '' }]
     if (tags[0].name === alerted[repo]) { return result }
     pushRepoWithNewTags(result, tags, alerted, repo)
     return result

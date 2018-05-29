@@ -6,7 +6,10 @@ export default async function fetchReleaseNotes (users: ActionableUser[]) {
   const repos = users.map(u => u.actionableRepos[SEND_EMAIL_AND_UPDATE_ALERTED])
   const reposToFetch = [...new Set(
     repos.reduce(
-      (res, userRepos) => [...res, ...userRepos.map(r => r.repo)],
+      (res, userRepos) => [
+        ...res,
+        ...userRepos.filter(r => r.tags.length).map(r => r.repo)
+      ],
       [] as string[]
     )
   )]

@@ -9,7 +9,7 @@ import findUsersToAlert from './parts/findUsersToAlert'
 import fetchReleaseNotes from './parts/fetchReleaseNotes'
 import sendEmailAndUpdateDb from './parts/sendEmailAndUpdateDb'
 import log from 'gitpunch-lib/log'
-import { closeHttpsConnections, trackTotalRequests, totalRequests } from 'gitpunch-lib/githubAtom'
+import * as githubAtom from 'gitpunch-lib/githubAtom'
 const { MONGODB_URL, MONGODB_DBNAME } = process.env
 const MONGODB_COLLECTION_NAME = 'users'
 
@@ -19,7 +19,7 @@ export async function handler (event, context, callback) {
     return callback()
   }
   let client
-  trackTotalRequests()
+  githubAtom.trackTotalRequests()
   try {
     client = await MongoClient.connect(MONGODB_URL)
     const collection = client.db(MONGODB_DBNAME).collection(MONGODB_COLLECTION_NAME)
@@ -34,7 +34,7 @@ export async function handler (event, context, callback) {
     log('error', { error: e })
   }
   client && client.close()
-  closeHttpsConnections()
-  totalRequests() && log('totalRequests', { count: totalRequests() })
+  githubAtom.closeConnections()
+  githubAtom.logTotalRequests()
   callback()
 }
