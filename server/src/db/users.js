@@ -37,6 +37,32 @@ export async function updateUser (params, attrs) {
   )
 }
 
+export async function addReposToUser (params, repos) {
+  const collection = await usersCollection
+  collection.updateOne(
+    query(params),
+    {
+      $addToSet: {
+        repos: {
+          $each: repos
+        }
+      }
+    }
+  )
+}
+
+export async function removeRepoFromUser (params, repo) {
+  const collection = await usersCollection
+  collection.updateOne(
+    query(params),
+    {
+      $pull: {
+        repos: repo
+      }
+    }
+  )
+}
+
 function query ({ id, email }) {
   return id ? { _id: ObjectID(id) } : { email }
 }

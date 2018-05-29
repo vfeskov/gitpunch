@@ -2,7 +2,7 @@ export default function serialize (user) {
   return user && {
     email: user.email,
     watching: user.watching,
-    repos: user.repos,
+    repos: [...user.repos].reverse(),
     alerted: user.alerted,
     frequency: user.frequency || 'realtime',
     checkAt: user.checkAt || 0,
