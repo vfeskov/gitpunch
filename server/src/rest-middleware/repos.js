@@ -38,7 +38,9 @@ export async function createBulk ({ body, token }, res, next) {
     if (reqRepos.every(({ repo }) => repos.includes(repo))) {
       return success(res, { repos })
     }
-    const newRepos = reqRepos.filter(({ repo }) => !repos.includes(repo));
+    const newRepos = reqRepos
+      .filter(({ repo }) => !repos.includes(repo))
+      .map(r => r.repo)
     const attrs = { repos: [...newRepos, ...repos] }
     await updateUser(token, attrs)
     success(res, attrs)

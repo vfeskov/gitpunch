@@ -30,6 +30,7 @@ export async function fetchAtom (url: string, includeEntry: boolean) {
       if (status !== 200) { throw new BadResponse(status) }
       const xml = await response.text()
       success = parse(xml, includeEntry)
+      break
     } catch (e) {
       error = e
       if (e instanceof BadRequest) { break }
