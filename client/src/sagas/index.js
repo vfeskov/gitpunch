@@ -85,7 +85,7 @@ function* onSetRepoAddValue () {
   yield takeLatest([actions.SET_REPO_ADD_VALUE, actions.createRepo.requestId], fetchSuggestions);
 }
 
-function* watchStarred ({ loadStarredArgs, accessToken, savedRepos}) {
+function* watchStarred ({ loadStarredArgs, accessToken }) {
   let starred, next
   try {
     const { items, links } = yield call(...loadStarredArgs)
@@ -95,7 +95,8 @@ function* watchStarred ({ loadStarredArgs, accessToken, savedRepos}) {
     yield put(actions.watchAllStarredRepos.failure(new Error(`Error loading starred repos: ${e.message}`)))
     return
   }
-  const newRepos = starred.filter(r => !savedRepos.includes(r))
+  const { savedRepos } = yield select()
+  const newRepos = starred.filter(r => !savedRepos.includes(r)).reverse()
   try {
     const successEvent = {}
     if (newRepos.length) {
@@ -115,22 +116,20 @@ function* watchStarred ({ loadStarredArgs, accessToken, savedRepos}) {
   }
   yield watchStarred({
     loadStarredArgs: [github.loadStarredLink, { link: next, accessToken }],
-    accessToken,
-    savedRepos
+    accessToken
   })
 }
 
 function* onWatchAllStarredRepos () {
   while (true) {
     yield take(actions.watchAllStarredRepos.requestId)
-    const { signedIn, savedRepos, accessToken } = yield select()
+    const { signedIn, accessToken } = yield select()
     if (!signedIn || !accessToken) {
       continue
     }
     yield watchStarred({
       loadStarredArgs: [github.loadStarredFirstPage, accessToken],
-      accessToken,
-      savedRepos
+      accessToken
     })
   }
 }
