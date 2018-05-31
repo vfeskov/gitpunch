@@ -108,6 +108,32 @@ const styles = theme => {
     position: 'relative'
   }
   return ({
+    '@global': {
+      body: {
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        margin: 0,
+        padding: 0
+      },
+      'html, body, #root': {
+        height: '100%'
+      },
+      a: {
+        color: theme.palette.secondary.main,
+        textDecoration: 'none'
+      },
+      'a.soft': {
+        color: 'rgba(0, 0, 0, 0.87)',
+        textDecoration: 'none !important'
+      },
+      'a:hover': {
+        textDecoration: 'underline',
+        color: theme.palette.secondary.main,
+        cursor: 'pointer'
+      },
+      svg: {
+        fill: 'currentColor'
+      }
+    },
     app: {
       boxSizing: 'border-box',
       height: '100%',

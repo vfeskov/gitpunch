@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { withStyles } from 'material-ui/styles'
-import { GitHubIcon, SignOutIcon } from './icons'
+import { SignOutIcon } from './icons'
 import { Link } from 'react-router-dom'
 
 export class Header extends PureComponent {
@@ -13,10 +13,7 @@ export class Header extends PureComponent {
     const { className, classes, email } = this.props
     return (
       <div className={`${className} ${classes.container}`}>
-        <span style={{ display: 'flex', alignItems: 'center' }}>
-          <Link to="/"className={classes.logo}>GitPunch</Link>
-          <a style={{ display: 'inline-flex' }} href="https://github.com/vfeskov/gitpunch" className="soft" target="_blank" rel="noopener noreferrer">{GitHubIcon()}</a>
-        </span>
+        <Link to="/" className={classes.logo}><img src="big-logo.png" alt="GitPunch" width="150px"/></Link>
         <span className={classes.spacer}></span>
         {email && (
         <span style={{ display: 'flex' }}>

@@ -77,7 +77,8 @@ export function styles (theme) {
         textAlign: 'center'
       }
     },
-    starredLink: {
+    inlineVCentered: {
+      alignItems: 'center',
       display: 'inline-flex',
       whiteSpace: 'pre'
     },

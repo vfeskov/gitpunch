@@ -1,6 +1,10 @@
-# [GitPunch](https://gitpunch.com)
-
-Watch for releases on GitHub
+<p align="center">
+  <br/>
+  <a href="https://gitpunch.com"><img width="300px" src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/client/public/big-logo.png"/></a>
+  <br/>
+  <br/>
+  Watch for releases on GitHub
+</p>
 
 ## Features
 
@@ -39,6 +43,10 @@ Details can be found in [Notifier's README](https://github.com/vfeskov/gitpunch/
 AWS CloudWatch dashboard showing data for 1 day:<br/>
 <img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/monitoring.png" width="800px" />
 
+## Credits
+
+Logo by [Sasha Feskova](https://www.behance.net/feskovochka). Special thanks to [@soulim](https://github.com/soulim) and [@luziamg](https://github.com/luziamg)
+
 ----------
 
-Support GitPunch with a [&#9733; star](https://github.com/vfeskov/gitpunch) ♥
+Support GitPunch by reporting bugs, suggesting ideas and starring the project - your feedback really helps me stay motivated ♥

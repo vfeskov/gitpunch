@@ -34,7 +34,7 @@ class RepoAdd extends PureComponent {
     const { value, disabled, error } = repoAdd
     const { loading, items } = suggestions
     const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
-    const watchStarredLink = <a href={starredLink} className={classes.starredLink} onClick={this.starredClicked}>watch {StarIcon()} starred</a>
+    const watchStarredLink = <a href={starredLink} className={classes.inlineVCentered} onClick={this.starredClicked}>{StarIcon()} starred</a>
     return (
       <div className={className}>
         <h2 className={classes.title}>Watch GitHub repo for releases</h2>
@@ -71,12 +71,13 @@ class RepoAdd extends PureComponent {
           </form>
           <div className={classes.or}>/</div>
           <div className={classes.starredLinkContainer}>
-            {accessToken ?
-              watchStarredLink :
-              <Tooltip title={'It\'ll also sign you in'}>
-                {watchStarredLink}
-              </Tooltip>
-            }
+            <span className={classes.inlineVCentered}>
+              watch {
+                accessToken ?
+                  watchStarredLink :
+                  <Tooltip title={'It\'ll also sign you in'}>{watchStarredLink}</Tooltip>
+              }
+            </span>
           </div>
         </div>
       </div>
