@@ -11,14 +11,14 @@ export class Intro extends Component {
 
   componentDidMount () {
     if (this.props.showIntro !== 'y') { return }
-    this.timeoutId = setTimeout(this.scheduleIncDS, 3750)
+    this.timeoutId = setTimeout(this.scheduleIncDS, 4200)
   }
 
   componentWillReceiveProps ({ showIntro }) {
     if (showIntro === this.props.showIntro) { return }
     this.timeoutId && clearTimeout(this.timeoutId)
     if (showIntro === 'y') {
-      this.timeoutId = setTimeout(this.scheduleIncDS, 4250)
+      this.timeoutId = setTimeout(this.scheduleIncDS, 4850)
     } else {
       this.setState({ ds: 0 })
     }
@@ -57,7 +57,8 @@ export class Intro extends Component {
       fifth,
       sixth,
       seventh,
-      eighth
+      eighth,
+      skipContainer
     } = this.props.classes
     // conditional animation class to make keyframes resettable
     const a = className => this.props.showIntro === 'y' ? className : ''
@@ -94,6 +95,9 @@ export class Intro extends Component {
             </div>
           </div>
         </div>
+      </div>
+      <div className={`${skipContainer} ${a(second)}`}>
+        <a className="soft" onClick={this.skip}>Skip →</a>
       </div>
     </div>
   }
@@ -170,18 +174,28 @@ export default withStyles(theme => {
       display: 'inline-block',
       marginRight: '0.5rem'
     },
+    skipContainer: {
+      [theme.breakpoints.up('sm')]: {
+        bottom: theme.spacing.unit * 4
+      },
+      bottom: theme.spacing.unit * 2,
+      left: 0,
+      position: 'fixed',
+      textAlign: 'center',
+      width: '100%'
+    },
     ...animated ({
       className: 'first'
     }),
     ...animatedSequence ({
       classNames: ['second', 'third', 'fourth', 'fifth'],
-      delay: 750,
-      delayAfterEach: 500
+      delay: 800,
+      delayAfterEach: 650
     }),
     ...animatedSequence ({
       classNames: ['sixth', 'seventh', 'eighth'],
-      delay: 3000,
-      delayAfterEach: 500
+      delay: 3650,
+      delayAfterEach: 600
     })
   }
 
