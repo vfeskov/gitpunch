@@ -56,7 +56,7 @@ class StarredDialog extends Component {
                   checked={repo.gitpunching}
                   onChange={() => this.toggleGitpunching(repo)}
                 />
-                <a href={`https://github.com/${repo.full_name}`} className="soft" target="_blank" rel="noopener noreferrer">{repo.full_name}</a>
+                <a href={`https://github.com/${repo.full_name}`} className={`soft ${repo.muted ? 'lightened' : ''}`} target="_blank" rel="noopener noreferrer">{repo.full_name}</a>
               </div>
               <div className={classes.description} style={ { color: '#777' } }>{repo.description || 'No description'}</div>
             </div>
@@ -93,7 +93,7 @@ class StarredDialog extends Component {
     if (accessToken === this.state.accessToken) {
       if (repos !== this.props.repos) {
         this.persist({
-          starred: this.appendGitpunching(this.state.starred, repos)
+          starred: this.appendStuff(this.state.starred, repos)
         })
       }
       return
@@ -106,7 +106,7 @@ class StarredDialog extends Component {
         links,
         loading: false,
         accessToken,
-        starred: this.appendGitpunching(items, repos),
+        starred: this.appendStuff(items, repos),
         loadedOnce: true
       })
     } catch (e) {
@@ -123,10 +123,12 @@ class StarredDialog extends Component {
     gitpunching ? this.props.removeRepo(full_name) : this.props.addRepo(full_name)
   }
 
-  appendGitpunching (starred, repos) {
+  appendStuff (starred, repos) {
     if (!starred.length) { return starred }
     return starred.map(repo => {
-      repo.gitpunching = repos.indexOf(repo.full_name) > -1
+      const gitpunchRepo = repos.find(r => r.repo === repo.full_name)
+      repo.gitpunching = Boolean(gitpunchRepo)
+      repo.muted = gitpunchRepo && gitpunchRepo.muted
       return repo
     })
   }
@@ -135,7 +137,7 @@ class StarredDialog extends Component {
     try {
       const { items, links } = await loadStarredLink({ link, accessToken: this.state.accessToken })
       this.persist({
-        starred: this.appendGitpunching(items, this.props.repos),
+        starred: this.appendStuff(items, this.props.repos),
         links
       })
       document.getElementById('starred-dialog-content').scrollTop = 0
