@@ -53,7 +53,7 @@ async function fetchEvents (accessToken) {
       }
       throw new Error('GitHub sends gibberish')
     } catch (e) {
-      console.error('Fetch Error: ' + e.message)
+      console.error('Fetch Error: ' + e.message, e.stack)
       return []
     }
   }))
