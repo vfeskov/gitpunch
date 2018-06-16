@@ -10,7 +10,8 @@ export default function findUsersToAlert (users: FullUser[]): ActionableUser[] {
     )
 }
 
-function withActionableRepos ({ _id, email, alerted, repos }: FullUser) {
+function withActionableRepos (user: FullUser) {
+  const { repos, alerted } = user
   const base = {
     [SEND_EMAIL_AND_UPDATE_ALERTED]: [],
     [ONLY_UPDATE_ALERTED]: []
@@ -21,7 +22,7 @@ function withActionableRepos ({ _id, email, alerted, repos }: FullUser) {
     pushRepoWithNewTags(result, tags, alerted, repo)
     return result
   }, base)
-  return { _id, email, alerted, actionableRepos }
+  return { ...user, actionableRepos }
 }
 
 function pushRepoWithNewTags (result, tags, alerted, repo) {

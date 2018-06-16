@@ -1,14 +1,15 @@
 import { loadUser, createUser } from '../db'
 import { success, badRequest, logErrAndNext500 } from '../util/http'
 import { hash } from '../util/bcrypt'
-import { validEmail, validPassword, validRepos } from '../util/validations'
+import { validEmail, validPassword, validSignUpRepos } from '../util/validations'
 import { setCookieTokenHeader, signToken } from '../util/token'
-import serialize from '../util/serialize'
+import { serializeUser } from '../util/serialize'
 import { compareHash } from '../util/bcrypt'
+import signUpReposToDbRepos from '../util/signUpReposToDbRepos'
 
 export default async function signIn (req, res, next) {
   if (!valid(req.body)) { return next(badRequest()) }
-  const { email, password, repos } = req.body
+  let { email, password, repos: reqRepos } = req.body
   let user = await loadUser({ email })
   if (user) {
     if (!user.passwordEncrypted) { return next(badRequest()) }
@@ -16,17 +17,18 @@ export default async function signIn (req, res, next) {
     if (!match) { return next(badRequest()) }
   } else {
     const passwordEncrypted = await hash(password, 10)
-    user = await createUser({ email, passwordEncrypted, repos })
+    const { repos, mutedRepos } = await signUpReposToDbRepos(reqRepos)
+    user = await createUser({ email, passwordEncrypted, repos, mutedRepos })
   }
   const token = signToken({ id: user.id })
   const headers = { 'Set-Cookie': setCookieTokenHeader(token) }
-  success(res, serialize(user), headers)
+  success(res, serializeUser(user), headers)
 }
 
 function valid (payload) {
   const { email, password, repos } = payload
   if (!email || !validEmail(email)) { return false }
   if (!password || !validPassword(password)) { return false }
-  if (repos && !validRepos(repos)) { return false }
+  if (repos && !validSignUpRepos(repos)) { return false }
   return true
 }

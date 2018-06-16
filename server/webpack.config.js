@@ -1,17 +1,18 @@
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 const { DefinePlugin } = require('webpack')
-
+const isProd = process.env.NODE_ENV === 'production'
 const config = {
+  devtool: isProd ? false : 'eval',
+  mode: isProd ? 'production' : 'development',
   target: 'node',
-  entry: './index',
-  context: path.resolve(__dirname, 'src'),
+  entry: './src/index.js',
   output: {
     filename: 'index.js',
     path: path.join(__dirname, 'build')
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         include: path.resolve(__dirname, '..', 'client', 'src'),
@@ -20,8 +21,7 @@ const config = {
           babelrc: false,
           presets: [require.resolve('babel-preset-react-app')]
         }
-      },
-      { test: /\.json$/, loader: 'json-loader' }
+      }
     ]
   },
   plugins: [

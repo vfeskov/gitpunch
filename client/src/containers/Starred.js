@@ -64,7 +64,7 @@ class StarredDialog extends Component {
           {!starred.length && !loading && loadedOnce && 'Looks like you haven\'t starred anything on GitHub yet'}
         </DialogContent>
         {!!starred.length && ([
-          <DialogActions key="pagination" classes={{ root: classes.centered }}>
+          <DialogActions key="pagination" classes={{ root: classes.actions }}>
             {['first', 'prev', 'next', 'last'].map(rel => (
               <Button key={rel} disabled={!links[rel]}
                 onClick={() => links[rel] && this.load(links[rel])}
@@ -73,7 +73,7 @@ class StarredDialog extends Component {
               </Button>
             ))}
           </DialogActions>,
-          <DialogActions key="select-all" classes={{ root: classes.centered }}>
+          <DialogActions key="select-all" classes={{ root: classes.actions }}>
             <Button variant="raised" color="secondary" style={{ minWidth: '110px' }} onClick={watchAllStarredRepos} disabled={starredWorking}>
               {starredWorking ? (
                 <CircularProgress size={19} color="secondary"/>
@@ -156,8 +156,13 @@ function styles(theme) {
       alignItems: 'center',
       display: 'flex'
     },
-    centered: {
-      justifyContent: 'center'
+    actions: {
+      justifyContent: 'center',
+      '@global': {
+        button: {
+          borderRadius: '24px'
+        }
+      }
     }
   }
 }

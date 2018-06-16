@@ -1,4 +1,4 @@
-import { SUCCESS, SIGN_IN, FETCH_PROFILE, CREATE_REPO, CREATE_REPOS, DELETE_REPO, SIGN_OUT } from '../actions'
+import { SUCCESS, SIGN_IN, FETCH_PROFILE, CREATE_REPO, CREATE_REPOS, DELETE_REPO, SIGN_OUT, MUTE_SAVED_REPO } from '../actions'
 
 export default function savedRepos (state = [], action) {
   switch (action.type) {
@@ -9,6 +9,7 @@ export default function savedRepos (state = [], action) {
     case CREATE_REPOS[SUCCESS]:
     case CREATE_REPO[SUCCESS]:
     case DELETE_REPO[SUCCESS]:
+    case MUTE_SAVED_REPO[SUCCESS]:
       return action.repos ? [...action.repos] : []
     case SIGN_OUT[SUCCESS]:
       return []

@@ -32,7 +32,8 @@
     "dotenv": "^5.0.1",
     "json-loader": "^0.5.7",
     "nodemon": "^1.17.4",
-    "webpack": "^3.11.0",
+    "webpack": "^4.12.0",
+    "webpack-command": "^0.2.1",
     "webpack-node-externals": "^1.7.2"
   }
 }

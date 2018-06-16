@@ -8,7 +8,7 @@ const usersCollection = connection.then(db => db.collection(USERS_COLLECTION_NAM
 export async function loadUser (params) {
   const collection = await usersCollection
   const user = await collection.findOne(query(params))
-  return withId(user)
+  return normalize(user)
 }
 
 export async function createUser (params) {
@@ -18,7 +18,7 @@ export async function createUser (params) {
     watching: true
   })
   await collection.insertOne(user)
-  return withId(user)
+  return normalize(user)
 }
 
 export async function updateUser (params, attrs) {
@@ -57,7 +57,32 @@ export async function removeRepoFromUser (params, repo) {
     query(params),
     {
       $pull: {
-        repos: repo
+        repos: repo,
+        mutedRepos: repo
+      }
+    }
+  )
+}
+
+export async function muteRepoOfUser (params, repo) {
+  const collection = await usersCollection
+  collection.updateOne(
+    query(params),
+    {
+      $addToSet: {
+        mutedRepos: repo
+      }
+    }
+  )
+}
+
+export async function unmuteRepoOfUser (params, repo) {
+  const collection = await usersCollection
+  collection.updateOne(
+    query(params),
+    {
+      $pull: {
+        mutedRepos: repo
       }
     }
   )
@@ -67,6 +92,18 @@ function query ({ id, email }) {
   return id ? { _id: ObjectID(id) } : { email }
 }
 
-function withId (user) {
-  return user && assign(user, { id: user._id.toString() })
+function normalize (origUser) {
+  if (!origUser) {
+    return null
+  }
+  const { _id, ...user } = origUser
+  return {
+    ...user,
+    id: _id.toString(),
+    repos: user.repos || [],
+    mutedRepos: user.mutedRepos || [],
+    frequency: user.frequency || 'realtime',
+    checkAt: user.checkAt || 0,
+    accessToken: user.accessToken || ''
+  }
 }

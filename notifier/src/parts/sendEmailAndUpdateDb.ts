@@ -17,8 +17,9 @@ export default function sendEmailAndUpdateDb (users: ActionableUser[], collectio
 }
 
 export async function sendEmail (user: ActionableUser): Promise<any> {
-  const { email, actionableRepos } = user
+  const { email, mutedRepos = [], actionableRepos } = user
   const repos = actionableRepos[SEND_EMAIL_AND_UPDATE_ALERTED]
+    .filter(({ repo }) => !mutedRepos.includes(repo))
   if (!repos.length) { return }
   return new Email(email, repos).send()
 }

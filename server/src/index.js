@@ -38,6 +38,12 @@ middlewares.push(error)
 
 const server = http.createServer(chain(middlewares))
 
-server.listen(port)
+server.listen(port, (e, s) => {
+  if (e) { return console.error(e) }
+  console.log('Listening on ', server.address())
+})
 
-publicEvents.monitor()
+if (!process.env.DONT_MONITOR_EVENTS) {
+  publicEvents.monitor()
+  console.log('Monitoring public github events')
+}

@@ -2,14 +2,15 @@ import { DBUser, RepoGroup } from './interfaces'
 import log from 'gitpunch-lib/log'
 const { keys } = Object
 
-export default function groupByRepo (users: DBUser[], relevantRepos: String[]): RepoGroup[] {
-  const byRepo = users.reduce((byRepo, { _id, email, alerted, accessToken, repos }) => {
-    repos.forEach(repo => {
+export default function groupByRelevantRepo (dbUsers: DBUser[], relevantRepos: String[]): RepoGroup[] {
+  const byRepo = dbUsers.reduce((byRepo, dbUser) => {
+    dbUser.repos.forEach(repo => {
       if (relevantRepos && !relevantRepos.includes(repo)) {
         return
       }
       byRepo[repo] = byRepo[repo] || { repo, users: [] }
-      byRepo[repo].users.push({ _id, email, alerted, accessToken })
+      const { repos, ...user } = dbUser
+      byRepo[repo].users.push(user)
     })
     return byRepo
   }, {})

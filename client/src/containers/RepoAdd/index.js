@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { renderInput, renderSuggestion, renderSuggestionsContainer } from './components'
-import Button from 'material-ui/Button'
 import SendIcon from 'material-ui-icons/Send'
 import { withStyles } from 'material-ui/styles'
 import { styles } from './styles'
@@ -65,9 +64,9 @@ class RepoAdd extends PureComponent {
               }}
             />
             {error && <div className={classes.error}>{error}</div>}
-            <Button type="submit" size="small" className={classes.addButton}>
+            <button type="submit" className={`action ${classes.addButton}`}>
               <SendIcon />
-            </Button>
+            </button>
           </form>
           <div className={classes.or}>/</div>
           <div className={classes.starredLinkContainer}>

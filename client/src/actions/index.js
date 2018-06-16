@@ -18,6 +18,7 @@ export const SIGN_OUT = createRequestTypes('SIGN_OUT')
 export const SAVE_CHECK_AT = createRequestTypes('SAVE_CHECK_AT')
 export const SAVE_FREQUENCY = createRequestTypes('SAVE_FREQUENCY')
 export const FETCH_PROFILE = createRequestTypes('FETCH_PROFILE')
+export const MUTE_SAVED_REPO = createRequestTypes('MUTE_SAVED_REPO')
 export const CREATE_REPO = createRequestTypes('CREATE_REPO')
 export const DELETE_REPO = createRequestTypes('DELETE_REPO')
 export const UNWATCH = createRequestTypes('UNWATCH')
@@ -27,8 +28,10 @@ export const CREATE_REPOS = createRequestTypes('CREATE_REPOS')
 export const WATCH_ALL_STARRED_REPOS = createRequestTypes('WATCH_ALL_STARRED_REPOS')
 
 export const SET_REPO_ADD_VALUE = 'SET_REPO_ADD_VALUE'
+export const MUTE_REPO_IN_BUFFER =  'MUTE_REPO_IN_BUFFER'
 export const ADD_REPO_TO_BUFFER =  'ADD_REPO_TO_BUFFER'
 export const REMOVE_REPO_FROM_BUFFER = 'REMOVE_REPO_FROM_BUFFER'
+export const MUTE_REPO = 'MUTE_REPO'
 export const ADD_REPO = 'ADD_REPO'
 export const REMOVE_REPO = 'REMOVE_REPO'
 export const TOGGLE_WATCHING = 'TOGGLE_WATCHING'
@@ -69,6 +72,12 @@ export const fetchProfile = {
   request: () => action(FETCH_PROFILE[REQUEST]),
   success: profile => action(FETCH_PROFILE[SUCCESS], { profile }),
   failure: error => action(FETCH_PROFILE[FAILURE], { error }),
+}
+export const muteSavedRepo = {
+  requestId: MUTE_SAVED_REPO[REQUEST],
+  request: (repo, muted) => action(MUTE_SAVED_REPO[REQUEST], { repo, muted }),
+  success: ({ repos }) => action(MUTE_SAVED_REPO[SUCCESS], { repos }),
+  failure: error => action(MUTE_SAVED_REPO[FAILURE], { error }),
 }
 export const createRepo = {
   requestId: CREATE_REPO[REQUEST],
@@ -114,8 +123,10 @@ export const watchAllStarredRepos = {
 }
 
 export const setRepoAddValue = value => action(SET_REPO_ADD_VALUE, { value })
+export const muteRepoInBuffer = (repo, muted) => action(MUTE_REPO_IN_BUFFER, { repo, muted })
 export const addRepoToBuffer = repo => action(ADD_REPO_TO_BUFFER, { repo })
 export const removeRepoFromBuffer = repo => action(REMOVE_REPO_FROM_BUFFER, { repo })
+export const muteRepo = (repo, muted) => action(MUTE_REPO, { repo, muted })
 export const addRepo = repo => action(ADD_REPO, { repo })
 export const removeRepo = repo => action(REMOVE_REPO, { repo })
 export const toggleWatching = () => action(TOGGLE_WATCHING)

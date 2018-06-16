@@ -31,7 +31,7 @@ export async function handler (event, context, callback) {
     const withReleaseNotes = await fetchReleaseNotes(usersToAlert)
     await sendEmailAndUpdateDb(withReleaseNotes, collection)
   } catch (e) {
-    log('error', { error: e })
+    log('error', { error: { message: e.message, stack: e.stack } })
   }
   client && client.close()
   githubAtom.closeConnections()

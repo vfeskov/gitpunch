@@ -122,13 +122,30 @@ const styles = theme => {
         textDecoration: 'none'
       },
       'a.soft': {
-        color: 'rgba(0, 0, 0, 0.87)',
+        color: theme.palette.primary[900],
         textDecoration: 'none !important'
+      },
+      'a.lightened': {
+        color: theme.palette.primary[500]
       },
       'a:hover': {
         textDecoration: 'underline',
         color: theme.palette.secondary.main,
         cursor: 'pointer'
+      },
+      'button.action': {
+        background: 'none',
+        border: 'none',
+        color: theme.palette.primary[600],
+        cursor: 'pointer',
+        padding: 0,
+        '&:active, &:focus, &:hover': {
+          color: theme.palette.secondary.main
+        },
+        '&[disabled]': {
+          color: theme.palette.primary[600],
+          cursor: 'default'
+        }
       },
       svg: {
         fill: 'currentColor'

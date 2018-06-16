@@ -19,7 +19,7 @@ function* onApiRequest (actionGroup, apiMethod) {
 
 const apiActions = (
   'signIn signOut saveCheckAt saveFrequency saveWatching ' +
-  'createRepo createRepos deleteRepo unwatch'
+  'createRepo createRepos deleteRepo unwatch muteSavedRepo'
 ).split(' ')
 
 const genericApiRequests = apiActions.reduce((r, id) =>
@@ -31,6 +31,16 @@ function* onToggleWatching () {
     yield take(actions.TOGGLE_WATCHING)
     const { watching } = yield select()
     yield put(actions.saveWatching.request(!watching))
+  }
+}
+
+function* onMuteRepo () {
+  while (true) {
+    const { repo, muted } = yield take(actions.MUTE_REPO)
+    const { signedIn } = yield select()
+    yield put(signedIn ?
+      actions.muteSavedRepo.request(repo, muted) :
+      actions.muteRepoInBuffer(repo, muted))
   }
 }
 
@@ -158,6 +168,7 @@ export default function* root () {
     ...genericApiRequests.map(h => fork(h)),
     fork(onSignedInChanges),
     fork(onToggleWatching),
+    fork(onMuteRepo),
     fork(onAddRepo),
     fork(onRemoveRepo),
     fork(onSetRepoAddValue),

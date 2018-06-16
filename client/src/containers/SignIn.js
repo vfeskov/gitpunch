@@ -79,7 +79,7 @@ class SignIn extends Component {
 SignIn.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
-  bufferRepos: PropTypes.arrayOf(PropTypes.string).isRequired,
+  bufferRepos: PropTypes.arrayOf(PropTypes.object).isRequired,
   signIn: PropTypes.func.isRequired,
 }
 

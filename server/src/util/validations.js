@@ -7,7 +7,11 @@ export function validRepo (repo) {
 }
 
 export function validRepos (repos) {
-  return Array.isArray(repos) && !repos.some(r => !validRepo(r))
+  return Array.isArray(repos) && repos.every(r => validRepo(r))
+}
+
+export function validSignUpRepos (repos) {
+  return Array.isArray(repos) && repos.every(r => r && validRepo(r.repo) && !r.muted || validMuted(r.muted))
 }
 
 export function validPassword (password) {
@@ -16,6 +20,10 @@ export function validPassword (password) {
 
 export function validWatching (watching) {
   return typeof watching === 'boolean'
+}
+
+export function validMuted (muted) {
+  return typeof muted === 'boolean'
 }
 
 export function validFrequency (frequency) {

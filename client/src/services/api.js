@@ -76,6 +76,13 @@ export function deleteRepo ({ repo }) {
   })
 }
 
+export function muteSavedRepo ({ repo, muted }) {
+  return fetchApi(`repos/${encodeURIComponent(repo)}/muted`, {
+    method: 'PUT',
+    body: JSON.stringify({ muted })
+  })
+}
+
 export function unwatch ({ lambdajwt }) {
   return fetchApi('unsubscribe', {
     method: 'PUT',
