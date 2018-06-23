@@ -1,10 +1,12 @@
 import React from 'react'
-import { withStyles } from 'material-ui/styles'
+import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import Radio, { RadioGroup } from 'material-ui/Radio'
-import { FormControl, FormControlLabel } from 'material-ui/Form'
-import Switch from 'material-ui/Switch'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
 import Hourpicker from '../Hourpicker'
 
 function Header ({

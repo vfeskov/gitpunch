@@ -11,7 +11,7 @@ import Footer from '../components/Footer'
 import Intro from '../components/Intro'
 import Privacy from '../components/Privacy'
 import * as cookie from '../services/cookie'
-import { withStyles } from 'material-ui/styles'
+import withStyles from '@material-ui/core/styles/withStyles'
 import { Route, withRouter } from 'react-router-dom'
 
 import { connect } from 'react-redux'

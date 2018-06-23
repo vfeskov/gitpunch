@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
-import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog'
-import { withStyles } from 'material-ui/styles'
-import Button from 'material-ui/Button'
-import IconButton from 'material-ui/IconButton'
-import CloseIcon from 'material-ui-icons/Close'
-import Switch from 'material-ui/Switch'
-import { CircularProgress } from 'material-ui/Progress';
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogContent'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import withMobileDialog from '@material-ui/core/withMobileDialog'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux'
 import { StarIcon } from '../components/icons'
 import { setStarredOpen, addRepo, removeRepo, watchAllStarredRepos } from '../actions'
@@ -64,6 +69,20 @@ class StarredDialog extends Component {
           {!starred.length && !loading && loadedOnce && 'Looks like you haven\'t starred anything on GitHub yet'}
         </DialogContent>
         {!!starred.length && ([
+          <DialogActions key="watch-all">
+            <FormControlLabel
+              control={
+                <Switch
+                  disabled={starredWorking}
+                  onChange={watchAllStarredRepos}
+                />
+              }
+              label={starredWorking ?
+                <CircularProgress size={19} color="secondary"/> :
+                'Watch all'
+              }
+            />
+          </DialogActions>,
           <DialogActions key="pagination" classes={{ root: classes.actions }}>
             {['first', 'prev', 'next', 'last'].map(rel => (
               <Button key={rel} disabled={!links[rel]}
@@ -72,15 +91,6 @@ class StarredDialog extends Component {
                 {rel}
               </Button>
             ))}
-          </DialogActions>,
-          <DialogActions key="select-all" classes={{ root: classes.actions }}>
-            <Button variant="raised" color="secondary" style={{ minWidth: '110px' }} onClick={watchAllStarredRepos} disabled={starredWorking}>
-              {starredWorking ? (
-                <CircularProgress size={19} color="secondary"/>
-              ) : (
-                <span>Select all</span>
-              )}
-            </Button>
           </DialogActions>
         ])}
       </Dialog>
