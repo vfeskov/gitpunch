@@ -32,8 +32,8 @@ class RepoAdd extends PureComponent {
     const { className, classes, repoAdd, accessToken, bufferRepos: repos, suggestions } = this.props
     const { value, disabled, error } = repoAdd
     const { loading, items } = suggestions
-    const starredLink = accessToken ? '/starred' : oauthUrl({ repos, returnTo: '/starred' })
-    const watchStarredLink = <a href={starredLink} className={classes.inlineVCentered} onClick={this.starredClicked}>{StarIcon()} starred</a>
+    const starsLink = accessToken ? '/stars' : oauthUrl({ repos, returnTo: '/stars' })
+    const watchingStarsLink = <a href={starsLink} className={classes.inlineVCentered} onClick={this.starsClicked}>{StarIcon()} stars</a>
     return (
       <div className={className}>
         <h2 className={classes.title}>Watch GitHub repo for releases</h2>
@@ -69,12 +69,12 @@ class RepoAdd extends PureComponent {
             </button>
           </form>
           <div className={classes.or}>/</div>
-          <div className={classes.starredLinkContainer}>
+          <div className={classes.starsLinkContainer}>
             <span className={classes.inlineVCentered}>
               watch {
                 accessToken ?
-                  watchStarredLink :
-                  <Tooltip title={'It\'ll also sign you in'}>{watchStarredLink}</Tooltip>
+                  watchingStarsLink :
+                  <Tooltip title={'It\'ll also sign you in'}>{watchingStarsLink}</Tooltip>
               }
             </span>
           </div>
@@ -103,10 +103,10 @@ class RepoAdd extends PureComponent {
     }
   }
 
-  starredClicked = ev => {
+  starsClicked = ev => {
     if (!this.props.accessToken) { return }
     ev.preventDefault()
-    this.props.setStarredOpen(true)
+    this.props.setStarsOpen(true)
   }
 }
 

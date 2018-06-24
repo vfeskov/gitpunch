@@ -11,8 +11,6 @@ import * as publicEvents from './public-events'
 
 const port = process.env.PORT || 3000
 
-const production = process.env.NODE_ENV === 'production'
-
 const middlewares = []
 
 middlewares.push(
@@ -24,7 +22,7 @@ middlewares.push(
   rest()
 )
 
-if (production) {
+if (process.env.NODE_ENV === 'production') {
   const serveStatic = require('serve-static')
   const { prerenderClient } = require('./other-middlewares/prerenderClient')
 

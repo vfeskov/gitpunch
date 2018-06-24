@@ -2,7 +2,7 @@ import { updateUser, loadUser } from '../db'
 import { success, badRequest, logErrAndNext500 } from '../util/http'
 import { verifyUnsubscribeToken } from '../util/token'
 
-export async function unsubscribe ({ body, token }, res, next) {
+export default async function unsubscribe ({ body, token }, res, next) {
   if (!body || !body.lambdajwt) { return next(badRequest()) }
   try {
     const unsubscribeToken = await verifyUnsubscribeToken(body.lambdajwt)

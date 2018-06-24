@@ -96,3 +96,10 @@ export function saveWatching ({ watching }) {
     body: JSON.stringify({ watching })
   })
 }
+
+export function saveWatchingStars ({ watchingStars }) {
+  return fetchApi('watching_stars', {
+    method: 'PUT',
+    body: JSON.stringify({ watchingStars })
+  })
+}

@@ -11,11 +11,12 @@ import accessToken from './accessToken'
 import frequency from './frequency'
 import checkAt from './checkAt'
 import serverRendered from './serverRendered'
-import starredOpen from './starredOpen'
+import starsOpen from './starsOpen'
 import alerted from './alerted'
 import showIntro from './showIntro'
 import suggestions from './suggestions'
-import starredWorking from './starredWorking'
+import starsWorking from './starsWorking'
+import watchingStars from './watchingStars'
 
 export default combineReducers({
   email,
@@ -30,9 +31,10 @@ export default combineReducers({
   frequency,
   checkAt,
   serverRendered,
-  starredOpen,
+  starsOpen,
   alerted,
   showIntro,
   suggestions,
-  starredWorking
+  starsWorking,
+  watchingStars
 })

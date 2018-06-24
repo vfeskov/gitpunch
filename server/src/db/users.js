@@ -104,6 +104,7 @@ function normalize (origUser) {
     mutedRepos: user.mutedRepos || [],
     frequency: user.frequency || 'realtime',
     checkAt: user.checkAt || 0,
-    accessToken: user.accessToken || ''
+    accessToken: user.accessToken || '',
+    watchingStars: user.watchingStars || false
   }
 }

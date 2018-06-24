@@ -25,7 +25,8 @@ export const UNWATCH = createRequestTypes('UNWATCH')
 export const SAVE_WATCHING = createRequestTypes('SAVE_WATCHING')
 export const FETCH_SUGGESTIONS = createRequestTypes('FETCH_SUGGESTIONS')
 export const CREATE_REPOS = createRequestTypes('CREATE_REPOS')
-export const WATCH_ALL_STARRED_REPOS = createRequestTypes('WATCH_ALL_STARRED_REPOS')
+export const ADD_STARS = createRequestTypes('ADD_STARS')
+export const SAVE_WATCHING_STARS = createRequestTypes('SAVE_WATCHING_STARS')
 
 export const SET_REPO_ADD_VALUE = 'SET_REPO_ADD_VALUE'
 export const MUTE_REPO_IN_BUFFER =  'MUTE_REPO_IN_BUFFER'
@@ -36,8 +37,9 @@ export const ADD_REPO = 'ADD_REPO'
 export const REMOVE_REPO = 'REMOVE_REPO'
 export const TOGGLE_WATCHING = 'TOGGLE_WATCHING'
 export const SET_SHOWN_REPOS = 'SET_SHOWN_REPOS'
-export const SET_STARRED_OPEN = 'SET_STARRED_OPEN'
+export const SET_STARS_OPEN = 'SET_STARS_OPEN'
 export const SET_SHOW_SPLASH = 'SET_SHOW_SPLASH'
+export const TOGGLE_WATCHING_STARS = 'TOGGLE_WATCHING_STARS'
 
 function action(type, payload = {}) {
   return { type, ...payload }
@@ -115,11 +117,17 @@ export const createRepos = {
   success: ({ repos }) => action(CREATE_REPOS[SUCCESS], { repos }),
   failure: error => action(CREATE_REPOS[FAILURE], { error }),
 }
-export const watchAllStarredRepos = {
-  requestId: WATCH_ALL_STARRED_REPOS[REQUEST],
-  request: () => action(WATCH_ALL_STARRED_REPOS[REQUEST]),
-  success: () => action(WATCH_ALL_STARRED_REPOS[SUCCESS]),
-  failure: error => action(WATCH_ALL_STARRED_REPOS[FAILURE], { error }),
+export const addStars = {
+  requestId: ADD_STARS[REQUEST],
+  request: () => action(ADD_STARS[REQUEST]),
+  success: () => action(ADD_STARS[SUCCESS]),
+  failure: error => action(ADD_STARS[FAILURE], { error }),
+}
+export const saveWatchingStars = {
+  requestId: SAVE_WATCHING_STARS[REQUEST],
+  request: watchingStars => action(SAVE_WATCHING_STARS[REQUEST], { watchingStars }),
+  success: ({ watchingStars }) => action(SAVE_WATCHING_STARS[SUCCESS], { watchingStars }),
+  failure: error => action(SAVE_WATCHING_STARS[FAILURE], { error }),
 }
 
 export const setRepoAddValue = value => action(SET_REPO_ADD_VALUE, { value })
@@ -131,8 +139,9 @@ export const addRepo = repo => action(ADD_REPO, { repo })
 export const removeRepo = repo => action(REMOVE_REPO, { repo })
 export const toggleWatching = () => action(TOGGLE_WATCHING)
 export const setShownRepos = repos => action(SET_SHOWN_REPOS, { repos })
-export const setStarredOpen = value => action(SET_STARRED_OPEN, { value })
+export const setStarsOpen = value => action(SET_STARS_OPEN, { value })
 export const setShowIntro = state => action(SET_SHOW_SPLASH, { state })
+export const toggleWatchingStars = () => action(TOGGLE_WATCHING_STARS)
 
 export const mapDispatchToProps = () => ({
   signIn: signIn.request,
@@ -145,7 +154,7 @@ export const mapDispatchToProps = () => ({
   unwatch: unwatch.request,
   saveWatching: saveWatching.request,
   fetchSuggestions: fetchSuggestions.request,
-  watchAllStarredRepos: watchAllStarredRepos.request,
+  addStars: addStars.request,
   toggleWatching,
   setRepoAddValue,
   addRepoToBuffer,
@@ -153,6 +162,6 @@ export const mapDispatchToProps = () => ({
   addRepo,
   removeRepo,
   setShownRepos,
-  setStarredOpen,
+  setStarsOpen,
   setShowIntro
 })

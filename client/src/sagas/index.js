@@ -18,7 +18,7 @@ function* onApiRequest (actionGroup, apiMethod) {
 }
 
 const apiActions = (
-  'signIn signOut saveCheckAt saveFrequency saveWatching ' +
+  'signIn signOut saveCheckAt saveFrequency saveWatching saveWatchingStars ' +
   'createRepo createRepos deleteRepo unwatch muteSavedRepo'
 ).split(' ')
 
@@ -31,6 +31,24 @@ function* onToggleWatching () {
     yield take(actions.TOGGLE_WATCHING)
     const { watching } = yield select()
     yield put(actions.saveWatching.request(!watching))
+  }
+}
+
+function* onToggleWatchingStars () {
+  while (true) {
+    yield take(actions.TOGGLE_WATCHING_STARS)
+    const { watchingStars } = yield select()
+    yield put(actions.saveWatchingStars.request(!watchingStars))
+  }
+}
+
+function* onSaveWatchingStarsSuccess () {
+  while (true) {
+    const { watchingStars } = yield take(actions.SAVE_WATCHING_STARS[actions.SUCCESS])
+    if (!watchingStars) {
+      continue
+    }
+    yield put(actions.addStars.request())
   }
 }
 
@@ -95,18 +113,18 @@ function* onSetRepoAddValue () {
   yield takeLatest([actions.SET_REPO_ADD_VALUE, actions.createRepo.requestId], fetchSuggestions);
 }
 
-function* watchStarred ({ loadStarredArgs, accessToken }) {
-  let starred, next
+function* addStars ({ loadStarsArgs, accessToken }) {
+  let stars, next
   try {
-    const { items, links } = yield call(...loadStarredArgs)
-    starred = items.map(i => i.full_name)
+    const { items, links } = yield call(...loadStarsArgs)
+    stars = items.map(i => i.full_name)
     next = links.next
   } catch (e) {
-    yield put(actions.watchAllStarredRepos.failure(new Error(`Error loading starred repos: ${e.message}`)))
+    yield put(actions.addStars.failure(new Error(`Error loading stars repos: ${e.message}`)))
     return
   }
   const { savedRepos } = yield select()
-  const newRepos = starred.filter(r => !savedRepos.includes(r)).reverse()
+  const newRepos = stars.filter(r => !savedRepos.includes(r)).reverse()
   try {
     const successEvent = {}
     if (newRepos.length) {
@@ -117,28 +135,28 @@ function* watchStarred ({ loadStarredArgs, accessToken }) {
     }
     yield put(actions.createRepos.success(successEvent))
   } catch (e) {
-    yield put(actions.watchAllStarredRepos.failure(new Error(`Error saving repos: ${e.message}`)))
+    yield put(actions.addStars.failure(new Error(`Error saving repos: ${e.message}`)))
     return
   }
   if (!next) {
-    yield put(actions.watchAllStarredRepos.success())
+    yield put(actions.addStars.success())
     return
   }
-  yield watchStarred({
-    loadStarredArgs: [github.loadStarredLink, { link: next, accessToken }],
+  yield addStars({
+    loadStarsArgs: [github.loadStarsLink, { link: next, accessToken }],
     accessToken
   })
 }
 
-function* onWatchAllStarredRepos () {
+function* onAddStars () {
   while (true) {
-    yield take(actions.watchAllStarredRepos.requestId)
+    yield take(actions.addStars.requestId)
     const { signedIn, accessToken } = yield select()
     if (!signedIn || !accessToken) {
       continue
     }
-    yield watchStarred({
-      loadStarredArgs: [github.loadStarredFirstPage, accessToken],
+    yield addStars({
+      loadStarsArgs: [github.loadStarsFirstPage, accessToken],
       accessToken
     })
   }
@@ -168,11 +186,13 @@ export default function* root () {
     ...genericApiRequests.map(h => fork(h)),
     fork(onSignedInChanges),
     fork(onToggleWatching),
+    fork(onToggleWatchingStars),
+    fork(onSaveWatchingStarsSuccess),
     fork(onMuteRepo),
     fork(onAddRepo),
     fork(onRemoveRepo),
     fork(onSetRepoAddValue),
-    fork(onWatchAllStarredRepos),
+    fork(onAddStars),
     fork(onStartup)
   ])
 }
