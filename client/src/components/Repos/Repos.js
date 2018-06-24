@@ -1,5 +1,4 @@
 import React from 'react'
-import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
 import NotificationsOffIcon from '@material-ui/icons/NotificationsOff'
@@ -9,7 +8,7 @@ import Header, { propTypes as HeaderPropTypes } from './Header'
 
 function Repos (props) {
   const { classes, ...headerProps } = props
-  const { alerted, className, removeRepo, shownRepos, muteRepo } = props
+  const { className, removeRepo, shownRepos, muteRepo } = props
   return (
     <div className={`${className} ${classes.container}`}>
       <Header {...headerProps} />
