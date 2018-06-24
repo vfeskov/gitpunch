@@ -65,7 +65,10 @@ class Stars extends Component {
                 }
                 label="Watch All"
               />
-              {starsWorking && <CircularProgress size={24} color="secondary"/>}
+              {starsWorking ?
+                <CircularProgress size={24} color="secondary"/> :
+                watchingStars && <small>syncs every 15 minutes</small>
+              }
             </div>
           </DialogActions>
         }
@@ -198,7 +201,12 @@ function styles(theme) {
     },
     watchAllContainer: {
       alignItems: 'center',
-      display: 'flex'
+      display: 'flex',
+      '@global': {
+        small: {
+          color: theme.palette.primary[500]
+        }
+      }
     },
     watchAllLabel: {
       marginLeft: 0
