@@ -55,7 +55,7 @@ class Stars extends Component {
           <DialogActions classes={{ root: classes.actions }}>
             <div className={classes.watchAllContainer}>
               <FormControlLabel
-                classes={{ root: classes.watchAllLabel, label: classes.watchAllText }}
+                classes={{ root: classes.label, label: classes.watchAllText }}
                 control={
                   <Switch
                     checked={watchingStars}
@@ -63,23 +63,21 @@ class Stars extends Component {
                     onChange={toggleWatchingStars}
                   />
                 }
-                label="Watch All"
+                label="Watch&nbsp;All"
               />
-              {starsWorking ?
-                <CircularProgress size={24} color="secondary"/> :
-                watchingStars && <small>syncs every 15 minutes</small>
-              }
+              <small>auto-adds new stars every 15 minutes</small>
+              {starsWorking && <CircularProgress size={24} color="secondary" className={classes.watchingStarsProgress} />}
             </div>
           </DialogActions>
         }
-        <DialogContent id="stars-dialog-content">
+        {watchingStars && !starsWorking || <DialogContent id="stars-dialog-content">
           {stars.map(repo => (
             <div key={repo.id}>
               <div>
                 <FormControlLabel
                   classes={{
-                    root: classes.watchAllLabel,
-                    label: classes.watchAllText + (repo.muted ? ' ' + classes.muted : '')
+                    root: classes.label,
+                    label: classes.repo
                   }}
                   control={
                     <Switch
@@ -96,8 +94,8 @@ class Stars extends Component {
           ))}
           {!stars.length && !loading && loadedOnce && 'Looks like you haven\'t stars anything on GitHub yet'}
           {loading && !loadedOnce && <CircularProgress size={24} color="secondary"/>}
-        </DialogContent>
-        {!!stars.length &&
+        </DialogContent>}
+        {watchingStars && !starsWorking || !!stars.length &&
           <DialogActions classes={{ root: classes.actions }}>
             <div className={classes.nav}>
               {['first', 'prev', 'next', 'last'].map(rel => (
@@ -201,21 +199,26 @@ function styles(theme) {
     },
     watchAllContainer: {
       alignItems: 'center',
-      display: 'flex',
+      display: 'inline-flex',
+      paddingRight: '32px',
+      position: 'relative',
       '@global': {
         small: {
           color: theme.palette.primary[500]
         }
       }
     },
-    watchAllLabel: {
+    label: {
       marginLeft: 0
     },
     watchAllText: {
-      fontSize: '1rem'
+      fontSize: '1rem',
+      fontWeight: 'bold'
     },
-    muted: {
-      color: theme.palette.primary[500]
+    watchingStarsProgress: {
+      position: 'absolute',
+      right: 0,
+      top: '12px'
     }
   }
 }
