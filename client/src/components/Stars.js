@@ -34,6 +34,10 @@ class Stars extends Component {
   render () {
     const { classes, starsOpen, starsWorking, setStarsOpen, fullScreen, width, toggleWatchingStars, watchingStars } = this.props
     const { stars, links, loading, loadedOnce } = this.state
+    const showWatchAll = !!stars.length || watchingStars
+    const showContent = !watchingStars || starsWorking
+    const showNav = !!stars.length && !watchingStars || starsWorking
+    const noStars = !stars.length && !loading && loadedOnce
     return (
       <Dialog
         aria-labelledby="stars-dialog-title"
@@ -51,7 +55,7 @@ class Stars extends Component {
             </IconButton>
           </div>
         </DialogTitle>
-        {!!stars.length &&
+        {showWatchAll &&
           <DialogActions classes={{ root: classes.actions }}>
             <div className={classes.watchAllContainer}>
               <FormControlLabel
@@ -70,7 +74,7 @@ class Stars extends Component {
             </div>
           </DialogActions>
         }
-        {watchingStars && !starsWorking || <DialogContent id="stars-dialog-content">
+        {showContent && <DialogContent id="stars-dialog-content">
           {stars.map(repo => (
             <div key={repo.id}>
               <div>
@@ -92,10 +96,10 @@ class Stars extends Component {
               <div className={classes.description} style={ { color: '#777' } }>{repo.description || 'No description'}</div>
             </div>
           ))}
-          {!stars.length && !loading && loadedOnce && 'Looks like you haven\'t stars anything on GitHub yet'}
+          {noStars && 'Looks like you haven\'t stars anything on GitHub yet'}
           {loading && !loadedOnce && <CircularProgress size={24} color="secondary"/>}
         </DialogContent>}
-        {watchingStars && !starsWorking || !!stars.length &&
+        {showNav &&
           <DialogActions classes={{ root: classes.actions }}>
             <div className={classes.nav}>
               {['first', 'prev', 'next', 'last'].map(rel => (
