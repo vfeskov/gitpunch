@@ -46,7 +46,7 @@ export class Privacy extends PureComponent {
               <td>GitHub</td>
               <td>
                 <ol>
-                  <li>Get your email address and stars repositories</li>
+                  <li>Get your email address and starred repositories</li>
                   <li>Search GitHub repos</li>
                 </ol>
               </td>

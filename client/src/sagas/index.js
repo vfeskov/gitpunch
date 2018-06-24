@@ -120,7 +120,7 @@ function* addStars ({ loadStarsArgs, accessToken }) {
     stars = items.map(i => i.full_name)
     next = links.next
   } catch (e) {
-    yield put(actions.addStars.failure(new Error(`Error loading stars repos: ${e.message}`)))
+    yield put(actions.addStars.failure(new Error(`Error loading stars: ${e.message}`)))
     return
   }
   const { savedRepos } = yield select()
