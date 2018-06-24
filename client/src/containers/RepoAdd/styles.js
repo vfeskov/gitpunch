@@ -70,7 +70,7 @@ export function styles (theme) {
       right: 0,
       top: 0
     },
-    starredLinkContainer: {
+    starsLinkContainer: {
       [theme.breakpoints.down('xs')]: {
         margin: `${theme.spacing.unit}px 0`,
         textAlign: 'center'

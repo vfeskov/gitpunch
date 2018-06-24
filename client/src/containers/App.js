@@ -5,19 +5,19 @@ import Repos from './Repos'
 import SignIn from './SignIn'
 import RepoAdd from './RepoAdd'
 import UnwatchMessage from './UnwatchMessage'
-import Starred from './Starred'
+import Stars from './Stars'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Intro from '../components/Intro'
 import Privacy from '../components/Privacy'
 import * as cookie from '../services/cookie'
-import { withStyles } from 'material-ui/styles'
+import withStyles from '@material-ui/core/styles/withStyles'
 import { Route, withRouter } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
 
-const homePath = '/(starred|unsubscribe/.+)?'
+const homePath = '/(stars|unsubscribe/.+)?'
 const homePathRegExp = new RegExp(`^${homePath}$`)
 class App extends PureComponent {
   skip = () => {
@@ -50,7 +50,7 @@ class App extends PureComponent {
           </div>
           <Footer className={classes.block} watchIntro={this.showIntro}></Footer>
         </div>
-        <Starred />
+        <Stars />
         <UnwatchMessage />
         <div className={
           classes.introContainer + ' ' +
@@ -73,7 +73,7 @@ class App extends PureComponent {
       jssStyles.parentNode.removeChild(jssStyles)
     }
     this.possiblyUnwatch()
-    this.possiblyShowStarred();
+    this.possiblyShowStars();
     window.location.pathname.match(/^\/(privacy)?$/) || window.history.pushState(null, '', '/')
   }
 
@@ -83,9 +83,9 @@ class App extends PureComponent {
     this.props.unwatch(match[1])
   }
 
-  possiblyShowStarred() {
-    if (window.location.pathname !== '/starred') { return }
-    this.props.setStarredOpen(true)
+  possiblyShowStars() {
+    if (window.location.pathname !== '/stars') { return }
+    this.props.setStarsOpen(true)
   }
 }
 

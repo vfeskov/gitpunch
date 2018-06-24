@@ -1,2 +1,11 @@
-export { loadUser, createUser, updateUser, addReposToUser, removeRepoFromUser, muteRepoOfUser, unmuteRepoOfUser } from './users'
+export {
+  loadUser,
+  createUser,
+  updateUser,
+  addReposToUser,
+  removeRepoFromUser,
+  muteRepoOfUser,
+  unmuteRepoOfUser,
+  loadUsers
+} from './users'
 export { loadAccessTokens } from './accessTokens'

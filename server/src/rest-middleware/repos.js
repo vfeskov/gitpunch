@@ -40,7 +40,7 @@ export async function createBulk ({ body, token }, res, next) {
         .filter(({ repo }) => !repos.includes(repo))
         .map(r => r.repo)
       await addReposToUser(token, newRepos)
-      repos = [...repos, ...reqRepos]
+      repos = [...repos, ...newRepos]
     }
     success(res, { repos: serializeRepos(repos, mutedRepos) })
   } catch (error)   {

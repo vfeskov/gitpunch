@@ -8,10 +8,9 @@ import parseToken from './other-middlewares/parseToken'
 import error from './other-middlewares/error'
 import chain from './util/chain'
 import * as publicEvents from './public-events'
+import syncStars from './sync-stars'
 
 const port = process.env.PORT || 3000
-
-const production = process.env.NODE_ENV === 'production'
 
 const middlewares = []
 
@@ -24,7 +23,7 @@ middlewares.push(
   rest()
 )
 
-if (production) {
+if (process.env.NODE_ENV === 'production') {
   const serveStatic = require('serve-static')
   const { prerenderClient } = require('./other-middlewares/prerenderClient')
 
@@ -44,6 +43,11 @@ server.listen(port, (e, s) => {
 })
 
 if (!process.env.DONT_MONITOR_EVENTS) {
-  publicEvents.monitor()
   console.log('Monitoring public github events')
+  publicEvents.monitor()
+}
+
+if (!process.env.DONT_SYNC_STARS) {
+  console.log('Syncing stars')
+  syncStars()
 }

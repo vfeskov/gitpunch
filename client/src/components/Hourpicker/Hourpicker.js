@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import Tooltip from 'material-ui/Tooltip'
+import Tooltip from '@material-ui/core/Tooltip'
 import moment from 'moment-timezone'
-import { withStyles } from 'material-ui/styles'
+import withStyles from '@material-ui/core/styles/withStyles'
 import HourpickerDialog from './HourpickerDialog'
 import { timeText, fromUTC } from './util'
 

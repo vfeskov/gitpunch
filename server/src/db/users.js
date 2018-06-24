@@ -88,6 +88,12 @@ export async function unmuteRepoOfUser (params, repo) {
   )
 }
 
+export async function loadUsers (params) {
+  const collection = await usersCollection
+  const users = await collection.find(params).toArray()
+  return users.map(normalize)
+}
+
 function query ({ id, email }) {
   return id ? { _id: ObjectID(id) } : { email }
 }
@@ -104,6 +110,7 @@ function normalize (origUser) {
     mutedRepos: user.mutedRepos || [],
     frequency: user.frequency || 'realtime',
     checkAt: user.checkAt || 0,
-    accessToken: user.accessToken || ''
+    accessToken: user.accessToken || '',
+    watchingStars: user.watchingStars || false
   }
 }

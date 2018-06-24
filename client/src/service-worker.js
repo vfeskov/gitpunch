@@ -46,7 +46,7 @@ self.addEventListener('fetch', event => {
     fetch(event.request)
       .then(response => {
         updateCache(
-          /\/(starred|unsubscribe)/.test(event.request.pathname) ?
+          /\/(stars|unsubscribe)/.test(event.request.pathname) ?
             indexRequest() :
             event.request
         )

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { withStyles } from 'material-ui/styles'
+import withStyles from '@material-ui/core/styles/withStyles'
 import { Link } from 'react-router-dom'
 
 export class Privacy extends PureComponent {

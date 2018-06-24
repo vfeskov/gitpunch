@@ -35,3 +35,7 @@ export function validCheckAt (checkAt) {
     Math.round(checkAt) === checkAt &&
     checkAt >= 0 && checkAt < 24
 }
+
+export function validWatchingStars (watchingStars) {
+  return typeof watchingStars === 'boolean'
+}

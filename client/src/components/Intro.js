@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { withStyles } from 'material-ui/styles'
-import { CircularProgress } from 'material-ui/Progress'
-import Tooltip from 'material-ui/Tooltip'
+import withStyles from '@material-ui/core/styles/withStyles'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Tooltip from '@material-ui/core/Tooltip'
 
 export class Intro extends Component {
   state = {

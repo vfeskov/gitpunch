@@ -1,11 +1,12 @@
-import { profile } from './profile'
+import profile from './profile'
 import signIn from './signIn'
 import signOut from './signOut'
 import * as repos from './repos'
-import { watching } from './watching'
-import { unsubscribe } from './unsubscribe'
+import watching from './watching'
+import unsubscribe from './unsubscribe'
 import frequency from './frequency'
 import checkAt from './checkAt'
+import watchingStars from './watchingStars'
 import * as oauth from './oauth'
 
 export const routes = {
@@ -19,6 +20,7 @@ export const routes = {
      'PUT /api/watching'          : watching,
      'PUT /api/frequency'         : frequency,
      'PUT /api/check_at'          : checkAt,
+     'PUT /api/watching_stars'       : watchingStars,
      'PUT /api/unsubscribe'       : unsubscribe,
      'GET /api/oauth/start'       : oauth.start,
      'GET /api/oauth/done'        : oauth.done
