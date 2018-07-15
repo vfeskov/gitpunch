@@ -3,7 +3,7 @@ import { minify } from 'html-minifier'
 import { decode } from 'he'
 import { SES } from 'aws-sdk'
 import log from 'gitpunch-lib/log'
-import { ActionableUser, RepoWithTags } from './interfaces'
+import { RepoWithTags, Tag } from './interfaces'
 const { byteLength } = Buffer;
 const privateKey = process.env.JWT_RSA_PRIVATE_KEY.replace(/\\n/g, '\n')
 const appUrl = process.env.APP_URL
@@ -15,12 +15,25 @@ const ses = new SES({
 })
 
 export default class Email {
-  private oneRelease: boolean
   private bodyBytes: number
   private compression: number
+  private repos: RepoToSend[]
 
-  constructor (private email: string, private repos: RepoWithTags[]) {
-    this.oneRelease = repos.length === 1 && repos[0].tags.length === 1
+  constructor (private email: string, repos: RepoWithTags[]) {
+    this.repos = repos.map(r => {
+      const {repo} = r
+      const [org, name] = repo.split('/')
+      const tags = r.tags.map(tag => ({
+        ...tag,
+        id: `${repo}@${tag.name}`.replace(/[^\d\w]/g, '-'),
+        title: title(tag)
+      }))
+      return { repo, tags, org, name }
+    }).sort((a, b) => {
+      const aN = a.name.toLowerCase();
+      const bN = b.name.toLowerCase();
+      return aN === bN ? 0 : (aN > bN ? 1 : -1)
+    })
   }
 
   send () {
@@ -53,41 +66,71 @@ export default class Email {
 
   subject () {
     return this.repos
-      .map(({repo, tags}) =>
-        `${repo.split('/')[1]}@${tags.map(tag =>
+      .map(({name, tags}) =>
+        `${name}@${tags.map(tag =>
           `${tag.name.replace(/^v(\d)/, '$1')}`
         ).join(', ')}`
       ).join('; ')
   }
 
   body () {
-    const { repos, oneRelease } = this
+    const { repos } = this
+    const hasIndex = repos.length > 1 || repos[0].tags.length > 1
     const raw = `
-      <div>
-        ${repos.map(({ repo, tags }) =>
-          tags.map(({ name, entry }) => '' +
-            `<div style="margin: 20px 0">
-              <div style="font-size: 1.5em; line-height: 1.5em; margin: 0; word-wrap: break-word;">
-                <a href="https://github.com/${repo}">${repo}</a>@<a href="https://github.com/${repo}/releases/tag/${name}" style="font-weight: bold;">${name}</a>
-              </div>
-              <div style="padding: 10px; border: 1px dashed #888;">
-                ${description(entry)}
-              </div>
-            </div>`
+      <div style="margin: 0 auto; max-width: 800px; font-family: Roboto, Helvetica, Arial, sans-serif;">
+        ${hasIndex ? `
+        <a name="index"></a>
+        <table style="border-spacing: 0; line-height: 2em; margin: 0 0 2em;" id="index">
+          <tbody>
+          ${repos.map(r => `
+            <tr>
+              <td style="text-align: right; padding: 0; vertical-align: top;">${anchor(repoBold(r), r.tags[0])}</td>
+              <td style="padding: 0; vertical-align: top;">${anchor('@', r.tags[0])}</td>
+              <td style="padding: 0; vertical-align: top;">${r.tags.map(tag => anchor(tag.name, tag)).join(', ')}
+              </td>
+            </tr>`
+          ).join('')}
+          </tbody>
+        </table>
+        ` : ''}
+        ${repos.map(r =>
+          r.tags.map(tag => `
+        <div style="margin: 0 0 2em; border: 1px solid rgba(53,114,156,0.2);">
+          <a name="${tag.id}"></a>
+          <div style="background: rgba(53,114,156,0.2); padding: 0.5em; line-height: 2em;" id="${tag.id}">
+            <div style="display: inline-block;">
+              <span style="word-wrap: break-word;">${repoBold(r)}@${tag.name}</span>
+              ${tag.title ? `
+              <br/>
+              <span style="font-size: 1.1em;">${tag.title}</span>
+              ` : ''}
+            </div>
+            <div style="float: right; font-size: 0.9em;">
+              <a href="https://github.com/${r.repo}/releases/tag/${tag.name}">GitHub</a>
+              ${hasIndex ? `
+              <span style="display: inline-block; width: 0.3em;"></span>
+              <a href="#index">Up</a>
+              ` : ''}
+            </div>
+          </div>
+          <div style="padding: 0.5em;">
+            ${description(tag.entry)}
+          </div>
+        </div>`
           ).join('')
         ).join('')}
-        <br/>
-        Best wishes from <a href="${appUrl}">GitPunch</a><br/>
-        <br/>
-        ---<br/>
+        <div style="line-height: 2em;">
+          Best wishes from <a href="https://github.com/vfeskov">Vlad</a> @ <a href="${appUrl}">GitPunch</a><br/>
+          <a href="https://github.com/vfeskov/gitpunch">Support me with a star</a>
+        </div>
+        <div style="border-top: 1px solid rgba(53,114,156,0.2); margin: 2em 0 1em;"></div>
         <small>
           This is an automated message, reply if you have any questions<br/>
           To stop getting these emails click <a href="${this.unsubscribeUrl()}">unsubscribe</a><br/>
-          <a href="https://github.com/vfeskov/gitpunch">Support <strong>GitPunch</strong> with a star ♥</a>
         </small>
       </div>
     `
-    const body = minifyHtml(raw)
+    const body = minifyHtml(style(raw))
     this.bodyBytes = byteLength(body)
     this.compression = 1 - this.bodyBytes / byteLength(raw)
     return body
@@ -103,6 +146,24 @@ export default class Email {
   }
 }
 
+function anchor (content, tag) {
+  return `<a href="#${tag.id}">${content}</a>`
+}
+
+function repoBold ({ org, name }) {
+  return `${org}/<strong style="font-size: 1.1em;">${name}</strong>`
+}
+
+const titleRegExp = /<title>([^<]*)<\/title>/
+function title (tag: Tag) {
+  try {
+    const title = tag.entry.match(titleRegExp)[1].replace(/^v/, '')
+    return title === tag.name.replace(/^v/, '') ? '' : title
+  } catch (e) {
+    return ''
+  }
+}
+
 const contentRegExp = /<content[^>]*?type="([^"]+)"[^>]*?>([^<]*)<\/content>/
 function description (entry: string) {
   try {
@@ -113,10 +174,14 @@ function description (entry: string) {
   }
 }
 
-const tagsWithAttrsToStrip = /<[^>]+\s+[^>]*(data-[\w\d\-]+|class|id)="[^">]*"[^>]*>/g
-const attrsToStrip = /(data-[\w\d\-]+|class|id)="[^">]*"/g
+function style (html) {
+  return html.replace(/<a /g, '<a style="color: #2979ff; text-decoration: none;"')
+}
+
+const tagsWithAttrsToStrip = /<[^>]+\s+[^>]*(data-[\w\d\-]+|class)="[^">]*"[^>]*>/g
+const attrsToStrip = /(data-[\w\d\-]+|class)="[^">]*"/g
 function minifyHtml (html: string) {
-  // strip data-*, class and id attributes
+  // strip data-* and class attributes
   (html.match(tagsWithAttrsToStrip) || []).forEach(match => {
     const stripped = match.replace(attrsToStrip, '')
     html = html.replace(match, stripped)
@@ -146,4 +211,18 @@ function minifyHtml (html: string) {
   } catch (e) {
     return html
   }
+}
+
+interface RepoToSend {
+  repo: string
+  org: string
+  name: string
+  tags: TagToSend[]
+}
+
+interface TagToSend extends Tag {
+  name: string
+  entry: string
+  id: string
+  title: string
 }
