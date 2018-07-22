@@ -14,10 +14,10 @@ function Repos (props) {
       <Header {...headerProps} />
       {shownRepos.map(({ repo, muted }) =>
         <div className={classes.item} key={repo}>
-          <a className={'soft '  + (muted ? 'lightened' : '')} href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">{repo}</a>
+          <span className={muted ? classes.muted : ''}>{repo}</span>
           <div style={{ flex: 1 }}></div>
           <button className="action" aria-label={muted ? 'Unmute' : 'Mute'} onClick={() => muteRepo(repo, !muted)}>
-            {muted ? <NotificationsActiveIcon /> : <NotificationsOffIcon />}
+            {muted ? <NotificationsOffIcon /> : <NotificationsActiveIcon />}
           </button>
           <button className={`${classes.deleteButton} action`} aria-label="Delete" onClick={() => removeRepo(repo)}>
             <DeleteIcon />
@@ -82,6 +82,10 @@ const styles = theme => ({
     '&:hover, &:focus, &:active': {
       color: `${theme.palette.error.main} !important`
     }
+  },
+  muted: {
+    color: theme.palette.primary[400],
+    textDecoration: 'line-through'
   }
 })
 

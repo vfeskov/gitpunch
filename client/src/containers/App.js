@@ -125,9 +125,6 @@ const styles = theme => {
         color: theme.palette.primary[900],
         textDecoration: 'none !important'
       },
-      'a.lightened': {
-        color: theme.palette.primary[500]
-      },
       'a:hover': {
         textDecoration: 'underline',
         color: theme.palette.secondary.main,
