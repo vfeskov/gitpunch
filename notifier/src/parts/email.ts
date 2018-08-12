@@ -112,6 +112,7 @@ export default class Email {
               <a href="#index">Up</a>
               ` : ''}
             </div>
+            <div style="clear: both;"></div>
           </div>
           <div style="padding: 0.5em;">
             ${description(tag.entry)}
