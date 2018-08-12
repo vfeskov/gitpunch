@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { SignOutIcon } from './icons'
 import { Link } from 'react-router-dom'
+import logo from './big-logo.png'
 
 export class Header extends PureComponent {
   onClick = e => {
@@ -13,7 +14,7 @@ export class Header extends PureComponent {
     const { className, classes, email } = this.props
     return (
       <div className={`${className} ${classes.container}`}>
-        <Link to="/" className={classes.logo}><img src="big-logo.png" alt="GitPunch" width="150px"/></Link>
+        <Link to="/" className={classes.logo}><img src={logo} alt="GitPunch" width="150px"/></Link>
         <span className={classes.spacer}></span>
         {email && (
         <span style={{ display: 'flex' }}>
