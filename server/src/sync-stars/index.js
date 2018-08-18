@@ -23,7 +23,7 @@ async function syncUser (user) {
     const newStars = stars.filter(repo => !user.repos.includes(repo))
     if (newStars.length) {
       await addReposToUser(user, newStars)
-      console.log(`New stars added to ${user.email}`)
+      console.log(`New stars added to ${user.email}: ${newStars.join(', ')}`)
     }
     if (user.watchingStars !== 2) {
       return
@@ -31,7 +31,7 @@ async function syncUser (user) {
     const nonstars = user.repos.filter(repo => !stars.includes(repo))
     if (nonstars.length) {
       await removeReposFromUser(user, nonstars)
-      console.log(`Nonstars removed from ${user.email}`)
+      console.log(`Nonstars removed from ${user.email}: ${nonstars.join(', ')}`)
     }
   } catch (e) {
     if (e instanceof RevokedTokenError) {
