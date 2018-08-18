@@ -1,6 +1,6 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import Root from './containers/Root'
+import Root from './components/Root'
 import { SheetsRegistry } from 'react-jss/lib/jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
