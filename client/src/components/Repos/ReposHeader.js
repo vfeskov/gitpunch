@@ -84,6 +84,7 @@ const styles = theme => ({
   },
   controlGroup: {
     display: 'flex',
+    justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column'
     }

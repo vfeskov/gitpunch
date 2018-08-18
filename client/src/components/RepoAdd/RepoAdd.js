@@ -7,7 +7,6 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { styles } from './RepoAdd-styles'
 import { oauthUrl } from '../../services/oauth'
 import { StarIcon } from '../../components/icons'
-import Tooltip from '@material-ui/core/Tooltip'
 
 const valueReplaceArgs = [
   [new RegExp('^https?://'), ''],
@@ -78,7 +77,7 @@ class RepoAdd extends PureComponent {
               watch {
                 accessToken ?
                   watchingStarsLink :
-                  <Tooltip title={'It\'ll also sign you in'}>{watchingStarsLink}</Tooltip>
+                  <span data-tip="It'll also sign you in">{watchingStarsLink}</span>
               }
             </span>)}
           </div>

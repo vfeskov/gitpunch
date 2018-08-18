@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Tooltip from '@material-ui/core/Tooltip'
 import moment from 'moment-timezone'
 import withStyles from '@material-ui/core/styles/withStyles'
 import HourpickerDialog from './HourpickerDialog'
@@ -24,9 +23,7 @@ class Hourpicker extends Component {
     const { dialogOpen } = this.state
     return (
       <div className={classes.container}>
-        <Tooltip title={`Timezone: ${moment.tz.guess()}`} placement="bottom">
-          <div>&nbsp;at <a className={classes.text} onClick={this.openDialog}>{timeText(fromUTC(utcHour))}</a></div>
-        </Tooltip>
+        <div data-tip={`Timezone: ${moment.tz.guess()}`}>&nbsp;at <a className={classes.text} onClick={this.openDialog}>{timeText(fromUTC(utcHour))}</a></div>
         <HourpickerDialog
           classes={classes}
           open={dialogOpen}
