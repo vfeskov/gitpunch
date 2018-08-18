@@ -51,14 +51,14 @@ export async function addReposToUser (params, repos) {
   )
 }
 
-export async function removeRepoFromUser (params, repo) {
+export async function removeReposFromUser (params, repos) {
   const collection = await usersCollection
   collection.updateOne(
     query(params),
     {
       $pull: {
-        repos: repo,
-        mutedRepos: repo
+        repos: { $in: repos },
+        mutedRepos: { $in: repos }
       }
     }
   )

@@ -3,7 +3,7 @@ export {
   createUser,
   updateUser,
   addReposToUser,
-  removeRepoFromUser,
+  removeReposFromUser,
   muteRepoOfUser,
   unmuteRepoOfUser,
   loadUsers

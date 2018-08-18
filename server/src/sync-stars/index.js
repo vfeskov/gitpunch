@@ -1,4 +1,4 @@
-import { loadUsers, addReposToUser, updateUser } from '../db'
+import { loadUsers, addReposToUser, updateUser, removeReposFromUser } from '../db'
 import fetch from 'node-fetch'
 const INTERVAL = process.env.SYNC_STARS_INTERVAL || 90000
 
@@ -7,7 +7,7 @@ export default async function syncStars () {
     console.log('Star Sync started')
     const users = await loadUsers({
       accessToken: { $ne: null },
-      watchingStars: true
+      watchingStars: { $ne: [null, false, 0] }
     })
     await Promise.all(users.map(syncUser))
   } catch (e) {
@@ -20,15 +20,23 @@ export default async function syncStars () {
 async function syncUser (user) {
   try {
     const stars = await fetchStars(user)
-    const newRepos = stars.filter(repo => !user.repos.includes(repo))
-    if (newRepos.length) {
-      await addReposToUser(user, newRepos)
+    const newStars = stars.filter(repo => !user.repos.includes(repo))
+    if (newStars.length) {
+      await addReposToUser(user, newStars)
       console.log(`New stars added to ${user.email}`)
+    }
+    if (user.watchingStars !== 2) {
+      return
+    }
+    const nonstars = user.repos.filter(repo => !stars.includes(repo))
+    if (nonstars.length) {
+      await removeReposFromUser(user, nonstars)
+      console.log(`Nonstars removed from ${user.email}`)
     }
   } catch (e) {
     if (e instanceof RevokedTokenError) {
       console.log(`Revoked token ${user.email}`)
-      await updateUser(user, { watchingStars: false }).catch(() => {
+      await updateUser(user, { watchingStars: 0 }).catch(() => {
         console.log(`Failed to update watchingStars of ${user.email}`)
       })
     } else {
@@ -58,28 +66,20 @@ async function fetchStars (user) {
 }
 
 async function fetchGitHubApi (url, user) {
-  try {
-    console.log(`Fetching github api ${url}`)
-    const response = await fetch(url, {
-      headers: { Authorization: `token ${user.accessToken}` }
-    })
-    if (response.status === 403) {
-      throw new RevokedTokenError(user)
-    }
-    if (response.status !== 200) {
-      throw new FetchError(url, response)
-    }
-    const body = await response.json()
-    return {
-      body,
-      links: extractLinks(response)
-    }
-  } catch (e) {
-    if (e instanceof RevokedTokenError) {
-      throw e
-    }
-    console.log(`Fetch GitHub API Error: ${e.message}`, e.stack)
-    return {}
+  console.log(`Fetching github api ${url}`)
+  const response = await fetch(url, {
+    headers: { Authorization: `token ${user.accessToken}` }
+  })
+  if (response.status === 403) {
+    throw new RevokedTokenError(user)
+  }
+  if (response.status !== 200) {
+    throw new FetchError(url, response)
+  }
+  const body = await response.json()
+  return {
+    body,
+    links: extractLinks(response)
   }
 }
 

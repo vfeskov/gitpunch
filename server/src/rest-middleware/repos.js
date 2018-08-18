@@ -1,7 +1,7 @@
 import { success, unauthorized, badRequest, internalServerError } from '../util/http'
 import { validRepos, validRepo, validMuted } from '../util/validations'
 import { fetchTags, withTags } from '../util/githubAtom'
-import { addReposToUser, removeRepoFromUser, loadUser, muteRepoOfUser, unmuteRepoOfUser } from '../db'
+import { addReposToUser, removeReposFromUser, loadUser, muteRepoOfUser, unmuteRepoOfUser } from '../db'
 import { serializeRepos } from '../util/serialize'
 
 export async function create ({ body, token }, res, next) {
@@ -58,7 +58,7 @@ export async function remove ({ params, token }, res, next) {
   const { repo } = params
   let { repos, mutedRepos } = await loadUser(token)
   if (repos.includes(repo)) {
-    await removeRepoFromUser(token, repo)
+    await removeReposFromUser(token, [repo])
     repos = repos.filter(r => r !== repo)
   }
   success(res, { repos: serializeRepos(repos, mutedRepos) })
