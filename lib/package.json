@@ -1,6 +1,6 @@
 {
   "name": "gitpunch-lib",
-  "version": "1.8.1",
+  "version": "1.10.0",
   "description": "Reusable code for other WinABeer services",
   "main": "githubAtom.js",
   "scripts": {
