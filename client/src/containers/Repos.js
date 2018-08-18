@@ -11,7 +11,8 @@ export default connect(
     signedIn: state.signedIn,
     watching: state.watching,
     unwatchingNonstars: state.unwatchingNonstars,
-    starsWorking: state.starsWorking
+    starsWorking: state.starsWorking,
+    watchingStars: state.watchingStars
   }),
   {
     removeRepo,

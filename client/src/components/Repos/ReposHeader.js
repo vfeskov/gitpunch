@@ -18,14 +18,15 @@ function ReposHeader ({
   shownRepos,
   signedIn,
   toggleWatching,
-  watching
+  watching,
+  watchingStars
 }) {
   function handleFrequencyChange (e, frequency) {
     if (frequency !== 'daily') { return saveFrequency({ frequency }) }
     const checkAt = +moment('9', 'H').utc().format('H')
     saveFrequency({ frequency, checkAt })
   }
-  return signedIn && shownRepos.length ? (
+  return signedIn && (shownRepos.length || watchingStars) ? (
     <div className={classes.controlGroup}>
       <FormControlLabel
         classes={{ label: classes.titleLabel }}
@@ -72,7 +73,8 @@ ReposHeader.propTypes = {
   shownRepos: PropTypes.arrayOf(PropTypes.object).isRequired,
   signedIn: PropTypes.bool.isRequired,
   toggleWatching: PropTypes.func.isRequired,
-  watching: PropTypes.bool.isRequired
+  watching: PropTypes.bool.isRequired,
+  watchingStars: PropTypes.bool.isRequired
 }
 
 export const propTypes = ReposHeader.propTypes
