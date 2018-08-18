@@ -1,5 +1,8 @@
 FROM node:8.9.1-alpine
 
+RUN apk add --update git && \
+  rm -rf /tmp/* /var/cache/apk/*
+
 RUN mkdir -p /app/client /app/lib /app/server
 
 WORKDIR /app
