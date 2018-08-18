@@ -7,7 +7,7 @@ export default async function syncStars () {
     console.log('Star Sync started')
     const users = await loadUsers({
       accessToken: { $ne: null },
-      watchingStars: { $ne: [null, false, 0] }
+      watchingStars: { $in: [true, 1, 2] }
     })
     await Promise.all(users.map(syncUser))
   } catch (e) {
