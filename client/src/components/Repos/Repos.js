@@ -4,11 +4,13 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
 import NotificationsOffIcon from '@material-ui/icons/NotificationsOff'
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
-import Header, { propTypes as HeaderPropTypes } from './Header'
+import Header, { propTypes as HeaderPropTypes } from './ReposHeader'
+import ReactTooltip from 'react-tooltip'
 
 function Repos (props) {
   const { classes, ...headerProps } = props
-  const { className, removeRepo, shownRepos, muteRepo } = props
+  const { className, removeRepo, shownRepos, muteRepo, unwatchingNonstars } = props
+  setTimeout(ReactTooltip.rebuild)
   return (
     <div className={`${className} ${classes.container}`}>
       <Header {...headerProps} />
@@ -16,12 +18,18 @@ function Repos (props) {
         <div className={classes.item} key={repo}>
           <span className={muted ? classes.muted : ''}>{repo}</span>
           <div style={{ flex: 1 }}></div>
-          <button className="action" aria-label={muted ? 'Unmute' : 'Mute'} onClick={() => muteRepo(repo, !muted)}>
+          <button className="action" aria-label={muted ? 'Unmute' : 'Mute'} onClick={() => muteRepo(repo, !muted)} data-tip={muted ? 'Emails are OFF' : 'Emails are ON'}>
             {muted ? <NotificationsOffIcon /> : <NotificationsActiveIcon />}
           </button>
-          <button className={`${classes.deleteButton} action`} aria-label="Delete" onClick={() => removeRepo(repo)}>
+          {unwatchingNonstars ||
+          <button
+            className={`${classes.deleteButton} action`}
+            aria-label="Delete"
+            onClick={() => removeRepo(repo)}
+          >
             <DeleteIcon />
           </button>
+          }
           {/* {alerted[repo] &&
             <a
               href={`https://github.com/${repo}/releases/tag/${alerted[repo]}`}
@@ -44,6 +52,7 @@ Repos.propTypes = {
   className: PropTypes.string,
   removeRepo: PropTypes.func.isRequired,
   shownRepos: PropTypes.arrayOf(PropTypes.object).isRequired,
+  unwatchingNonstars: PropTypes.bool.isRequired,
   ...HeaderPropTypes
 }
 
@@ -81,10 +90,13 @@ const styles = theme => ({
   deleteButton: {
     '&:hover, &:focus, &:active': {
       color: `${theme.palette.error.main} !important`
+    },
+    '&[disabled]': {
+      color: `${theme.palette.primary[500]} !important`
     }
   },
   muted: {
-    color: theme.palette.primary[400],
+    color: theme.palette.primary[500],
     textDecoration: 'line-through'
   }
 })

@@ -1,16 +1,13 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
-import { renderInput, renderSuggestion, renderSuggestionsContainer } from './components'
+import { renderInput, renderSuggestion, renderSuggestionsContainer } from './RepoAdd-components'
 import SendIcon from '@material-ui/icons/Send'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { styles } from './styles'
-import oauthUrl from '../../lib/oauthUrl'
+import { styles } from './RepoAdd-styles'
+import { oauthUrl } from '../../services/oauth'
 import { StarIcon } from '../../components/icons'
 import Tooltip from '@material-ui/core/Tooltip'
-
-import { connect } from 'react-redux'
-import { mapDispatchToProps } from '../../actions'
 
 const valueReplaceArgs = [
   [new RegExp('^https?://'), ''],
@@ -29,16 +26,21 @@ class RepoAdd extends PureComponent {
   }
 
   render () {
-    const { className, classes, repoAdd, accessToken, bufferRepos: repos, suggestions } = this.props
+    const { className, classes, repoAdd, accessToken, bufferRepos: repos, suggestions, unwatchingNonstars, watchingStars } = this.props
     const { value, disabled, error } = repoAdd
     const { loading, items } = suggestions
     const starsLink = accessToken ? '/stars' : oauthUrl({ repos, returnTo: '/stars' })
     const watchingStarsLink = <a href={starsLink} className={classes.inlineVCentered} onClick={this.starsClicked}>{StarIcon()} stars</a>
-    return (
+    return unwatchingNonstars ? (
+      <div className={className}>
+        <h2 className={classes.title}><span className={classes.inlineVCentered}>Watching {watchingStarsLink} for releases</span></h2>
+        <p className={classes.syncHint}><small>syncs list every 15 minutes</small></p>
+      </div>
+    ) : (
       <div className={className}>
         <h2 className={classes.title}>Watch GitHub repo for releases</h2>
-        <div className={classes.contentWrapper}>
-          <form className={classes.autosuggestWrapper} onSubmit={this.onSubmit}>
+        <div className={classes.contentWrapper + (watchingStars ? ` ${classes.displayBlock}` : '')}>
+          <form className={classes.autosuggestWrapper + (watchingStars ? ` ${classes.newLine}` : '')} onSubmit={this.onSubmit}>
             <Autosuggest
               theme={{
                 container: classes.container,
@@ -68,15 +70,17 @@ class RepoAdd extends PureComponent {
               <SendIcon />
             </button>
           </form>
-          <div className={classes.or}>/</div>
-          <div className={classes.starsLinkContainer}>
-            <span className={classes.inlineVCentered}>
+          {watchingStars || <div className={classes.or}>/</div>}
+          <div className={classes.starsLinkContainer} style={{textAlign: 'center'}}>
+            {watchingStars ? (<span className={classes.inlineVCentered}>
+              adds new {watchingStarsLink} every 15 min
+            </span>) : (<span className={classes.inlineVCentered}>
               watch {
                 accessToken ?
                   watchingStarsLink :
                   <Tooltip title={'It\'ll also sign you in'}>{watchingStarsLink}</Tooltip>
               }
-            </span>
+            </span>)}
           </div>
         </div>
       </div>
@@ -121,16 +125,8 @@ RepoAdd.propTypes = {
   classes: PropTypes.object.isRequired,
   accessToken: PropTypes.string.isRequired,
   showIntro: PropTypes.string.isRequired,
-  suggestions: PropTypes.object.isRequired
+  suggestions: PropTypes.object.isRequired,
+  unwatchingNonstars: PropTypes.bool.isRequired
 }
 
-export default connect(
-  state => ({
-    repoAdd: state.repoAdd,
-    accessToken: state.accessToken,
-    bufferRepos: state.bufferRepos,
-    showIntro: state.showIntro,
-    suggestions: state.suggestions
-  }),
-  mapDispatchToProps()
-)(withStyles(styles)(RepoAdd))
+export default withStyles(styles)(RepoAdd)

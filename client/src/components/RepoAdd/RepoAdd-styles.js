@@ -57,12 +57,14 @@ export function styles (theme) {
       alignItems: 'center',
       display: 'flex',
       flex: 1,
-      width: '290px',
-      maxWidth: '100%',
+      width: '100%',
       position: 'relative',
       [theme.breakpoints.down('xs')]: {
         marginBottom: theme.spacing.unit * 4
       }
+    },
+    newLine: {
+      marginBottom: theme.spacing.unit * 4
     },
     addButton: {
       minWidth: '32px',
@@ -93,6 +95,15 @@ export function styles (theme) {
       top: '100%',
       color: '#f00',
       fontSize: '90%'
+    },
+    syncHint: {
+      color: theme.palette.primary[500],
+      [theme.breakpoints.down('xs')]: {
+        textAlign: 'center'
+      }
+    },
+    displayBlock: {
+      display: 'block'
     }
   }
 }

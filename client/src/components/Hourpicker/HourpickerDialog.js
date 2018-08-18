@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import { ampmMode, timeText, fromUTC, toUTC, fromLocal } from './util'
+import { ampmMode, timeText, fromUTC, toUTC, fromLocal } from './Hourpicker-util'
 const { assign } = Object
 const { cos, sin, PI } = Math
 

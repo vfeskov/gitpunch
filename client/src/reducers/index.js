@@ -17,6 +17,7 @@ import showIntro from './showIntro'
 import suggestions from './suggestions'
 import starsWorking from './starsWorking'
 import watchingStars from './watchingStars'
+import unwatchingNonstars from './unwatchingNonstars'
 
 export default combineReducers({
   email,
@@ -36,5 +37,6 @@ export default combineReducers({
   showIntro,
   suggestions,
   starsWorking,
-  watchingStars
+  watchingStars,
+  unwatchingNonstars
 })

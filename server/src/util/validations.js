@@ -37,5 +37,5 @@ export function validCheckAt (checkAt) {
 }
 
 export function validWatchingStars (watchingStars) {
-  return typeof watchingStars === 'boolean'
+  return [0, 1, 2].includes(watchingStars)
 }

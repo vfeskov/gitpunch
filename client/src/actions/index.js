@@ -40,6 +40,7 @@ export const SET_SHOWN_REPOS = 'SET_SHOWN_REPOS'
 export const SET_STARS_OPEN = 'SET_STARS_OPEN'
 export const SET_SHOW_SPLASH = 'SET_SHOW_SPLASH'
 export const TOGGLE_WATCHING_STARS = 'TOGGLE_WATCHING_STARS'
+export const TOGGLE_UNWATCHING_NONSTARS = 'TOGGLE_UNWATCHING_NONSTARS'
 
 function action(type, payload = {}) {
   return { type, ...payload }
@@ -142,6 +143,7 @@ export const setShownRepos = repos => action(SET_SHOWN_REPOS, { repos })
 export const setStarsOpen = value => action(SET_STARS_OPEN, { value })
 export const setShowIntro = state => action(SET_SHOW_SPLASH, { state })
 export const toggleWatchingStars = () => action(TOGGLE_WATCHING_STARS)
+export const toggleUnwatchingNonstars = () => action(TOGGLE_UNWATCHING_NONSTARS)
 
 export const mapDispatchToProps = () => ({
   signIn: signIn.request,

@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-import { StarIcon, ForkIcon } from '../../components/icons'
+import { StarIcon, ForkIcon } from '../icons'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 export function renderSuggestionsContainer (options) {

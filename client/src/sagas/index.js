@@ -38,14 +38,24 @@ function* onToggleWatchingStars () {
   while (true) {
     yield take(actions.TOGGLE_WATCHING_STARS)
     const { watchingStars } = yield select()
-    yield put(actions.saveWatchingStars.request(!watchingStars))
+    yield put(actions.saveWatchingStars.request(watchingStars ? 0 : 1))
+  }
+}
+
+function* onToggleUnwatchingNonstars () {
+  while (true) {
+    yield take(actions.TOGGLE_UNWATCHING_NONSTARS)
+    const { unwatchingNonstars } = yield select()
+    yield put(actions.saveWatchingStars.request(unwatchingNonstars ? 1 : 2))
   }
 }
 
 function* onSaveWatchingStarsSuccess () {
   while (true) {
+    yield take(actions.SAVE_WATCHING_STARS[actions.REQUEST])
+    const { watchingStars: prevWatchingStars } = yield select()
     const { watchingStars } = yield take(actions.SAVE_WATCHING_STARS[actions.SUCCESS])
-    if (!watchingStars) {
+    if (!watchingStars || prevWatchingStars) {
       continue
     }
     yield put(actions.addStars.request())
@@ -187,6 +197,7 @@ export default function* root () {
     fork(onSignedInChanges),
     fork(onToggleWatching),
     fork(onToggleWatchingStars),
+    fork(onToggleUnwatchingNonstars),
     fork(onSaveWatchingStarsSuccess),
     fork(onMuteRepo),
     fork(onAddRepo),

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { SignOutIcon } from './icons'
 import { Link } from 'react-router-dom'
-import logo from './big-logo.png'
+import logo from '../big-logo.png'
 
 export class Header extends PureComponent {
   onClick = e => {

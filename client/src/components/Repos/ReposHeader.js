@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import Hourpicker from '../Hourpicker'
 
-function Header ({
+function ReposHeader ({
   checkAt,
   classes,
   frequency,
@@ -35,7 +35,7 @@ function Header ({
             onChange={toggleWatching}
           />
         }
-        label={watching ? 'Watching' : 'Not watching'}
+        label={watching ? 'Emails are ON' : 'Emails are OFF'}
       />
       {watching && <div>
         <FormControl component="div" style={{flexDirection: 'row', alignItems: 'center', marginLeft: '-12px', display: 'flex'}}>
@@ -62,7 +62,7 @@ function Header ({
   )
 }
 
-Header.propTypes = {
+ReposHeader.propTypes = {
   checkAt: PropTypes.number.isRequired,
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
@@ -75,7 +75,7 @@ Header.propTypes = {
   watching: PropTypes.bool.isRequired
 }
 
-export const propTypes = Header.propTypes
+export const propTypes = ReposHeader.propTypes
 
 const styles = theme => ({
   checkAtText: {
@@ -84,7 +84,6 @@ const styles = theme => ({
   },
   controlGroup: {
     display: 'flex',
-    justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column'
     }
@@ -100,14 +99,14 @@ const styles = theme => ({
     marginLeft: 0
   },
   title: {
-    ...theme.typography.title,
+    ...theme.typography.subheading,
     marginBottom: theme.spacing.unit * 2,
     marginTop: 0,
     [theme.breakpoints.down('xs')]: {
       textAlign: 'center'
     }
   },
-  titleLabel: theme.typography.title
+  titleLabel: theme.typography.subheading
 })
 
-export default withStyles(styles)(Header)
+export default withStyles(styles)(ReposHeader)

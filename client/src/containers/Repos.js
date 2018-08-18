@@ -9,7 +9,8 @@ export default connect(
     frequency: state.frequency,
     shownRepos: state.shownRepos,
     signedIn: state.signedIn,
-    watching: state.watching
+    watching: state.watching,
+    unwatchingNonstars: state.unwatchingNonstars
   }),
   {
     removeRepo,

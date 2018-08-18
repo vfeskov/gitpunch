@@ -32,7 +32,7 @@ class Stars extends Component {
   }
 
   render () {
-    const { classes, starsOpen, starsWorking, setStarsOpen, fullScreen, width, toggleWatchingStars, watchingStars } = this.props
+    const { classes, starsOpen, starsWorking, setStarsOpen, fullScreen, width, toggleWatchingStars, watchingStars, toggleUnwatchingNonstars, unwatchingNonstars } = this.props
     const { stars, links, loading, loadedOnce } = this.state
     const showWatchAll = !!stars.length || watchingStars
     const showContent = !watchingStars || starsWorking
@@ -67,9 +67,19 @@ class Stars extends Component {
                     onChange={toggleWatchingStars}
                   />
                 }
-                label="Watch&nbsp;All"
+                label="Add All"
               />
-              <small>auto-adds new stars every 15 minutes</small>
+              <FormControlLabel
+                classes={{ root: classes.label }}
+                control={
+                  <Switch
+                    checked={unwatchingNonstars}
+                    onChange={toggleUnwatchingNonstars}
+                  />
+                }
+                label="Remove Nonstars"
+              />
+              <small>syncs every 15 min</small>
               {starsWorking && <CircularProgress size={24} color="secondary" className={classes.watchingStarsProgress} />}
             </div>
           </DialogActions>

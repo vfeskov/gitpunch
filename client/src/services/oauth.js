@@ -1,4 +1,4 @@
-export default function oathUrl ({ repos, returnTo }) {
+export function oauthUrl ({ repos, returnTo }) {
   // eslint-disable-next-line no-restricted-globals
   let { hostname, protocol, port } = location
   if (hostname === 'localhost') { port = 3001 }

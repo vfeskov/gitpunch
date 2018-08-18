@@ -111,6 +111,6 @@ function normalize (origUser) {
     frequency: user.frequency || 'realtime',
     checkAt: user.checkAt || 0,
     accessToken: user.accessToken || '',
-    watchingStars: user.watchingStars || false
+    watchingStars: user.watchingStars || 0
   }
 }

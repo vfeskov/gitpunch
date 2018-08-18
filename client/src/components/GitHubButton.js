@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Button from '@material-ui/core/Button'
 import { GitHubIcon } from './icons'
-import oauthUrl from '../lib/oauthUrl'
+import { oauthUrl } from '../services/oauth'
 
-class GitHubButton extends Component {
+class GitHubButton extends PureComponent {
   render () {
     const { bufferRepos: repos, classes, className } = this.props
     const link = oauthUrl({ repos })
