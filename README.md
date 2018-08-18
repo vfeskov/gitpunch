@@ -1,6 +1,6 @@
 <p align="center">
   <br/>
-  <a href="https://gitpunch.com"><img width="300px" src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/client/src/components/big-logo.png"/></a>
+  <a href="https://gitpunch.com"><img width="300px" src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/client/src/big-logo.png"/></a>
   <br/>
   <br/>
   Watch for releases on GitHub
