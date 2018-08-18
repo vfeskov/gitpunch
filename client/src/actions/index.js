@@ -21,6 +21,7 @@ export const FETCH_PROFILE = createRequestTypes('FETCH_PROFILE')
 export const MUTE_SAVED_REPO = createRequestTypes('MUTE_SAVED_REPO')
 export const CREATE_REPO = createRequestTypes('CREATE_REPO')
 export const DELETE_REPO = createRequestTypes('DELETE_REPO')
+export const DELETE_ALL_REPOS = createRequestTypes('DELETE_ALL_REPOS')
 export const UNWATCH = createRequestTypes('UNWATCH')
 export const SAVE_WATCHING = createRequestTypes('SAVE_WATCHING')
 export const FETCH_SUGGESTIONS = createRequestTypes('FETCH_SUGGESTIONS')
@@ -93,6 +94,12 @@ export const deleteRepo = {
   request: repo => action(DELETE_REPO[REQUEST], { repo }),
   success: ({ repos }) => action(DELETE_REPO[SUCCESS], { repos }),
   failure: error => action(DELETE_REPO[FAILURE], { error }),
+}
+export const deleteAllRepos = {
+  requestId: DELETE_ALL_REPOS[REQUEST],
+  request: repo => action(DELETE_ALL_REPOS[REQUEST]),
+  success: () => action(DELETE_ALL_REPOS[SUCCESS]),
+  failure: error => action(DELETE_ALL_REPOS[FAILURE], { error }),
 }
 export const unwatch = {
   requestId: UNWATCH[REQUEST],

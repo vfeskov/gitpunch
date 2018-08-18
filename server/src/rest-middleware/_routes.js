@@ -16,11 +16,12 @@ export const routes = {
     'POST /api/repos'             : repos.create,
     'POST /api/repos/bulk'        : repos.createBulk,
      'PUT /api/repos/:repo/muted' : repos.updateMuted,
+  'DELETE /api/repos/all'         : repos.removeAll,
   'DELETE /api/repos/:repo'       : repos.remove,
      'PUT /api/watching'          : watching,
      'PUT /api/frequency'         : frequency,
      'PUT /api/check_at'          : checkAt,
-     'PUT /api/watching_stars'       : watchingStars,
+     'PUT /api/watching_stars'    : watchingStars,
      'PUT /api/unsubscribe'       : unsubscribe,
      'GET /api/oauth/start'       : oauth.start,
      'GET /api/oauth/done'        : oauth.done

@@ -64,6 +64,19 @@ export async function removeReposFromUser (params, repos) {
   )
 }
 
+export async function removeAllReposFromUser (params) {
+  const collection = await usersCollection
+  collection.updateOne(
+    query(params),
+    {
+      $set: {
+        repos: [],
+        mutedRepos: []
+      }
+    }
+  )
+}
+
 export async function muteRepoOfUser (params, repo) {
   const collection = await usersCollection
   collection.updateOne(

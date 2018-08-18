@@ -76,6 +76,12 @@ export function deleteRepo ({ repo }) {
   })
 }
 
+export function deleteAllRepos () {
+  return fetchApi('repos/all', {
+    method: 'DELETE'
+  })
+}
+
 export function muteSavedRepo ({ repo, muted }) {
   return fetchApi(`repos/${encodeURIComponent(repo)}/muted`, {
     method: 'PUT',

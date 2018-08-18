@@ -4,6 +4,7 @@ export {
   updateUser,
   addReposToUser,
   removeReposFromUser,
+  removeAllReposFromUser,
   muteRepoOfUser,
   unmuteRepoOfUser,
   loadUsers

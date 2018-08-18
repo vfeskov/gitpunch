@@ -128,7 +128,6 @@ class Stars extends Component {
 
   async componentWillReceiveProps (nextProps) {
     const { accessToken, starsOpen, repos } = nextProps
-    if (!starsOpen) { return }
     if (accessToken === this.state.accessToken) {
       if (repos !== this.props.repos) {
         this.persist({
@@ -137,6 +136,7 @@ class Stars extends Component {
       }
       return
     }
+    if (!starsOpen) { return }
     try {
       if (!accessToken) { throw new Error() }
       this.persist({ loading: true })

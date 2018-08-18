@@ -1,7 +1,7 @@
-import { success, unauthorized, badRequest, internalServerError } from '../util/http'
+import { success, unauthorized, badRequest } from '../util/http'
 import { validRepos, validRepo, validMuted } from '../util/validations'
 import { fetchTags, withTags } from '../util/githubAtom'
-import { addReposToUser, removeReposFromUser, loadUser, muteRepoOfUser, unmuteRepoOfUser } from '../db'
+import { addReposToUser, removeReposFromUser, removeAllReposFromUser, loadUser, muteRepoOfUser, unmuteRepoOfUser } from '../db'
 import { serializeRepos } from '../util/serialize'
 
 export async function create ({ body, token }, res, next) {
@@ -62,6 +62,17 @@ export async function remove ({ params, token }, res, next) {
     repos = repos.filter(r => r !== repo)
   }
   success(res, { repos: serializeRepos(repos, mutedRepos) })
+}
+
+export async function removeAll ({ token }, res, next) {
+  if (!token) {
+    return next(unauthorized())
+  }
+  const { repos, mutedRepos } = await loadUser(token)
+  if (repos.length || mutedRepos.length) {
+    await removeAllReposFromUser(token)
+  }
+  success(res, { repos: serializeRepos([], []) })
 }
 
 export async function updateMuted ({ params, body, token }, res, next) {

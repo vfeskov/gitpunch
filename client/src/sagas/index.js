@@ -19,7 +19,7 @@ function* onApiRequest (actionGroup, apiMethod) {
 
 const apiActions = (
   'signIn signOut saveCheckAt saveFrequency saveWatching saveWatchingStars ' +
-  'createRepo createRepos deleteRepo unwatch muteSavedRepo'
+  'createRepo createRepos deleteRepo unwatch muteSavedRepo deleteAllRepos'
 ).split(' ')
 
 const genericApiRequests = apiActions.reduce((r, id) =>
