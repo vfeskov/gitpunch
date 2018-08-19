@@ -29,7 +29,7 @@ export default function styles (theme) {
         color: theme.palette.secondary.main,
         cursor: 'pointer'
       },
-      'button.action': {
+      'button.action, a.action': {
         background: 'none',
         border: 'none',
         color: theme.palette.primary[600],

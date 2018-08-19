@@ -36,7 +36,7 @@ class Stars extends Component {
     const { stars, links, loading, loadedOnce } = this.state
     const showWatchAll = !!stars.length || watchingStars
     const showContent = !watchingStars || starsWorking
-    const showNav = !!stars.length && !watchingStars || starsWorking
+    const showNav = (!!stars.length && !watchingStars) || starsWorking
     const noStars = !stars.length && !loading && loadedOnce
     return (
       <Dialog

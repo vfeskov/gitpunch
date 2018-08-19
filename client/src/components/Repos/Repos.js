@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import DeleteIcon from '@material-ui/icons/Delete'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
 import NotificationsOffIcon from '@material-ui/icons/NotificationsOff'
+import LaunchIcon from '@material-ui/icons/Launch'
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 import Header, { propTypes as HeaderPropTypes } from './ReposHeader'
@@ -33,7 +34,10 @@ class Repos extends Component {
           <div className={classes.item} key={repo}>
             <span className={muted ? classes.muted : ''}>{repo}</span>
             <div style={{ flex: 1 }}></div>
-            <button className="action" aria-label={muted ? 'Unmute' : 'Mute'} onClick={() => muteRepo(repo, !muted)} data-tip={muted ? 'Emails are OFF' : 'Emails are ON'}>
+            <a className="action" target="_blank" rel="noopener noreferrer" title="Open on GitHub" href={`https://github.com/${repo}`}>
+              <LaunchIcon />
+            </a>
+            <button className="action" aria-label={muted ? 'Unmute' : 'Mute'} onClick={() => muteRepo(repo, !muted)}>
               {muted ? <NotificationsOffIcon /> : <NotificationsActiveIcon />}
             </button>
             {unwatchingNonstars ||
@@ -90,7 +94,7 @@ const styles = theme => ({
     display: 'flex',
     minHeight: '48px',
     '@global': {
-      'button.action': {
+      '.action': {
         marginLeft: theme.spacing.unit,
         visibility: 'hidden'
       }
@@ -101,7 +105,7 @@ const styles = theme => ({
       margin: '0 -10px',
       padding: '0 10px',
       '@global': {
-        'button.action': {
+        '.action': {
           visibility: 'visible'
         }
       }
