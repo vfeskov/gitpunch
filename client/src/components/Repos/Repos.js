@@ -24,7 +24,7 @@ class Repos extends Component {
     return (
       <div className={`${className} ${classes.container}`}>
         <Header {...headerProps} />
-        {signedIn && shownRepos.length > 0 && <div className={classes.buttonContainer}>
+        {signedIn && shownRepos.length > 0 && !unwatchingNonstars && <div className={classes.buttonContainer}>
           <Button onClick={() => this.setState({ confirmationOpen: true })} disabled={starsWorking}>
             Remove All
           </Button>
