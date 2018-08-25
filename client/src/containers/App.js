@@ -1,8 +1,9 @@
 import App from '../components/App'
 import { connect } from 'react-redux'
 import { mapDispatchToProps } from '../actions'
+import { withRouter } from 'react-router-dom'
 
-export default connect(
+export default withRouter(connect(
   state => ({
     email: state.email,
     signedIn: state.signedIn,
@@ -10,4 +11,4 @@ export default connect(
     showIntro: state.showIntro
   }),
   mapDispatchToProps()
-)(App)
+)(App))

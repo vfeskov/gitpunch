@@ -12,7 +12,7 @@ import Intro from '../Intro'
 import Privacy from '../Privacy'
 import * as cookie from '../../services/cookie'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { Route, withRouter } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import styles from './App-styles'
 import ReactTooltip from 'react-tooltip'
 
@@ -73,7 +73,7 @@ class App extends PureComponent {
       jssStyles.parentNode.removeChild(jssStyles)
     }
     this.possiblyUnwatch()
-    this.possiblyShowStars();
+    this.possiblyShowStars()
     window.location.pathname.match(/^\/(privacy)?$/) || window.history.pushState(null, '', '/')
   }
 
@@ -99,4 +99,4 @@ App.propTypes = {
   setShowIntro: PropTypes.func.isRequired
 }
 
-export default withRouter(withStyles(styles)(App))
+export default withStyles(styles)(App)
