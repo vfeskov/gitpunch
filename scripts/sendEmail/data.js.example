@@ -1,0 +1,6 @@
+module.exports = {
+  from: 'Vlad from GitPunch <email@email.com>',
+  subject: 'Subject',
+  body: 'Body',
+  recipients: ['email@email.com', 'email2@email.com']
+};
