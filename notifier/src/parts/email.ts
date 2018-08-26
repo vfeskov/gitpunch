@@ -4,6 +4,7 @@ import { decode } from 'he'
 import { SES } from 'aws-sdk'
 import log from 'gitpunch-lib/log'
 import { RepoWithTags, Tag } from './interfaces'
+import namesWithOrgs from './namesWithOrgs'
 const { byteLength } = Buffer;
 const privateKey = process.env.JWT_RSA_PRIVATE_KEY.replace(/\\n/g, '\n')
 const appUrl = process.env.APP_URL
@@ -66,8 +67,8 @@ export default class Email {
 
   subject () {
     return this.repos
-      .map(({name, tags}) =>
-        `${name}@${tags.map(tag =>
+      .map(({repo, name, tags}) =>
+        `${namesWithOrgs.includes(name) ? repo : name}@${tags.map(tag =>
           `${tag.name.replace(/^v(\d)/, '$1')}`
         ).join(', ')}`
       ).join('; ')
