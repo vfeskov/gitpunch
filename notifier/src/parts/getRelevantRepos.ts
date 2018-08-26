@@ -7,6 +7,7 @@ const FETCH_ALL_REPOS_INTERVAL = +process.env.FETCH_ALL_REPOS_INTERVAL || 60 // 
 const SQS_QUEUE_URL = process.env.SQS_QUEUE_URL
 const RECEIVE_MAX_EVENTS = +process.env.RECEIVE_MAX_EVENTS || 40
 const SQS_REQUEST_TIMEOUT = +process.env.SQS_REQUEST_TIMEOUT || 2000
+const DONT_USE_QUEUE = process.env.DONT_USE_QUEUE;
 const sqs = new SQS({
   apiVersion: '2012-11-05',
   region: process.env.SQS_REGION
@@ -14,6 +15,9 @@ const sqs = new SQS({
 
 export default async function getRelevantRepos () {
   try {
+    if (DONT_USE_QUEUE) {
+      return null
+    }
     const now = new Date()
     const minutes = now.getUTCHours() * 60 + now.getUTCMinutes()
     // if it's time to fetch all repos
