@@ -14,7 +14,6 @@ import * as cookie from '../../services/cookie'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Route } from 'react-router-dom'
 import styles from './App-styles'
-import ReactTooltip from 'react-tooltip'
 
 const homePath = '/(stars|unsubscribe/.+)?'
 const homePathRegExp = new RegExp(`^${homePath}$`)
@@ -62,7 +61,6 @@ class App extends PureComponent {
             <Intro onSkip={this.skip} showIntro={showIntro} />
           </div>
         </div>
-        <ReactTooltip />
       </div>
     )
   }

@@ -6,7 +6,6 @@ import LaunchIcon from '@material-ui/icons/Launch'
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 import Header, { propTypes as HeaderPropTypes } from './ReposHeader'
-import ReactTooltip from 'react-tooltip'
 import Button from '@material-ui/core/Button'
 import ReposConfirmDeleteAll from './ReposConfirmDeleteAll'
 
@@ -21,7 +20,6 @@ class Repos extends Component {
   render () {
     const { classes, ...headerProps } = this.props
     const { className, removeRepo, shownRepos, muteRepo, unwatchingNonstars, signedIn, starsWorking } = this.props
-    setTimeout(ReactTooltip.rebuild)
     return (
       <div className={`${className} ${classes.container}`}>
         <Header {...headerProps} />
