@@ -23,9 +23,9 @@ export default class Email {
     this.repos = repos.map(r => {
       const {repo} = r
       const [org, name] = repo.split('/')
-      const tags = r.tags.map(tag => ({
+      const tags = [...r.tags].reverse().map(tag => ({
         ...tag,
-        id: `${repo}@${tag.name}`.replace(/[^\d\w]/g, '-'),
+        id: `${repo}-${tag.name}`.replace(/[^\d\w]/g, '-'),
         title: title(tag)
       }))
       return { repo, tags, org, name }
