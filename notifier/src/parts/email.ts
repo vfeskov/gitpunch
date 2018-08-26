@@ -66,8 +66,8 @@ export default class Email {
 
   subject () {
     return this.repos
-      .map(({name, tags}) =>
-        `${name}@${tags.map(tag =>
+      .map(({org, name, tags}) =>
+        `${org}/${name}@${tags.map(tag =>
           `${tag.name.replace(/^v(\d)/, '$1')}`
         ).join(', ')}`
       ).join('; ')
