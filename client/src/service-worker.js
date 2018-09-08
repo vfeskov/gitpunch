@@ -1,13 +1,11 @@
-importScripts('workbox-sw.prod.v2.1.3.js')
+importScripts('workbox-sw.js')
 
-const workbox = new WorkboxSW({
-  skipWaiting: true,
-  clientsClaim: true
-})
+workbox.skipWaiting()
+workbox.clientsClaim()
 
 // following array will be filled with filenames
 // from `build/` folder when `generate-sw` script runs
-workbox.precache([])
+workbox.precaching.precacheAndRoute([])
 
 // cache index.html when service worker gets installed
 self.addEventListener('install', () => updateCache(indexRequest()))
@@ -19,8 +17,6 @@ self.addEventListener('fetch', event => {
   // I want to let event through without modifying it if
   // any of the following conditions are met
   if (
-    // if it's a request for a precached file
-    isPrecached(url) ||
     // if it's a request for a static file (not index.html)
     isStaticFile(url) ||
     // if it's an external request to another domain
@@ -55,10 +51,6 @@ self.addEventListener('fetch', event => {
       .catch(() => caches.match(event.request))
   )
 })
-
-function isPrecached({ href }) {
-  return workbox._revisionedCacheManager._parsedCacheUrls.includes(href)
-}
 
 function isStaticFile({ pathname }) {
   return pathname.includes('.') && pathname !== '/index.html'
