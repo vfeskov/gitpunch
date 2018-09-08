@@ -199,12 +199,7 @@ function styles(theme) {
     },
     actions: {
       minHeight: theme.spacing.unit * 4.5,
-      overflow: 'hidden',
-      '@global': {
-        button: {
-          borderRadius: theme.spacing.unit * 3
-        }
-      }
+      overflow: 'hidden'
     },
     nav: {
       alignItems: 'center',

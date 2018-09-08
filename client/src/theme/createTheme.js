@@ -8,4 +8,11 @@ export default () => createMuiTheme({
     secondary: blue,
     type: 'light'
   },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: '24px'
+      },
+    },
+  },
 })
