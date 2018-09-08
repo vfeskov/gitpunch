@@ -101,6 +101,18 @@ export async function unmuteRepoOfUser (params, repo) {
   )
 }
 
+export async function setMutedReposOfUser (params, repos) {
+  const collection = await usersCollection
+  collection.updateOne(
+    query(params),
+    {
+      $set: {
+        mutedRepos: repos
+      }
+    }
+  )
+}
+
 export async function loadUsers (params) {
   const collection = await usersCollection
   const users = await collection.find(params).toArray()

@@ -7,6 +7,7 @@ export {
   removeAllReposFromUser,
   muteRepoOfUser,
   unmuteRepoOfUser,
-  loadUsers
+  loadUsers,
+  setMutedReposOfUser
 } from './users'
 export { loadAccessTokens } from './accessTokens'

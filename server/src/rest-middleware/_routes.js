@@ -15,6 +15,7 @@ export const routes = {
   'DELETE /api/sign_out'          : signOut,
     'POST /api/repos'             : repos.create,
     'POST /api/repos/bulk'        : repos.createBulk,
+     'PUT /api/repos/all/muted'   : repos.updateAllMuted,
      'PUT /api/repos/:repo/muted' : repos.updateMuted,
   'DELETE /api/repos/all'         : repos.removeAll,
   'DELETE /api/repos/:repo'       : repos.remove,

@@ -1,6 +1,6 @@
 import Repos from '../components/Repos'
 import { connect } from 'react-redux'
-import { removeRepo, saveCheckAt, saveFrequency, toggleWatching, muteRepo, deleteAllRepos } from '../actions'
+import { removeRepo, saveCheckAt, saveFrequency, toggleWatching, muteRepo, removeAllRepos, muteAllRepos } from '../actions'
 
 export default connect(
   state => ({
@@ -16,10 +16,11 @@ export default connect(
   }),
   {
     removeRepo,
-    saveCheckAt: saveCheckAt.request,
-    saveFrequency: saveFrequency.request,
-    toggleWatching,
+    removeAllRepos,
     muteRepo,
-    deleteAllRepos: deleteAllRepos.request
+    muteAllRepos,
+    toggleWatching,
+    saveCheckAt: saveCheckAt.request,
+    saveFrequency: saveFrequency.request
   }
 )(Repos)

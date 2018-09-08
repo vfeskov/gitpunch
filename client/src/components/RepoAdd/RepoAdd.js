@@ -17,12 +17,12 @@ const valueReplaceArgs = [
 
 class RepoAdd extends PureComponent {
   componentDidMount () {
-    this.props.showIntro === 'n' && this.inputRef && this.inputRef.focus()
+    //this.props.showIntro === 'n' && this.inputRef && this.inputRef.focus()
   }
 
   componentWillReceiveProps ({ showIntro }) {
     if (showIntro !== 'n') { return }
-    setTimeout(() => this.inputRef && this.inputRef.focus(), 500)
+    //setTimeout(() => this.inputRef && this.inputRef.focus(), 500)
   }
 
   render () {

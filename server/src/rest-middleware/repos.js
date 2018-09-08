@@ -1,7 +1,7 @@
 import { success, unauthorized, badRequest } from '../util/http'
 import { validRepos, validRepo, validMuted } from '../util/validations'
 import { fetchTags, withTags } from '../util/githubAtom'
-import { addReposToUser, removeReposFromUser, removeAllReposFromUser, loadUser, muteRepoOfUser, unmuteRepoOfUser } from '../db'
+import { addReposToUser, removeReposFromUser, removeAllReposFromUser, loadUser, muteRepoOfUser, unmuteRepoOfUser, setMutedReposOfUser } from '../db'
 import { serializeRepos } from '../util/serialize'
 
 export async function create ({ body, token }, res, next) {
@@ -95,5 +95,19 @@ export async function updateMuted ({ params, body, token }, res, next) {
     await unmuteRepoOfUser(token, repo)
     mutedRepos = mutedRepos.filter(r => r !== repo)
   }
+  success(res, { repos: serializeRepos(repos, mutedRepos) })
+}
+
+export async function updateAllMuted ({ body, token }, res, next) {
+  if (!token) {
+    return next(unauthorized())
+  }
+  if (!validMuted(body.muted)) {
+    return next(badRequest())
+  }
+  const { muted } = body
+  const { repos } = await loadUser(token)
+  const mutedRepos = muted ? repos : []
+  await setMutedReposOfUser(token, mutedRepos)
   success(res, { repos: serializeRepos(repos, mutedRepos) })
 }

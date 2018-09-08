@@ -6,27 +6,38 @@ import LaunchIcon from '@material-ui/icons/Launch'
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 import Header, { propTypes as HeaderPropTypes } from './ReposHeader'
-import Button from '@material-ui/core/Button'
 import ReposConfirmDeleteAll from './ReposConfirmDeleteAll'
 
 class Repos extends Component {
   state = { confirmationOpen: false }
 
   handleConfirmationClose = value => {
-    value && this.props.deleteAllRepos()
+    value === true && this.props.removeAllRepos()
     this.setState({ confirmationOpen: false })
   }
 
   render () {
     const { classes, ...headerProps } = this.props
-    const { className, removeRepo, shownRepos, muteRepo, unwatchingNonstars, signedIn, starsWorking } = this.props
+    const { className, removeRepo, shownRepos, muteRepo, unwatchingNonstars, starsWorking, muteAllRepos } = this.props
+    const allMuted = shownRepos.every(({ muted }) => muted)
     return (
       <div className={`${className} ${classes.container}`}>
         <Header {...headerProps} />
-        {signedIn && shownRepos.length > 0 && !unwatchingNonstars && <div className={classes.buttonContainer}>
-          <Button onClick={() => this.setState({ confirmationOpen: true })} disabled={starsWorking}>
-            Remove All
-          </Button>
+        {shownRepos.length > 1 && <div className={classes.itemsHeader}>
+          <div style={{ flex: 1 }}></div>
+          <button className="action" aria-label={allMuted ? 'Unmute All' : 'Mute All'} onClick={() => muteAllRepos(!allMuted)}>
+            {allMuted ? <NotificationsOffIcon /> : <NotificationsActiveIcon />}
+          </button>
+          {unwatchingNonstars ||
+          <button
+            className={`${classes.deleteButton} action`}
+            aria-label="Remove All"
+            onClick={() => this.setState({ confirmationOpen: true })}
+            disabled={starsWorking}
+          >
+            <DeleteIcon />
+          </button>
+          }
         </div>}
         {shownRepos.map(({ repo, muted }) =>
           <div className={classes.item} key={repo}>
@@ -41,7 +52,7 @@ class Repos extends Component {
             {unwatchingNonstars ||
             <button
               className={`${classes.deleteButton} action`}
-              aria-label="Delete"
+              aria-label="Remove"
               onClick={() => removeRepo(repo)}
             >
               <DeleteIcon />
@@ -62,8 +73,7 @@ class Repos extends Component {
         <ReposConfirmDeleteAll
           open={this.state.confirmationOpen}
           onClose={this.handleConfirmationClose}
-        >
-        </ReposConfirmDeleteAll>
+        />
       </div>
     )
   }
@@ -75,7 +85,8 @@ Repos.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   removeRepo: PropTypes.func.isRequired,
-  deleteAllRepos: PropTypes.func.isRequired,
+  removeAllRepos: PropTypes.func.isRequired,
+  muteAllRepos: PropTypes.func.isRequired,
   shownRepos: PropTypes.arrayOf(PropTypes.object).isRequired,
   unwatchingNonstars: PropTypes.bool.isRequired,
   ...HeaderPropTypes
@@ -85,6 +96,16 @@ const styles = theme => ({
   container: {
     [theme.breakpoints.down('xs')]: {
       textAlign: 'center'
+    }
+  },
+  itemsHeader: {
+    alignItems: 'center',
+    display: 'flex',
+    minHeight: '48px',
+    '@global': {
+      '.action': {
+        marginLeft: theme.spacing.unit
+      }
     }
   },
   item: {

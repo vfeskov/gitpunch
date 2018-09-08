@@ -19,7 +19,8 @@ function* onApiRequest (actionGroup, apiMethod) {
 
 const apiActions = (
   'signIn signOut saveCheckAt saveFrequency saveWatching saveWatchingStars ' +
-  'createRepo createRepos deleteRepo unwatch muteSavedRepo deleteAllRepos'
+  'createRepo createRepos deleteRepo unwatch muteSavedRepo deleteAllRepos ' +
+  'muteAllSavedRepos'
 ).split(' ')
 
 const genericApiRequests = apiActions.reduce((r, id) =>
@@ -72,6 +73,16 @@ function* onMuteRepo () {
   }
 }
 
+function* onMuteAllRepos () {
+  while (true) {
+    const { muted } = yield take(actions.MUTE_ALL_REPOS)
+    const { signedIn } = yield select()
+    yield put(signedIn ?
+      actions.muteAllSavedRepos.request(muted) :
+      actions.muteAllReposInBuffer(muted))
+  }
+}
+
 function* onAddRepo () {
   while (true) {
     const { repo } = yield take(actions.ADD_REPO)
@@ -89,6 +100,16 @@ function* onRemoveRepo () {
     yield put(signedIn ?
       actions.deleteRepo.request(repo) :
       actions.removeRepoFromBuffer(repo))
+  }
+}
+
+function* onRemoveAllRepos () {
+  while (true) {
+    yield take(actions.REMOVE_ALL_REPOS)
+    const { signedIn } = yield select()
+    yield put(signedIn ?
+      actions.deleteAllRepos.request() :
+      actions.removeAllReposFromBuffer())
   }
 }
 
@@ -200,8 +221,10 @@ export default function* root () {
     fork(onToggleUnwatchingNonstars),
     fork(onSaveWatchingStarsSuccess),
     fork(onMuteRepo),
+    fork(onMuteAllRepos),
     fork(onAddRepo),
     fork(onRemoveRepo),
+    fork(onRemoveAllRepos),
     fork(onSetRepoAddValue),
     fork(onAddStars),
     fork(onStartup)

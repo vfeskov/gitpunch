@@ -19,6 +19,7 @@ export const SAVE_CHECK_AT = createRequestTypes('SAVE_CHECK_AT')
 export const SAVE_FREQUENCY = createRequestTypes('SAVE_FREQUENCY')
 export const FETCH_PROFILE = createRequestTypes('FETCH_PROFILE')
 export const MUTE_SAVED_REPO = createRequestTypes('MUTE_SAVED_REPO')
+export const MUTE_ALL_SAVED_REPOS = createRequestTypes('MUTE_ALL_SAVED_REPOS')
 export const CREATE_REPO = createRequestTypes('CREATE_REPO')
 export const DELETE_REPO = createRequestTypes('DELETE_REPO')
 export const DELETE_ALL_REPOS = createRequestTypes('DELETE_ALL_REPOS')
@@ -31,11 +32,15 @@ export const SAVE_WATCHING_STARS = createRequestTypes('SAVE_WATCHING_STARS')
 
 export const SET_REPO_ADD_VALUE = 'SET_REPO_ADD_VALUE'
 export const MUTE_REPO_IN_BUFFER =  'MUTE_REPO_IN_BUFFER'
+export const MUTE_ALL_REPOS_IN_BUFFER =  'MUTE_ALL_REPOS_IN_BUFFER'
 export const ADD_REPO_TO_BUFFER =  'ADD_REPO_TO_BUFFER'
 export const REMOVE_REPO_FROM_BUFFER = 'REMOVE_REPO_FROM_BUFFER'
+export const REMOVE_ALL_REPOS_FROM_BUFFER = 'REMOVE_ALL_REPOS_FROM_BUFFER'
 export const MUTE_REPO = 'MUTE_REPO'
+export const MUTE_ALL_REPOS = 'MUTE_ALL_REPOS'
 export const ADD_REPO = 'ADD_REPO'
 export const REMOVE_REPO = 'REMOVE_REPO'
+export const REMOVE_ALL_REPOS = 'REMOVE_ALL_REPOS'
 export const TOGGLE_WATCHING = 'TOGGLE_WATCHING'
 export const SET_SHOWN_REPOS = 'SET_SHOWN_REPOS'
 export const SET_STARS_OPEN = 'SET_STARS_OPEN'
@@ -82,6 +87,12 @@ export const muteSavedRepo = {
   request: (repo, muted) => action(MUTE_SAVED_REPO[REQUEST], { repo, muted }),
   success: ({ repos }) => action(MUTE_SAVED_REPO[SUCCESS], { repos }),
   failure: error => action(MUTE_SAVED_REPO[FAILURE], { error }),
+}
+export const muteAllSavedRepos = {
+  requestId: MUTE_ALL_SAVED_REPOS[REQUEST],
+  request: (muted) => action(MUTE_ALL_SAVED_REPOS[REQUEST], { muted }),
+  success: ({ repos }) => action(MUTE_ALL_SAVED_REPOS[SUCCESS], { repos }),
+  failure: error => action(MUTE_ALL_SAVED_REPOS[FAILURE], { error }),
 }
 export const createRepo = {
   requestId: CREATE_REPO[REQUEST],
@@ -143,8 +154,12 @@ export const muteRepoInBuffer = (repo, muted) => action(MUTE_REPO_IN_BUFFER, { r
 export const addRepoToBuffer = repo => action(ADD_REPO_TO_BUFFER, { repo })
 export const removeRepoFromBuffer = repo => action(REMOVE_REPO_FROM_BUFFER, { repo })
 export const muteRepo = (repo, muted) => action(MUTE_REPO, { repo, muted })
+export const muteAllRepos = muted => action(MUTE_ALL_REPOS, { muted })
+export const muteAllReposInBuffer = muted => action(MUTE_ALL_REPOS_IN_BUFFER, { muted })
 export const addRepo = repo => action(ADD_REPO, { repo })
 export const removeRepo = repo => action(REMOVE_REPO, { repo })
+export const removeAllRepos = () => action(REMOVE_ALL_REPOS)
+export const removeAllReposFromBuffer = () => action(REMOVE_ALL_REPOS_FROM_BUFFER)
 export const toggleWatching = () => action(TOGGLE_WATCHING)
 export const setShownRepos = repos => action(SET_SHOWN_REPOS, { repos })
 export const setStarsOpen = value => action(SET_STARS_OPEN, { value })

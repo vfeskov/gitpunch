@@ -89,6 +89,13 @@ export function muteSavedRepo ({ repo, muted }) {
   })
 }
 
+export function muteAllSavedRepos ({ muted }) {
+  return fetchApi(`repos/all/muted`, {
+    method: 'PUT',
+    body: JSON.stringify({ muted })
+  })
+}
+
 export function unwatch ({ lambdajwt }) {
   return fetchApi('unsubscribe', {
     method: 'PUT',
