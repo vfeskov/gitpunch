@@ -12,22 +12,7 @@ class Repos extends Component {
   state = {
     confirmationOpen: false,
     sortKey: 'date',
-    sortDir: 'desc',
-    shownRepos: [],
-    repos: [],
-    sortedRepos: []
-  }
-
-  componentWillReceiveProps ({ shownRepos } = {}) {
-    if (this.state.shownRepos === shownRepos) {
-      return
-    }
-    const repos = shownRepos.map(({ repo, muted }) => {
-      const repoLC = repo.toLowerCase()
-      return { repo, muted, repoLC, name: repoLC.split('/', 2)[1] }
-    })
-    const sortedRepos = this.sortedRepos(repos, this.state.sortKey, this.state.sortDir)
-    this.setState({ ...this.state, shownRepos, repos, sortedRepos })
+    sortDir: 'desc'
   }
 
   handleConfirmationClose = value => {
@@ -40,7 +25,7 @@ class Repos extends Component {
   }
 
   sort (key) {
-    const { sortKey, sortDir, repos } = this.state
+    const { sortKey, sortDir } = this.state
     let dir
     if (sortKey === key) {
       dir = sortDir === 'asc' ? 'desc' : 'asc'
@@ -50,36 +35,48 @@ class Repos extends Component {
     this.setState({
       ...this.state,
       sortKey: key,
-      sortDir: dir,
-      sortedRepos: this.sortedRepos(repos, key, dir)
+      sortDir: dir
     })
   }
 
-  sortedRepos (repos, sortKey, sortDir) {
+  sortedRepos () {
+    const { shownRepos: repos } = this.props
+    if (!repos || !repos.length) {
+      return repos
+    }
+    const { sortKey, sortDir } = this.state
     if (sortKey === 'date') {
       return sortDir === 'desc' ? repos : [...repos].reverse()
     }
     if (sortKey === 'org') {
-      return [...repos].sort(sorter('repoLC'))
+      return [...repos].sort((a, b) =>
+        sorter(
+          a.repo.toLowerCase(),
+          b.repo.toLowerCase()
+        )
+      )
     }
     if (sortKey === 'name') {
-      return [...repos].sort(sorter('name'))
+      return [...repos].sort((a, b) =>
+        sorter(
+          a.repo.split('/', 2)[1].toLowerCase(),
+          b.repo.split('/', 2)[1].toLowerCase()
+        )
+      )
     }
     return repos
 
-    function sorter (key) {
-      return (a, b) => {
-        if (a[key] < b[key]) return sortDir === 'asc' ? -1 : 1;
-        if (a[key] > b[key]) return sortDir === 'asc' ? 1 : -1;
-        return 0;
-      }
+    function sorter (a, b) {
+      if (a < b) return sortDir === 'asc' ? -1 : 1;
+      if (a > b) return sortDir === 'asc' ? 1 : -1;
+      return 0;
     }
   }
 
   render () {
     const { classes, ...headerProps } = this.props
     const { className, removeRepo, muteRepo, unwatchingNonstars, starsWorking, muteAllRepos } = this.props
-    const { sortedRepos } = this.state
+    const sortedRepos = this.sortedRepos()
     const allMuted = sortedRepos.every(({ muted }) => muted)
     return (
       <div className={`${className} ${classes.container}`}>

@@ -23,7 +23,8 @@
     "mongodb": "^3.1.4",
     "node-fetch": "^2.2.0",
     "react": "^16.5.0",
-    "serve-static": "^1.13.2"
+    "serve-static": "^1.13.2",
+    "webpack": "^4.17.2"
   },
   "devDependencies": {
     "babel-loader": "^7.1.5",
@@ -33,7 +34,6 @@
     "file-loader": "^1.1.11",
     "json-loader": "^0.5.7",
     "nodemon": "^1.18.4",
-    "webpack": "^4.17.2",
     "webpack-command": "^0.4.1",
     "webpack-node-externals": "^1.7.2"
   }
