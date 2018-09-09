@@ -86,7 +86,13 @@ class Repos extends Component {
             Sort by <a className={this.sortClass('org')} onClick={() => this.sort('org')}>org</a>/<a className={this.sortClass('name')} onClick={() => this.sort('name')}>name</a> or <a className={this.sortClass('date')} onClick={() => this.sort('date')}>date</a>
           </span>
           <span style={{ flex: 1 }}></span>
-          <button className="action" aria-label={allMuted ? 'Unmute All' : 'Mute All'} onClick={() => muteAllRepos(!allMuted)}>
+          All&#32;→&#32;
+          <button
+            className="action"
+            aria-label={allMuted ? 'Unmute All' : 'Mute All'}
+            onClick={() => muteAllRepos(!allMuted)}
+            disabled={starsWorking}
+          >
             {allMuted ? <NotificationsOffIcon /> : <NotificationsActiveIcon />}
           </button>
           {unwatchingNonstars ||

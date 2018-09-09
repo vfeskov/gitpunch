@@ -40,7 +40,7 @@ export default function styles (theme) {
           color: theme.palette.secondary.main
         },
         '&[disabled]': {
-          color: theme.palette.primary[600],
+          color: theme.palette.primary[500],
           cursor: 'default'
         }
       },
