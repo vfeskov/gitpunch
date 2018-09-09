@@ -100,14 +100,13 @@ export default class Email {
           <a name="${tag.id}"></a>
           <div style="background: rgba(53,114,156,0.2); padding: 0.5em; line-height: 2em;" id="${tag.id}">
             <div style="display: inline-block;">
-              <span style="word-wrap: break-word;">${repoBold(r)}@${tag.name}</span>
+              <span style="word-wrap: break-word;"><a href="https://github.com/${r.repo}">${repoBold(r)}</a>@<a href="https://github.com/${r.repo}/releases/tag/${tag.name}">${tag.name}</a></span>
               ${tag.title ? `
               <br/>
               <span style="font-size: 1.1em;">${tag.title}</span>
               ` : ''}
             </div>
             <div style="float: right; font-size: 0.9em;">
-              <a href="https://github.com/${r.repo}/releases/tag/${tag.name}">GitHub</a>
               ${hasIndex ? `
               <span style="display: inline-block; width: 0.3em;"></span>
               <a href="#index">Up</a>
