@@ -1,8 +1,3 @@
-import { MongoClient } from 'mongodb'
-const URL = process.env.WAB_MONGODB_URL
-const DB_NAME = process.env.WAB_MONGODB_DBNAME
+import * as mongoose from 'mongoose'
 
-export const connection = (async () => {
-  const client = await MongoClient.connect(URL, { useNewUrlParser: true })
-  return client.db(DB_NAME)
-})()
+mongoose.connect(process.env.WAB_MONGODB_URL, { useNewUrlParser: true })

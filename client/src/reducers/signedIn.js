@@ -10,6 +10,6 @@ export default function signedIn (state = false, action) {
     case SIGN_OUT[SUCCESS]:
       return false
     default:
-      return isRequestFailure(action) ? action.error.status !== 401 : state
+      return isRequestFailure(action) ? action.status !== 401 : state
   }
 }

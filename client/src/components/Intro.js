@@ -11,14 +11,14 @@ export class Intro extends Component {
 
   componentDidMount () {
     if (this.props.showIntro !== 'y') { return }
-    this.timeoutId = setTimeout(this.scheduleIncDS, 4200)
+    this.timeoutId = setTimeout(this.scheduleIncDS, 3700)
   }
 
   componentWillReceiveProps ({ showIntro }) {
     if (showIntro === this.props.showIntro) { return }
     this.timeoutId && clearTimeout(this.timeoutId)
     if (showIntro === 'y') {
-      this.timeoutId = setTimeout(this.scheduleIncDS, 4850)
+      this.timeoutId = setTimeout(this.scheduleIncDS, 4000)
     } else {
       this.setState({ ds: 0 })
     }
@@ -189,13 +189,13 @@ export default withStyles(theme => {
     }),
     ...animatedSequence ({
       classNames: ['second', 'third', 'fourth', 'fifth'],
-      delay: 800,
-      delayAfterEach: 650
+      delay: 600,
+      delayAfterEach: 400
     }),
     ...animatedSequence ({
       classNames: ['sixth', 'seventh', 'eighth'],
-      delay: 3650,
-      delayAfterEach: 600
+      delay: 2200,
+      delayAfterEach: 400
     })
   }
 

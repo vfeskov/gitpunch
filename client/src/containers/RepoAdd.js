@@ -1,6 +1,6 @@
 import RepoAdd from '../components/RepoAdd'
 import { connect } from 'react-redux'
-import { mapDispatchToProps } from '../actions'
+import { createRepo, setRepoAddValue, setStarsOpen } from '../actions'
 
 export default connect(
   state => ({
@@ -12,5 +12,9 @@ export default connect(
     unwatchingNonstars: state.unwatchingNonstars,
     watchingStars: state.watchingStars
   }),
-  mapDispatchToProps()
+  {
+    createRepo,
+    setRepoAddValue,
+    setStarsOpen
+  }
 )(RepoAdd)

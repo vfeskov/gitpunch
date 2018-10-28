@@ -1,12 +1,15 @@
-import { SIGN_IN, SAVE_WATCHING_STARS, FETCH_PROFILE, SIGN_OUT, SUCCESS } from '../actions'
+import { SIGN_IN, PATCH_PROFILE, FETCH_PROFILE, SIGN_OUT, SUCCESS } from '../actions'
 
-export default function unwatchingNonstars (state = false, action) {
-  switch (action.type) {
-    case SAVE_WATCHING_STARS[SUCCESS]:
-      return action.watchingStars === 2
+export default function unwatchingNonstars (state = false, { type, ...payload }) {
+  switch (type) {
+    case PATCH_PROFILE[SUCCESS]:
+      if (typeof payload.watchingStars === 'undefined') {
+        return state
+      }
+      return payload.watchingStars === 2
     case SIGN_IN[SUCCESS]:
     case FETCH_PROFILE[SUCCESS]:
-      return action.profile.watchingStars === 2
+      return payload.watchingStars === 2
     case SIGN_OUT[SUCCESS]:
       return false
     default:

@@ -1,5 +1,6 @@
 import 'isomorphic-fetch'
-import React, { PureComponent } from 'react'
+import 'rc-slider/assets/index.css'
+import React, { PureComponent, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import Repos from '../../containers/Repos'
 import SignIn from '../../containers/SignIn'
@@ -14,54 +15,60 @@ import * as cookie from '../../services/cookie'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Route } from 'react-router-dom'
 import styles from './App-styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
 const homePath = '/(stars|unsubscribe/.+)?'
 const homePathRegExp = new RegExp(`^${homePath}$`)
 class App extends PureComponent {
   skip = () => {
     cookie.set('dontShowIntro', 1)
-    this.props.setShowIntro('n')
+    if (this.props.showIntro !== 'n') {
+      this.props.setShowIntro({ state: 'n' })
+    }
   }
 
   showIntro = () => {
-    this.props.setShowIntro('y')
+    this.props.setShowIntro({ state: 'y' })
   }
 
   render () {
     const { classes, signedIn, email, signOut, showIntro, location } = this.props
     const isHome = homePathRegExp.test(location.pathname)
     return (
-      <div className={classes.app}>
-        <div className={classes.contentContainer + ' ' + (showIntro === 'n' || !isHome ? classes.contentOn : '')}>
-          <div className={classes.content}>
-            <Header className={classes.block} email={email} signOut={signOut} />
-            <Route exact path={homePath} render={() => <div>
-              <RepoAdd className={`${classes.block} ${classes.maxWidth}`} />
-              <div className={`${classes.container} ${classes.maxWidth}`}>
-                <Repos className={`${classes.block} ${classes.repos}`} />
-                {!signedIn && <SignIn className={classes.block} />}
-              </div>
-            </div>}/>
-            <Route path="/privacy" render={() =>
-              <Privacy className={`${classes.block} ${classes.maxWidthWide}`}/>
-            }/>
+      <Fragment>
+        <CssBaseline />
+        <div className={classes.app}>
+          <div className={classes.contentContainer + ' ' + (showIntro === 'n' || !isHome ? classes.contentOn : '')} id="scroll-container">
+            <div className={classes.content}>
+              <Header className={classes.block} email={email} signOut={signOut} />
+              <Route exact path={homePath} render={() => <div>
+                <RepoAdd className={`${classes.block} ${classes.maxWidth}`} />
+                <div className={`${classes.container} ${classes.maxWidth}`}>
+                  <Repos className={`${classes.block} ${classes.repos}`} />
+                  {!signedIn && <SignIn className={classes.block} />}
+                </div>
+              </div>}/>
+              <Route path="/privacy" render={() =>
+                <Privacy className={`${classes.block} ${classes.maxWidthWide}`}/>
+              }/>
+            </div>
+            <Footer className={classes.block} watchIntro={this.showIntro}></Footer>
           </div>
-          <Footer className={classes.block} watchIntro={this.showIntro}></Footer>
-        </div>
-        <Stars />
-        <UnwatchMessage />
-        <div className={
-          classes.introContainer + ' ' +
-          (showIntro === 'y' && isHome ?
-            classes.introOn :
-            classes.introOff
-          )
-        }>
-          <div className={classes.maxWidth}>
-            <Intro onSkip={this.skip} showIntro={showIntro} />
+          <Stars />
+          <UnwatchMessage />
+          <div className={
+            classes.introContainer + ' ' +
+            (showIntro === 'y' && isHome ?
+              classes.introOn :
+              classes.introOff
+            )
+          }>
+            <div className={classes.maxWidth}>
+              <Intro onSkip={this.skip} showIntro={showIntro} />
+            </div>
           </div>
         </div>
-      </div>
+      </Fragment>
     )
   }
 
@@ -78,12 +85,14 @@ class App extends PureComponent {
   possiblyUnwatch () {
     const match = window.location.pathname.match(/^\/unsubscribe\/(.+)$/)
     if (!match) { return }
-    this.props.unwatch(match[1])
+    this.props.unwatch({ lambdajwt: match[1] })
+    this.skip()
   }
 
   possiblyShowStars() {
     if (window.location.pathname !== '/stars') { return }
-    this.props.setStarsOpen(true)
+    this.props.setStarsOpen({ open: true })
+    this.skip()
   }
 }
 
@@ -94,7 +103,9 @@ App.propTypes = {
   signedIn: PropTypes.bool.isRequired,
   accessToken: PropTypes.string.isRequired,
   signOut: PropTypes.func.isRequired,
-  setShowIntro: PropTypes.func.isRequired
+  setShowIntro: PropTypes.func.isRequired,
+  unwatch: PropTypes.func.isRequired,
+  setStarsOpen: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(App)

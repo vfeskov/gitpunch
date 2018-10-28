@@ -41,7 +41,7 @@ class Stars extends Component {
     return (
       <Dialog
         aria-labelledby="stars-dialog-title"
-        onClose={() => setStarsOpen(false)}
+        onClose={() => setStarsOpen({ open: false })}
         open={starsOpen}
         fullScreen={fullScreen}
         width={width}
@@ -50,7 +50,7 @@ class Stars extends Component {
           <div className={classes.title}>
             <span>Watch {StarIcon()} Stars</span>
             <span style={{ flex: 1 }}></span>
-            <IconButton color="inherit" onClick={() => setStarsOpen(false)} aria-label="Close">
+            <IconButton color="inherit" onClick={() => setStarsOpen({ open: false })} aria-label="Close">
               <CloseIcon />
             </IconButton>
           </div>
@@ -159,7 +159,7 @@ class Stars extends Component {
 
   toggleGitpunching (repo) {
     const { full_name, gitpunching } = repo
-    gitpunching ? this.props.removeRepo(full_name) : this.props.addRepo(full_name)
+    gitpunching ? this.props.deleteRepo({ repo: full_name }) : this.props.createRepo({ repo: full_name, muted: false, filter: 3 })
   }
 
   appendStuff (stars, repos) {

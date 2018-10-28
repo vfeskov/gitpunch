@@ -38,16 +38,9 @@ export function signIn ({ email, password, repos }) {
   })
 }
 
-export function saveCheckAt ({ checkAt }) {
-  return fetchApi('check_at', {
-    method: 'PUT',
-    body: JSON.stringify({ checkAt })
-  })
-}
-
-export function saveFrequency (params) {
-  return fetchApi('frequency', {
-    method: 'PUT',
+export function patchProfile (params) {
+  return fetchApi('profile', {
+    method: 'PATCH',
     body: JSON.stringify(params)
   })
 }
@@ -56,63 +49,50 @@ export function fetchProfile () {
   return fetchApi('profile')
 }
 
-export function createRepo ({ repo }) {
+export function createRepoInDb (repo) {
   return fetchApi('repos', {
     method: 'POST',
-    body: JSON.stringify({ repo })
+    body: JSON.stringify(repo)
   })
 }
 
-export function createRepos ({ repos }) {
+export function createRepos (repos) {
   return fetchApi('repos/bulk', {
     method: 'POST',
-    body: JSON.stringify({ repos })
+    body: JSON.stringify(repos)
   })
 }
 
-export function deleteRepo ({ repo }) {
-  return fetchApi(`repos/${encodeURIComponent(repo)}`, {
+export function deleteRepoInDb (repo) {
+  return fetchApi(`repos/${encodeURIComponent(repo.repo)}`, {
     method: 'DELETE'
   })
 }
 
-export function deleteAllRepos () {
+export function deleteAllReposInDb () {
+  return fetchApi('profile', {
+    method: 'PATCH',
+    body: JSON.stringify({ repos: [] })
+  })
+}
+
+export function patchRepoInDb (repo) {
+  return fetchApi(`repos/${encodeURIComponent(repo.repo)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(repo)
+  })
+}
+
+export function patchAllReposInDb (params) {
   return fetchApi('repos/all', {
-    method: 'DELETE'
+    method: 'PATCH',
+    body: JSON.stringify(params)
   })
 }
 
-export function muteSavedRepo ({ repo, muted }) {
-  return fetchApi(`repos/${encodeURIComponent(repo)}/muted`, {
-    method: 'PUT',
-    body: JSON.stringify({ muted })
-  })
-}
-
-export function muteAllSavedRepos ({ muted }) {
-  return fetchApi(`repos/all/muted`, {
-    method: 'PUT',
-    body: JSON.stringify({ muted })
-  })
-}
-
-export function unwatch ({ lambdajwt }) {
+export function unwatch (lambdajwt) {
   return fetchApi('unsubscribe', {
     method: 'PUT',
-    body: JSON.stringify({ lambdajwt })
-  })
-}
-
-export function saveWatching ({ watching }) {
-  return fetchApi('watching', {
-    method: 'PUT',
-    body: JSON.stringify({ watching })
-  })
-}
-
-export function saveWatchingStars ({ watchingStars }) {
-  return fetchApi('watching_stars', {
-    method: 'PUT',
-    body: JSON.stringify({ watchingStars })
+    body: JSON.stringify(lambdajwt)
   })
 }

@@ -37,7 +37,7 @@ class SignIn extends Component {
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input id="password" type="password" required value={password} onChange={ev => this.handlePasswordChange(ev)} />
           </FormControl>
-          <Button type="submit" variant="raised" className={classes.signIn}>
+          <Button type="submit" variant="contained" className={classes.signIn}>
             Sign In / Sign Up
           </Button>
         </form>

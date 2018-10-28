@@ -3,6 +3,9 @@ import grey from '@material-ui/core/colors/grey'
 import blue from '@material-ui/core/colors/blue'
 
 export default () => createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   palette: {
     primary: grey,
     secondary: blue,

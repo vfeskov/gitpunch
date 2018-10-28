@@ -20,7 +20,7 @@ export function styles (theme) {
       listStyleType: 'none',
     },
     title: {
-      ...theme.typography.title,
+      ...theme.typography.h6,
       marginBottom: theme.spacing.unit,
       marginTop: 0,
       [theme.breakpoints.down('xs')]: {

@@ -76,7 +76,7 @@ export default function styles (theme) {
       justifyContent: 'center'
     },
     container: {
-      fontSize: theme.typography.body1.fontSize
+      fontSize: theme.typography.body2.fontSize
     },
     text: {
       cursor: 'pointer',

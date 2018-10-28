@@ -1,11 +1,15 @@
-export function serializeUser (user) {
-  const { repos, mutedRepos, _id } = user
-  return { ...user, repos: serializeRepos(repos, mutedRepos) }
-}
+import pick from 'lodash.pick'
 
-export function serializeRepos (repos = [], mutedRepos = []) {
-  return repos.map(repo => ({
-    repo,
-    muted: mutedRepos.includes(repo)
-  })).reverse()
+export function serialize (user) {
+  return pick(user, [
+    'id',
+    'email',
+    'frequency',
+    'checkAt',
+    'accessToken',
+    'watching',
+    'watchingStars',
+    'alerted',
+    'repos'
+  ])
 }

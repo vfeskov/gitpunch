@@ -13,8 +13,7 @@ function ReposHeader ({
   checkAt,
   classes,
   frequency,
-  saveCheckAt,
-  saveFrequency,
+  patchProfile,
   shownRepos,
   signedIn,
   toggleWatching,
@@ -22,9 +21,9 @@ function ReposHeader ({
   watchingStars
 }) {
   function handleFrequencyChange (e, frequency) {
-    if (frequency !== 'daily') { return saveFrequency({ frequency }) }
+    if (frequency !== 'daily') { return patchProfile({ frequency }) }
     const checkAt = +moment('9', 'H').utc().format('H')
-    saveFrequency({ frequency, checkAt })
+    patchProfile({ frequency, checkAt })
   }
   return signedIn && (shownRepos.length || watchingStars) ? (
     <div className={classes.controlGroup}>
@@ -49,7 +48,7 @@ function ReposHeader ({
           >
             <FormControlLabel value="realtime" control={<Radio />} className={classes.realtimeOption} label="Realtime" />
             <FormControlLabel value="daily" control={<Radio />} className={classes.dailyOption} label="Daily" />
-            {frequency === 'daily' && <Hourpicker utcHour={checkAt} onSave={saveCheckAt} />}
+            {frequency === 'daily' && <Hourpicker utcHour={checkAt} onSave={v => patchProfile({ checkAt: v })} />}
           </RadioGroup>
         </FormControl>
       </div>}
@@ -68,8 +67,7 @@ ReposHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   frequency: PropTypes.string.isRequired,
-  saveCheckAt: PropTypes.func.isRequired,
-  saveFrequency: PropTypes.func.isRequired,
+  patchProfile: PropTypes.func.isRequired,
   shownRepos: PropTypes.arrayOf(PropTypes.object).isRequired,
   signedIn: PropTypes.bool.isRequired,
   toggleWatching: PropTypes.func.isRequired,
@@ -103,14 +101,14 @@ const styles = theme => ({
     marginLeft: 0
   },
   title: {
-    ...theme.typography.subheading,
+    ...theme.typography.subtitle1,
     marginBottom: theme.spacing.unit * 2,
     marginTop: 0,
     [theme.breakpoints.down('xs')]: {
       textAlign: 'center'
     }
   },
-  titleLabel: theme.typography.subheading
+  titleLabel: theme.typography.subtitle1
 })
 
 export default withStyles(styles)(ReposHeader)

@@ -1,4 +1,4 @@
-import { FETCH_SUGGESTIONS, CREATE_REPO, ADD_REPO_TO_BUFFER, REQUEST, SUCCESS, FAILURE } from '../actions'
+import { FETCH_SUGGESTIONS, CREATE_REPO_IN_DB, CREATE_REPO_IN_BUFFER, REQUEST, SUCCESS, FAILURE } from '../actions'
 
 const initState = { loading: false, items: [] }
 export default function suggestions (state = initState, action) {
@@ -9,9 +9,9 @@ export default function suggestions (state = initState, action) {
       return { loading: false, items: action.items }
     case FETCH_SUGGESTIONS[FAILURE]:
       return { loading: false, items: [] }
-    case ADD_REPO_TO_BUFFER:
-    case CREATE_REPO[FAILURE]:
-    case CREATE_REPO[SUCCESS]:
+    case CREATE_REPO_IN_BUFFER:
+    case CREATE_REPO_IN_DB[FAILURE]:
+    case CREATE_REPO_IN_DB[SUCCESS]:
       return initState
     default:
       return state

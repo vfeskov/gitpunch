@@ -1,6 +1,6 @@
 import App from '../components/App'
 import { connect } from 'react-redux'
-import { mapDispatchToProps } from '../actions'
+import { setShowIntro, signOut, unwatch, setStarsOpen } from '../actions'
 import { withRouter } from 'react-router-dom'
 
 export default withRouter(connect(
@@ -10,5 +10,10 @@ export default withRouter(connect(
     accessToken: state.accessToken,
     showIntro: state.showIntro
   }),
-  mapDispatchToProps()
+  {
+    setShowIntro,
+    setStarsOpen,
+    signOut: signOut.request,
+    unwatch: unwatch.request
+  }
 )(App))

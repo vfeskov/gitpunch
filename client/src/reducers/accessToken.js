@@ -1,10 +1,10 @@
 import { SIGN_IN, FETCH_PROFILE, SIGN_OUT, SUCCESS } from '../actions'
 
-export default function accessToken (state = '', action) {
-  switch (action.type) {
+export default function accessToken (state = '', { type, ...payload }) {
+  switch (type) {
     case SIGN_IN[SUCCESS]:
     case FETCH_PROFILE[SUCCESS]:
-      return action.profile.accessToken
+      return payload.accessToken
     case SIGN_OUT[SUCCESS]:
       return ''
     default:

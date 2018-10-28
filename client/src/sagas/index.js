@@ -18,9 +18,8 @@ function* onApiRequest (actionGroup, apiMethod) {
 }
 
 const apiActions = (
-  'signIn signOut saveCheckAt saveFrequency saveWatching saveWatchingStars ' +
-  'createRepo createRepos deleteRepo unwatch muteSavedRepo deleteAllRepos ' +
-  'muteAllSavedRepos'
+  'signIn signOut patchProfile unwatch createRepoInDb createRepos deleteRepoInDb ' +
+  'patchRepoInDb deleteAllReposInDb patchAllReposInDb'
 ).split(' ')
 
 const genericApiRequests = apiActions.reduce((r, id) =>
@@ -31,7 +30,7 @@ function* onToggleWatching () {
   while (true) {
     yield take(actions.TOGGLE_WATCHING)
     const { watching } = yield select()
-    yield put(actions.saveWatching.request(!watching))
+    yield put(actions.patchProfile.request({ watching: !watching }))
   }
 }
 
@@ -39,7 +38,7 @@ function* onToggleWatchingStars () {
   while (true) {
     yield take(actions.TOGGLE_WATCHING_STARS)
     const { watchingStars } = yield select()
-    yield put(actions.saveWatchingStars.request(watchingStars ? 0 : 1))
+    yield put(actions.patchProfile.request({ watchingStars: watchingStars ? 0 : 1 }))
   }
 }
 
@@ -47,69 +46,73 @@ function* onToggleUnwatchingNonstars () {
   while (true) {
     yield take(actions.TOGGLE_UNWATCHING_NONSTARS)
     const { unwatchingNonstars } = yield select()
-    yield put(actions.saveWatchingStars.request(unwatchingNonstars ? 1 : 2))
+    yield put(actions.patchProfile.request({ watchingStars: unwatchingNonstars ? 1 : 2 }))
   }
 }
 
 function* onSaveWatchingStarsSuccess () {
   while (true) {
-    yield take(actions.SAVE_WATCHING_STARS[actions.REQUEST])
-    const { watchingStars: prevWatchingStars } = yield select()
-    const { watchingStars } = yield take(actions.SAVE_WATCHING_STARS[actions.SUCCESS])
-    if (!watchingStars || prevWatchingStars) {
+    const { watchingStars: req } = yield take(actions.PATCH_PROFILE[actions.REQUEST])
+    if (typeof req === 'undefined') {
+      continue
+    }
+    const { watchingStars: prev } = yield select()
+    const { watchingStars: final } = yield take(actions.PATCH_PROFILE[actions.SUCCESS])
+    if (!final || prev) {
       continue
     }
     yield put(actions.addStars.request())
   }
 }
 
-function* onMuteRepo () {
+function* onPatchRepo () {
   while (true) {
-    const { repo, muted } = yield take(actions.MUTE_REPO)
+    const { type, ...payload } = yield take(actions.PATCH_REPO)
     const { signedIn } = yield select()
     yield put(signedIn ?
-      actions.muteSavedRepo.request(repo, muted) :
-      actions.muteRepoInBuffer(repo, muted))
+      actions.patchRepoInDb.request(payload) :
+      actions.patchRepoInBuffer(payload))
   }
 }
 
-function* onMuteAllRepos () {
+function* onPatchAllRepos () {
   while (true) {
-    const { muted } = yield take(actions.MUTE_ALL_REPOS)
+    const { type, ...payload } = yield take(actions.PATCH_ALL_REPOS)
     const { signedIn } = yield select()
     yield put(signedIn ?
-      actions.muteAllSavedRepos.request(muted) :
-      actions.muteAllReposInBuffer(muted))
+      actions.patchAllReposInDb.request(payload) :
+      actions.patchAllReposInBuffer(payload))
   }
 }
 
-function* onAddRepo () {
+function* onCreateRepo () {
   while (true) {
-    const { repo } = yield take(actions.ADD_REPO)
+    const { type, ...payload } = yield take(actions.CREATE_REPO)
     const { signedIn } = yield select()
-    yield put(signedIn ?
-      actions.createRepo.request(repo) :
-      actions.addRepoToBuffer(repo))
+    const action = signedIn ?
+      actions.createRepoInDb.request(payload) :
+      actions.createRepoInBuffer(payload)
+    yield put(action)
   }
 }
 
-function* onRemoveRepo () {
+function* onDeleteRepo () {
   while (true) {
-    const { repo } = yield take(actions.REMOVE_REPO)
+    const { type, ...payload } = yield take(actions.DELETE_REPO)
     const { signedIn } = yield select()
     yield put(signedIn ?
-      actions.deleteRepo.request(repo) :
-      actions.removeRepoFromBuffer(repo))
+      actions.deleteRepoInDb.request(payload) :
+      actions.deleteRepoInBuffer(payload))
   }
 }
 
-function* onRemoveAllRepos () {
+function* onDeleteAllRepos () {
   while (true) {
-    yield take(actions.REMOVE_ALL_REPOS)
+    yield take(actions.DELETE_ALL_REPOS)
     const { signedIn } = yield select()
     yield put(signedIn ?
-      actions.deleteAllRepos.request() :
-      actions.removeAllReposFromBuffer())
+      actions.deleteAllReposInDb.request() :
+      actions.deleteAllReposInBuffer())
   }
 }
 
@@ -119,7 +122,7 @@ function* onSignedInChanges () {
     const { signedIn, savedRepos, bufferRepos, shownRepos } = yield select()
     const newShownRepos = signedIn ? savedRepos : bufferRepos
     if (newShownRepos === shownRepos) { continue }
-    yield put(actions.setShownRepos(newShownRepos))
+    yield put(actions.setShownRepos({ repos: newShownRepos }))
   }
 }
 
@@ -141,7 +144,11 @@ function* fetchSuggestions ({ value }) {
 }
 
 function* onSetRepoAddValue () {
-  yield takeLatest([actions.SET_REPO_ADD_VALUE, actions.createRepo.requestId], fetchSuggestions);
+  yield takeLatest([
+    actions.SET_REPO_ADD_VALUE,
+    actions.CREATE_REPO_IN_BUFFER,
+    actions.createRepoInDb.requestId
+  ], fetchSuggestions);
 }
 
 function* addStars ({ loadStarsArgs, accessToken }) {
@@ -159,7 +166,7 @@ function* addStars ({ loadStarsArgs, accessToken }) {
   try {
     const successEvent = {}
     if (newRepos.length) {
-      const { repos } = yield call(api.createRepos, { repos: newRepos })
+      const { repos } = yield call(api.createRepos, { repos: newRepos.map(repo => ({ repo, muted: false, filter: 3 })) })
       successEvent.repos = repos
     } else {
       successEvent.repos = savedRepos
@@ -204,11 +211,11 @@ function* onStartup () {
     yield put(actions.fetchProfile.failure(error))
   }
   const { signedIn, savedRepos, bufferRepos } = yield select()
-  yield put(actions.setShownRepos(signedIn ? savedRepos : bufferRepos))
+  yield put(actions.setShownRepos({ repos: signedIn ? savedRepos : bufferRepos }))
   if (signedIn || cookie.get('dontShowIntro')) {
-    yield put(actions.setShowIntro('n'))
+    yield put(actions.setShowIntro({ state: 'n' }))
   } else {
-    yield put(actions.setShowIntro('y'))
+    yield put(actions.setShowIntro({ state: 'y' }))
   }
 }
 
@@ -220,11 +227,11 @@ export default function* root () {
     fork(onToggleWatchingStars),
     fork(onToggleUnwatchingNonstars),
     fork(onSaveWatchingStarsSuccess),
-    fork(onMuteRepo),
-    fork(onMuteAllRepos),
-    fork(onAddRepo),
-    fork(onRemoveRepo),
-    fork(onRemoveAllRepos),
+    fork(onPatchRepo),
+    fork(onPatchAllRepos),
+    fork(onCreateRepo),
+    fork(onDeleteRepo),
+    fork(onDeleteAllRepos),
     fork(onSetRepoAddValue),
     fork(onAddStars),
     fork(onStartup)

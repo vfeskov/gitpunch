@@ -88,12 +88,12 @@ class RepoAdd extends PureComponent {
   }
 
   confirm (repo) {
-    this.props.addRepo(repo)
+    this.props.createRepo({ repo, muted: false, filter: 3 })
   }
 
   setValue(value) {
     valueReplaceArgs.forEach(args => value = value.replace(...args));
-    this.props.setRepoAddValue(value)
+    this.props.setRepoAddValue({ value })
   }
 
   onSubmit = ev => {
@@ -110,7 +110,7 @@ class RepoAdd extends PureComponent {
   starsClicked = ev => {
     if (!this.props.accessToken) { return }
     ev.preventDefault()
-    this.props.setStarsOpen(true)
+    this.props.setStarsOpen({ open: true })
   }
 }
 
@@ -120,8 +120,9 @@ RepoAdd.propTypes = {
     disabled: PropTypes.bool.isRequired
   }),
   className: PropTypes.string,
-  addRepo: PropTypes.func.isRequired,
+  createRepo: PropTypes.func.isRequired,
   setRepoAddValue: PropTypes.func.isRequired,
+  setStarsOpen: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   accessToken: PropTypes.string.isRequired,
   showIntro: PropTypes.string.isRequired,

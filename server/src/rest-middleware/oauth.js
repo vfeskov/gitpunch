@@ -1,9 +1,9 @@
 import fetch from 'node-fetch'
 import { randomBytes } from 'crypto'
-import { loadUser, createUser, updateUser } from '../db'
+import { User } from '../db'
 import { signToken, setCookieTokenHeader } from '../util/token'
-import { validSignUpRepos } from '../util/validations'
-import signUpReposToDbRepos from '../util/signUpReposToDbRepos'
+import { withTags } from '../util/githubAtom'
+import { validRepos } from '../util/validations'
 const clientId = process.env.WAB_OAUTH_CLIENT_ID
 const clientSecret = process.env.WAB_OAUTH_CLIENT_SECRET
 const clientHost = process.env.WAB_CLIENT_HOST
@@ -44,17 +44,17 @@ export async function done (req, res, next) {
   res.end()
 }
 
-async function authToken (code, state, reqRepos) {
+async function authToken (code, state, repos) {
   try {
     const accessToken = await getAccessToken(code, state)
     const email = await getEmail(accessToken)
-    let user = await loadUser({ email })
+    let user = await User.load({ email })
     if (user) {
-      await updateUser({ id: user.id }, { accessToken })
+      await user.save({ accessToken })
     } else {
-      reqRepos = parseRepos(reqRepos)
-      const { repos, mutedRepos } = await signUpReposToDbRepos(reqRepos)
-      user = await createUser({ email, accessToken, repos, mutedRepos })
+      repos = parseRepos(repos)
+      repos = await withTags(repos)
+      user = await User.create({ email, accessToken, repos })
     }
     return signToken({ id: user.id })
   } catch (error) {
@@ -105,7 +105,7 @@ function parseRepos (repos) {
     repos = fromHex(repos)
     repos = decodeURIComponent(repos)
     repos = JSON.parse(repos)
-    return validSignUpRepos(repos) ? repos : []
+    return validRepos(repos) ? repos : []
   } catch (e) {
     return []
   }

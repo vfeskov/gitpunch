@@ -1,12 +1,12 @@
-import { SET_REPO_ADD_VALUE, ADD_REPO_TO_BUFFER, ADD_STARS, CREATE_REPO, SUCCESS, REQUEST, FAILURE } from '../actions'
+import { SET_REPO_ADD_VALUE, ADD_STARS, SUCCESS, REQUEST, FAILURE, CREATE_REPO_IN_BUFFER, CREATE_REPO_IN_DB } from '../actions'
 import { combineReducers } from 'redux'
 
 function value (state = '', action) {
   switch (action.type) {
     case SET_REPO_ADD_VALUE:
       return action.value
-    case ADD_REPO_TO_BUFFER:
-    case CREATE_REPO[SUCCESS]:
+    case CREATE_REPO_IN_BUFFER:
+    case CREATE_REPO_IN_DB[SUCCESS]:
       return ''
     default:
       return state
@@ -15,26 +15,26 @@ function value (state = '', action) {
 
 function disabled (state = false, action) {
   switch (action.type) {
-    case CREATE_REPO[REQUEST]:
+    case CREATE_REPO_IN_DB[REQUEST]:
       return true
-    case CREATE_REPO[SUCCESS]:
-    case CREATE_REPO[FAILURE]:
+    case CREATE_REPO_IN_DB[SUCCESS]:
+    case CREATE_REPO_IN_DB[FAILURE]:
       return false
     default:
       return state
   }
 }
 
-function error (state = null, action) {
-  switch (action.type) {
+function error (state = null, { type, ...payload }) {
+  switch (type) {
     case SET_REPO_ADD_VALUE:
-    case CREATE_REPO[REQUEST]:
-    case CREATE_REPO[SUCCESS]:
+    case CREATE_REPO_IN_DB[REQUEST]:
+    case CREATE_REPO_IN_DB[SUCCESS]:
     case ADD_STARS[SUCCESS]:
-    case ADD_REPO_TO_BUFFER:
+    case CREATE_REPO_IN_BUFFER:
       return null
-    case CREATE_REPO[FAILURE]:
-      return action.error.headers.get('x-error-message')
+    case CREATE_REPO_IN_DB[FAILURE]:
+      return payload.error.headers.get('x-error-message')
     default:
       return state
   }

@@ -4,7 +4,7 @@ import parseBody from 'body-parser'
 import compression from 'compression'
 import rest from './rest-middleware'
 import parseParams from './other-middlewares/parseParams'
-import parseToken from './other-middlewares/parseToken'
+import loadUser from './other-middlewares/loadUser'
 import error from './other-middlewares/error'
 import chain from './util/chain'
 import * as publicEvents from './public-events'
@@ -18,7 +18,7 @@ middlewares.push(
   parseParams,
   parseCookies(),
   parseBody.json(),
-  parseToken,
+  loadUser,
   compression(),
   rest()
 )

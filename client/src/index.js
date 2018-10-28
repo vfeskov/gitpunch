@@ -9,6 +9,7 @@ import createTheme from './theme/createTheme'
 import Root from './components/Root'
 import registerServiceWorker from './registerServiceWorker'
 import { BrowserRouter } from 'react-router-dom'
+import ScrollToTop from './components/ScrollToTop'
 
 const store = configureStore(window.__INITIAL_STATE__)
 store.runSaga(rootSaga)
@@ -17,7 +18,9 @@ const theme = createTheme()
 render(
   <MuiThemeProvider theme={theme}>
     <BrowserRouter>
-      <Root store={store} />
+      <ScrollToTop>
+        <Root store={store} />
+      </ScrollToTop>
     </BrowserRouter>
   </MuiThemeProvider>,
   document.getElementById('root')

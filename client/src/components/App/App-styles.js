@@ -9,7 +9,6 @@ export default function styles (theme) {
   return ({
     '@global': {
       body: {
-        background: '#fdfdfd',
         fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
         margin: 0,
         padding: 0

@@ -1,6 +1,6 @@
 import Stars from '../components/Stars'
 import { connect } from 'react-redux'
-import { setStarsOpen, addRepo, removeRepo, toggleWatchingStars, toggleUnwatchingNonstars } from '../actions'
+import { setStarsOpen, createRepo, deleteRepo, toggleWatchingStars, toggleUnwatchingNonstars } from '../actions'
 
 export default connect(
   state => ({
@@ -13,8 +13,8 @@ export default connect(
   }),
   {
     setStarsOpen,
-    addRepo,
-    removeRepo,
+    createRepo,
+    deleteRepo,
     toggleWatchingStars,
     toggleUnwatchingNonstars
   }

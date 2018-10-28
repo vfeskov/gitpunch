@@ -45,7 +45,7 @@ export default withStyles(theme => ({
     }
   },
   logo: {
-    ...theme.typography.headline,
+    ...theme.typography.h5,
     border: 'none',
     display: 'inline-block',
     marginRight: '1rem'

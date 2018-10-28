@@ -6,8 +6,8 @@ export function prepareRoutes (routes) {
       const [method, url] = route.split(' ', 2)
       const urlRegExp = new RegExp(`^${url.replace(/\:[^\/]+/g, '([^/]+)')}(\\?.+)?$`)
       const paramNames = (url.match(/\:[^\/]+/g) || []).map(n => n.substr(1))
-      const handler = routes[route]
-      return { method, url, urlRegExp, paramNames, handler }
+      const [handler, options] = Array.isArray(routes[route]) ? routes[route] : [routes[route], {}]
+      return { method, url, urlRegExp, paramNames, handler, options }
     })
 }
 

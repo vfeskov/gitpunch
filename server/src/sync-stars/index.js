@@ -1,11 +1,11 @@
-import { loadUsers, addReposToUser, updateUser, removeReposFromUser } from '../db'
+import { User } from '../db'
 import fetch from 'node-fetch'
 const INTERVAL = process.env.SYNC_STARS_INTERVAL || 90000
 
 export default async function syncStars () {
   try {
     console.log('Star Sync started')
-    const users = await loadUsers({
+    const users = await User.find({
       accessToken: { $ne: null },
       watchingStars: { $in: [true, 1, 2] }
     })
@@ -22,21 +22,21 @@ async function syncUser (user) {
     const stars = await fetchStars(user)
     const newStars = stars.filter(repo => !user.repos.includes(repo))
     if (newStars.length) {
-      await addReposToUser(user, newStars)
+      await user.addRepos(user, newStars.map(repo => ({ repo })))
       console.log(`New stars added to ${user.email}: ${newStars.join(', ')}`)
     }
     if (user.watchingStars !== 2) {
       return
     }
-    const nonstars = user.repos.filter(repo => !stars.includes(repo))
+    const nonstars = user.repos.filter(({ repo }) => !stars.includes(repo))
     if (nonstars.length) {
-      await removeReposFromUser(user, nonstars)
+      await user.removeRepos(user, nonstars.map(repo => ({ repo })))
       console.log(`Nonstars removed from ${user.email}: ${nonstars.join(', ')}`)
     }
   } catch (e) {
     if (e instanceof RevokedTokenError) {
       console.log(`Revoked token ${user.email}`)
-      await updateUser(user, { watchingStars: 0 }).catch(() => {
+      await user.save({ watchingStars: 0 }).catch(() => {
         console.log(`Failed to update watchingStars of ${user.email}`)
       })
     } else {
@@ -66,11 +66,11 @@ async function fetchStars (user) {
 }
 
 async function fetchGitHubApi (url, user) {
-  console.log(`Fetching github api ${url}`)
+  console.log(`Fetching github api ${url} ${user.accessToken}`)
   const response = await fetch(url, {
     headers: { Authorization: `token ${user.accessToken}` }
   })
-  if (response.status === 403) {
+  if (response.status === 401 || response.status === 403) {
     throw new RevokedTokenError(user)
   }
   if (response.status !== 200) {

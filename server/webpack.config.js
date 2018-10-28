@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals')
 const { DefinePlugin } = require('webpack')
 const isProd = process.env.NODE_ENV === 'production'
 const config = {
-  devtool: 'eval',
+  devtool: isProd ? 'source-map' : 'eval',
   mode: isProd ? 'production' : 'development',
   target: 'node',
   entry: './src/index.js',
