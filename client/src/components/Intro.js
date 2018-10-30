@@ -96,7 +96,7 @@ export class Intro extends Component {
           </div>
         </div>
       </div>
-      <div className={`${skipContainer} ${a(second)}`}>
+      <div className={`${skipContainer} ${a(first)}`}>
         <a className="soft" onClick={this.skip}>Skip →</a>
       </div>
     </div>
