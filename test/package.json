@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node wait-for-server && testcafe chrome index.js"
+    "test": "npm run wait-for-server && testcafe chrome index.js",
+    "wait-for-server": "node -r dotenv/config wait-for-server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "assert": "^1.4.1",
     "dotenv": "^6.1.0",
+    "mongodb": "^3.1.8",
     "testcafe": "^0.23.0"
   }
 }

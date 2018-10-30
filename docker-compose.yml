@@ -14,3 +14,5 @@ services:
     image: mongo
     environment:
       MONGO_INITDB_DATABASE: staging
+    ports:
+      - 32017:27017
