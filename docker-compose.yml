@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app:
+    build: .
+    env_file:
+      - server/.env.test
+    environment:
+      WAB_MONGODB_URL: mongodb://mongodb:27017/staging?authSource=admin
+    ports:
+      - 3000:3000
+    links:
+      - mongodb
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_DATABASE: staging

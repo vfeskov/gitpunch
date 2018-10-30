@@ -18,7 +18,7 @@ export class Header extends PureComponent {
         <span className={classes.spacer}></span>
         {email && (
         <span style={{ display: 'flex' }}>
-          <span style={{ display: 'inline-block', paddingRight: '1em' }}>{email}</span>
+          <span style={{ display: 'inline-block', paddingRight: '1em' }} testid="current-user-email">{email}</span>
           <a style={{ display: 'inline-flex' }} className="soft" onClick={this.onClick}>{SignOutIcon()}</a>
         </span>
         )}

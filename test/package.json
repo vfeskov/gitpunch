@@ -1,0 +1,15 @@
+{
+  "name": "gitpunch-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node wait-for-server && testcafe chrome index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "testcafe": "^0.23.0"
+  }
+}

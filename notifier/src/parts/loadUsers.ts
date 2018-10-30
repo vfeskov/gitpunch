@@ -25,9 +25,7 @@ export default async function loadUsers (collection: Collection, relevantRepos: 
     }
   }
 
-  const dbUsers = await collection.find(query, {
-    projection: { passwordEncrypted: 0 }
-  }).toArray()
+  const dbUsers = await collection.find(query).toArray()
   if (!dbUsers.length) {
     return []
   }

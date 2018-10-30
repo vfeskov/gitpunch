@@ -9,7 +9,7 @@ class GitHubButton extends PureComponent {
     const { bufferRepos: repos, classes, className } = this.props
     const link = oauthUrl({ repos })
     return (
-      <Button href={link} variant="contained" color="secondary" className={`${classes.theButton} ${className}`}>
+      <Button href={link} variant="contained" color="secondary" className={`${classes.theButton} ${className}`} testid="github-sign-in">
         {GitHubIcon()}&nbsp;GitHub&nbsp;Sign&nbsp;In
       </Button>
     )

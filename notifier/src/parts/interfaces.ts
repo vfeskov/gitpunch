@@ -5,7 +5,10 @@ export interface User {
   email: string
   alerted: Alerted,
   mutedRepos: string[],
-  accessToken?: string
+  accessToken?: string,
+  majors: string[],
+  minors: string[],
+  patches: string[]
 }
 
 export interface Alerted {
