@@ -66,7 +66,7 @@ class RepoAdd extends PureComponent {
               }}
             />
             {error && <div className={classes.error}>{error}</div>}
-            <button type="submit" className={`action ${classes.addButton}`}>
+            <button type="submit" className={`action ${classes.addButton}`} testid="repo-add-submit">
               <SendIcon />
             </button>
           </form>

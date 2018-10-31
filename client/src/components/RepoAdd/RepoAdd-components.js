@@ -32,9 +32,12 @@ export function renderInput (inputProps) {
         placeholder="Enter name or paste link"
         InputProps={{
           classes: {
-            input: classes.input,
+            input: classes.input
           },
           ...other
+        }}
+        inputProps={{
+          testid: "repo-add-input"
         }}
       />
       {loading ? <LinearProgress className={classes.progress} /> : null}

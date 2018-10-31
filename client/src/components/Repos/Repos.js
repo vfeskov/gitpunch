@@ -151,7 +151,7 @@ class Repos extends Component {
               <a className="action" target="_blank" rel="noopener noreferrer" title="Open on GitHub" href={`https://github.com/${repo}`} onClick={(event) => event.stopPropagation()}>
                 <LaunchIcon />
               </a>
-              <button className="action" aria-label={muted ? 'Unmute' : 'Mute'} onClick={(event) => { event.stopPropagation(); patchRepo({ ...r, muted: !muted }) }}>
+              <button className="action" aria-label={muted ? 'Unmute' : 'Mute'} onClick={(event) => { event.stopPropagation(); patchRepo({ ...r, muted: !muted }) }} testid="mute-repo">
                 {muted ? <NotificationsOffIcon /> : <NotificationsActiveIcon />}
               </button>
               {unwatchingNonstars ||
