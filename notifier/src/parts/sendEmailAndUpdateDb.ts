@@ -16,12 +16,30 @@ export default function sendEmailAndUpdateDb (users: ActionableUser[], collectio
   }))
 }
 
+const MAJOR = /^v?\d+\.0\.0$/
+const MINOR = /^v?\d+\.\d+\.0$/
+const PATCH = /^v?\d+\.\d+\.\d+$/
 export async function sendEmail (user: ActionableUser): Promise<any> {
-  const { email, mutedRepos = [], actionableRepos } = user
+  const { email, mutedRepos = [], majors = [], minors = [], patches = [], actionableRepos } = user
   const repos = actionableRepos[SEND_EMAIL_AND_UPDATE_ALERTED]
     .filter(({ repo }) => !mutedRepos.includes(repo))
+    .map(({ repo, tags }) => {
+      if (majors.includes(repo)) {
+        tags = filteredTags(tags, MAJOR)
+      } else if (minors.includes(repo)) {
+        tags = filteredTags(tags, MINOR)
+      } else if (patches.includes(repo)) {
+        tags = filteredTags(tags, PATCH)
+      }
+      return { repo, tags }
+    })
+    .filter(({ tags }) => tags.length)
   if (!repos.length) { return }
   return new Email(email, repos).send()
+}
+
+function filteredTags (tags, pattern) {
+  return tags.filter(({ name }) => pattern.test(name))
 }
 
 export async function updateDb (user: ActionableUser, collection: Collection): Promise<any> {
