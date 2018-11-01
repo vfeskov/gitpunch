@@ -107,7 +107,7 @@ class Repos extends Component {
       case 0: return 'Ma'
       case 1: return 'Mi'
       case 2: return 'Pa'
-      case 3: return 'Al'
+      default: return 'Al'
     }
   }
 
@@ -117,7 +117,7 @@ class Repos extends Component {
       case 0: return base + 'major releases, pattern: *.0.0'
       case 1: return base + 'major & minor releases, pattern: *.*.0'
       case 2: return base + 'major, minor & patch releases, pattern: *.*.*'
-      case 3: return base + 'all releases'
+      default: return base + 'all releases'
     }
   }
 
@@ -135,7 +135,7 @@ class Repos extends Component {
             Sort by <a className={this.sortClass('org')} onClick={() => this.sort('org')}>org</a>/<a className={this.sortClass('name')} onClick={() => this.sort('name')}>name</a> or <a className={this.sortClass('date')} onClick={() => this.sort('date')}>date</a>
           </span>
           <span style={{ flex: 1 }}></span>
-          <span>To All:</span>
+          <span>To All →</span>
           <button
             className="action"
             aria-label={allMuted ? 'Unmute All' : 'Mute All'}

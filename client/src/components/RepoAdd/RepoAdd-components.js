@@ -36,6 +36,7 @@ export function renderInput (inputProps) {
           },
           ...other
         }}
+        // eslint-disable-next-line
         inputProps={{
           testid: "repo-add-input"
         }}
