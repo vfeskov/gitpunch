@@ -198,13 +198,13 @@ function styles(theme) {
       display: 'flex'
     },
     actions: {
-      minHeight: theme.spacing.unit * 4.5,
-      overflow: 'hidden'
+      minHeight: theme.spacing.unit * 6
     },
     nav: {
       alignItems: 'center',
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      paddingBottom: theme.spacing.unit * 2
     },
     watchAllContainer: {
       alignItems: 'center',
