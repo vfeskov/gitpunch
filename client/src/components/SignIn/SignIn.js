@@ -8,6 +8,7 @@ import FormControl from '@material-ui/core/FormControl'
 import GitHubButton from '../GitHubButton'
 import { Link } from 'react-router-dom'
 import styles from './SignIn-styles'
+import CloseIcon from '@material-ui/icons/Close'
 
 const { assign } = Object
 
@@ -29,6 +30,7 @@ class SignIn extends Component {
         <GitHubButton bufferRepos={bufferRepos}/>
         {enteringEmail ? (
         <form onSubmit={e => this.signIn(e)} className={classes.form}>
+          <a className="soft" style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }} onClick={() => this.setState({ enteringEmail: false })}><CloseIcon /></a>
           <FormControl required className={classes.formControl}>
             <InputLabel htmlFor="email">Email</InputLabel>
             <Input id="email" value={email} type="email" required onChange={ev => this.handleEmailChange(ev)} />

@@ -6,7 +6,8 @@ export default function styles (theme) {
     form: {
       alignItems: 'center',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      position: 'relative'
     },
     formControl: {
       marginBottom: theme.spacing.unit * 2
