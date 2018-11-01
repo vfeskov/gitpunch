@@ -32,10 +32,12 @@ test('First add repos then sign in', async t => {
 
     .typeText('[testid=repo-add-input]:not([disabled])', 'vuejs/vue')
     .pressKey('enter')
-    .click(Selector('.rc-slider').find('span').withText('Major'))
 
     .typeText('[testid=repo-add-input]:not([disabled])', 'emberjs/ember.js')
     .click('button[testid=repo-add-submit]')
+
+    .click(Selector('[testid=repo-name]').withText('vuejs/vue'))
+    .click(Selector('.rc-slider').find('span').withText('Major'))
 
     .typeText('[testid=repo-add-input]:not([disabled])', 'nonexistent/repo')
     .click('button[testid=repo-add-submit]');
