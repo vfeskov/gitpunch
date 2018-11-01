@@ -6,10 +6,12 @@ export default async function syncStars () {
   try {
     console.log('Star Sync started')
     const users = await User.find({
-      accessToken: { $ne: null },
+      accessToken: { $exists: true, $not: { $in: ['', null] } },
       watchingStars: { $in: [true, 1, 2] }
     })
-    await Promise.all(users.map(syncUser))
+    if (users && users.length) {
+      await Promise.all(users.map(syncUser))
+    }
   } catch (e) {
     console.log(`Star Sync Error: ${e.message}`, e.stack)
   }
@@ -20,18 +22,20 @@ export default async function syncStars () {
 async function syncUser (user) {
   try {
     const stars = await fetchStars(user)
-    const newStars = stars.filter(repo => !user.repos.includes(repo))
+    const repoNames = user.repos.map(r => r.repo)
+    const newStars = stars.filter(repo => !repoNames.includes(repo))
     if (newStars.length) {
-      await user.addRepos(user, newStars.map(repo => ({ repo })))
-      console.log(`New stars added to ${user.email}: ${newStars.join(', ')}`)
+      const newRepos = newStars.map(repo => ({ repo, muted: false, filter: 3 }))
+      await user.addRepos(newRepos)
+      console.log(`New stars added to ${user.email}: ${JSON.stringify(newRepos)}`)
     }
     if (user.watchingStars !== 2) {
       return
     }
     const nonstars = user.repos.filter(({ repo }) => !stars.includes(repo))
     if (nonstars.length) {
-      await user.removeRepos(user, nonstars.map(repo => ({ repo })))
-      console.log(`Nonstars removed from ${user.email}: ${nonstars.join(', ')}`)
+      await user.removeRepos(nonstars)
+      console.log(`Nonstars removed from ${user.email}: ${JSON.stringify(nonstars)}`)
     }
   } catch (e) {
     if (e instanceof RevokedTokenError) {

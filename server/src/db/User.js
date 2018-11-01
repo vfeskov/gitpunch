@@ -138,7 +138,6 @@ export class User {
         delete command[k]
       }
     })
-    console.log(command)
     return UserModel.updateOne(toRaw(search), command)
   }
 
@@ -156,8 +155,9 @@ export class User {
     return UserModel.updateOne(toRaw(search), command)
   }
 
-  static find (rawSearch) {
-    return UserModel.find(rawSearch).map(raw => new User(fromRaw(raw)))
+  static async find (rawSearch) {
+    const rawUsers = await UserModel.find(rawSearch)
+    return rawUsers.map(raw => new User(fromRaw(raw)))
   }
 }
 
