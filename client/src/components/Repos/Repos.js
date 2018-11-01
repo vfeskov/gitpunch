@@ -8,12 +8,26 @@ import PropTypes from 'prop-types'
 import Header, { propTypes as HeaderPropTypes } from './ReposHeader'
 import ReposConfirmDeleteAll from './ReposConfirmDeleteAll'
 import Slider from 'rc-slider'
+import withTheme from '@material-ui/core/styles/withTheme';
 
+const filterTextStyle = { color: 'inherit' }
 const filterTexts = {
-  0: 'Major',
-  1: 'Minor',
-  2: 'Patch',
-  3: 'All'
+  0: {
+    style: filterTextStyle,
+    label: 'Major'
+  },
+  1: {
+    style: filterTextStyle,
+    label: 'Minor'
+  },
+  2: {
+    style: filterTextStyle,
+    label: 'Patch'
+  },
+  3: {
+    style: filterTextStyle,
+    label: 'All'
+  }
 }
 
 class Repos extends Component {
@@ -109,9 +123,10 @@ class Repos extends Component {
 
   render () {
     const { classes, ...headerProps } = this.props
-    const { className, deleteRepo, patchRepo, unwatchingNonstars, starsWorking, patchAllRepos, selectedRepo, selectRepo } = this.props
+    const { theme, className, deleteRepo, patchRepo, unwatchingNonstars, starsWorking, patchAllRepos, selectedRepo, selectRepo } = this.props
     const sortedRepos = this.sortedRepos()
     const allMuted = sortedRepos.every(({ muted }) => muted)
+    console.log(theme)
     return (
       <div className={`${className} ${classes.container}`}>
         <Header {...headerProps} />
@@ -120,6 +135,7 @@ class Repos extends Component {
             Sort by <a className={this.sortClass('org')} onClick={() => this.sort('org')}>org</a>/<a className={this.sortClass('name')} onClick={() => this.sort('name')}>name</a> or <a className={this.sortClass('date')} onClick={() => this.sort('date')}>date</a>
           </span>
           <span style={{ flex: 1 }}></span>
+          <span>To All:</span>
           <button
             className="action"
             aria-label={allMuted ? 'Unmute All' : 'Mute All'}
@@ -141,10 +157,10 @@ class Repos extends Component {
         </div>}
         {sortedRepos.map(r => {
           const { repo, muted, filter = 3 } = r
-          return <div className={classes.item + (selectedRepo === repo ? ' ' + classes.selected : '')} key={repo}>
+          return <div className={classes.item + (selectedRepo === repo ? ' ' + classes.selected : '')} key={repo} testid="repo">
             <div className={classes.itemTop} onClick={() => selectRepo({ repo })}>
-              <span className={muted ? classes.muted : ''}>{repo}</span>
-              <span className={classes.filterBadge + ' ' + classes[`filterBadge${filter}`]}>
+              <span className={muted ? classes.muted : ''} testid="repo-name">{repo}</span>
+              <span className={classes.filterBadge + ' ' + (muted ? '' : classes[`filterBadge${filter}`])}>
                 {this.filterBadge(filter)}
               </span>
               <span style={{ flex: 1 }}></span>
@@ -183,6 +199,24 @@ class Repos extends Component {
                   max={3}
                   marks={filterTexts}
                   value={filter}
+                  trackStyle={{
+                    backgroundColor: theme.palette.secondary[200]
+                  }}
+                  railStyle={{
+                    backgroundColor: theme.palette.grey[400]
+                  }}
+                  dotStyle={{
+                    backgroundColor: theme.palette.grey[500],
+                    borderColor: theme.palette.grey[500]
+                  }}
+                  activeDotStyle={{
+                    backgroundColor: theme.palette.secondary[500],
+                    borderColor: theme.palette.secondary[500]
+                  }}
+                  handleStyle={{
+                    backgroundColor: theme.palette.secondary[500],
+                    borderColor: theme.palette.secondary[500]
+                  }}
                   onChange={value => patchRepo({ repo, filter: value })}
                 />
               </div>
@@ -302,8 +336,9 @@ const styles = theme => {
       }
     },
     filterBadge: {
+      background: theme.palette.grey[500],
       borderRadius: '8px',
-      color: '#fafafa',
+      color: theme.palette.grey[50],
       fontSize: '10px',
       height: '16px',
       lineHeight: '16px',
@@ -318,10 +353,7 @@ const styles = theme => {
       background: '#a335ee'
     },
     filterBadge2: {
-      background: '#0070dd'
-    },
-    filterBadge3: {
-      background: '#9d9d9d'
+      background: 'green'
     },
     filterSlider: {
       padding: '8px 24px 32px'
@@ -333,4 +365,4 @@ const styles = theme => {
   }
 }
 
-export default withStyles(styles)(Repos)
+export default withTheme()(withStyles(styles)(Repos))
