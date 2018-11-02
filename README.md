@@ -8,39 +8,210 @@
 
 ## Features
 
-- Completely **open-source**
 - **Realtime** or **daily** updates
-- Register with multiple emails (e.g., email+important@gmail.com) to have **more than one list**
+- Ignore **minor**, **patch** or **pre-releases** ([semver](https://semver.org/))
 - Optionally **watch starred** repos
+- Completely **open-source**
 
-## Emails look like this
-<img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/client/public/email.png" width="600px" />
+## API
 
-## Overview of code
+### `POST /api/sign_in`
 
-- Frontend: **React**
-- Backend: **NodeJS**
-- Database: **MongoDB**
-- API Server deployed to: **AWS ElasticBeanstalk**
-- Recurrent script is run by: **AWS Lambda**
-- Email server: **AWS Simple Email Service**
-- Queue: **AWS Simple Queue Service**
-- Logs: **AWS CloudWatch**
+Gets you an authorization token via cookie
 
-The server, besides providing REST endpoints to the database, also fetches GitHub public events every second and sends new release/tag events to the queue
+Example payload
+```json
+{
+  "email": "test@email.com",
+  "password": "testpassword"
+}
+```
 
-Recurrent script (Notifier) fetches releases of relevant repos every minute, sends emails to users and updates those users in the database to prevent duplicate emails
+Responds with user record (see [profile](#profile)) and `Set-Cookie` header that sets `token` cookie. The cookie must be sent with subsequent requests for authorization
 
-Relevant repos are those that:
+### `DELETE /api/sign_out`
 
-- are being watched at the time of script execution and either
-- have their release events in the queue or
-- it's time to fetch all of them - happens every hour
+Unsets `token` cookie
 
-Details can be found in [Notifier's README](https://github.com/vfeskov/gitpunch/blob/master/notifier/README.md)
+### <a id="profile"></a>`GET /api/profile`
 
-## How it's monitored
-AWS CloudWatch dashboard showing data for 1 week:<br/>
+Returns authorized user record
+
+Example response:
+```js
+{
+  "id":"5bd5f53e66785643e93c83a9",
+  "email":"test@email.com",
+  "frequency":"daily",
+  "checkAt":9, // UTC hour
+  "accessToken":"tui43sg76bbcbfce178bb682b01d6ebcd8b1c221", // of github
+  "watching":true,
+  "watchingStars":1, // 0: not watching stars
+                     // 1: adding new stars
+                     // 2: 1 + removing nonstars
+  "alerted":[["angular/angular","7.1.0-beta.1"],["vuejs/vue","v2.5.17"]],
+  "repos":[
+    {
+      "repo":"angular/angular",
+      "muted":false,
+      "filter":0 // 0: only major releases
+                 // 1: major & minor
+                 // 2: major, minor & patch
+                 // 3: all
+    },
+    {
+      "repo":"vuejs/vue",
+      "muted":true,
+      "filter":2
+    }
+  ]
+}
+```
+
+### `PATCH /api/profile`
+
+Updates record of authorized user
+
+Any of the params can be send alone or all together:
+```js
+{
+  "frequency":"daily",
+  "checkAt":9, // UTC hour
+  "watching":true,
+  "watchingStars":1, // 0: not watching stars
+                     // 1: adding new stars
+                     // 2: 1 + removing nonstars
+  "repos":[
+    {
+      "repo":"angular/angular",
+      "muted":false,
+      "filter":0 // 0: only major releases
+                 // 1: major & minor
+                 // 2: major, minor & patch
+                 // 3: all
+    },
+    {
+      "repo":"vuejs/vue",
+      "muted":true,
+      "filter":2
+    }
+  ]
+}
+```
+
+Responds with result user record, see [profile](#profile)
+
+### `POST /api/repos`
+
+Adds a repo to authorized user
+
+Params:
+```js
+{
+  "repo":"angular/angular",
+  "muted":false,
+  "filter":0 // 0: only major releases
+             // 1: major & minor
+             // 2: major, minor & patch
+             // 3: all
+}
+```
+
+Responds with all repos of authorized user, <a id="all-repos-example"></a>example:
+```js
+{
+  "repos":[
+    {
+      "repo":"angular/angular",
+      "muted":false,
+      "filter":0 // 0: only major releases
+                 // 1: major & minor
+                 // 2: major, minor & patch
+                 // 3: all
+    },
+    {
+      "repo":"vuejs/vue",
+      "muted":true,
+      "filter":2
+    }
+  ]
+}
+```
+
+### `POST /api/repos/bulk`
+
+Adds multiple repos to authorized user
+
+Params:
+```js
+{
+  "repos":[
+    {
+      "repo":"angular/angular",
+      "muted":false,
+      "filter":0 // 0: only major releases
+                 // 1: major & minor
+                 // 2: major, minor & patch
+                 // 3: all
+    },
+    {
+      "repo":"vuejs/vue",
+      "muted":true,
+      "filter":2
+    }
+  ]
+}
+```
+
+Responds with all repos of authorized user, see [example](#all-repos-example)
+
+### `PATCH /api/repos/all`
+
+Updates all repos of authorized user
+
+Params can be sent alone or all together:
+```js
+{
+  "muted":false,
+  "filter":0 // 0: only major releases
+             // 1: major & minor
+             // 2: major, minor & patch
+             // 3: all
+}
+```
+
+Responds with all repos of authorized user, see [example](#all-repos-example)
+
+### `PATCH /api/repos/:repo`
+
+Updates a single repo of authorized user
+
+Params:
+```js
+{
+  "muted":false,
+  "filter":0 // 0: only major releases
+             // 1: major & minor
+             // 2: major, minor & patch
+             // 3: all
+}
+```
+
+Responds with all repos of authorized user, see [example](#all-repos-example)
+
+### `DELETE /api/repos/all`
+
+Deletes all repos of authorized user
+
+Responds with `{repos: []}`
+
+### `DELETE /api/repos:repo`
+
+Deletes a repo of authorized user
+
+Responds with all repos of authorized user, see [example](#all-repos-example)
+
+## Notifier Stats
 <img src="https://raw.githubusercontent.com/vfeskov/gitpunch/master/monitoring.png" width="800px" />
 
 ## Credits
