@@ -67,6 +67,7 @@ export function styles (theme) {
       marginBottom: theme.spacing.unit * 4
     },
     addButton: {
+      color: `${theme.palette.secondary.main} !important`,
       minWidth: '32px',
       position: 'absolute',
       right: 0,

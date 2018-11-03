@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 import Header, { propTypes as HeaderPropTypes } from './ReposHeader'
 import ReposConfirmDeleteAll from './ReposConfirmDeleteAll'
 import Slider from 'rc-slider'
-import withTheme from '@material-ui/core/styles/withTheme';
+import withTheme from '@material-ui/core/styles/withTheme'
 
 const filterTextStyle = { color: 'inherit' }
 const filterTexts = {
@@ -26,7 +26,7 @@ const filterTexts = {
   },
   3: {
     style: filterTextStyle,
-    label: 'All'
+    label: <span>All<br/>releases</span>
   }
 }
 
@@ -111,22 +111,11 @@ class Repos extends Component {
     }
   }
 
-  filterDesc (filter) {
-    const base = 'You\'ll be notified about '
-    switch (filter) {
-      case 0: return base + 'major releases, pattern: *.0.0'
-      case 1: return base + 'major & minor releases, pattern: *.*.0'
-      case 2: return base + 'major, minor & patch releases, pattern: *.*.*'
-      default: return base + 'all releases'
-    }
-  }
-
   render () {
     const { classes, ...headerProps } = this.props
     const { theme, className, deleteRepo, patchRepo, unwatchingNonstars, starsWorking, patchAllRepos, selectedRepo, selectRepo } = this.props
     const sortedRepos = this.sortedRepos()
     const allMuted = sortedRepos.every(({ muted }) => muted)
-    console.log(theme)
     return (
       <div className={`${className} ${classes.container}`}>
         <Header {...headerProps} />
@@ -267,7 +256,7 @@ const styles = theme => {
     itemsHeader: {
       alignItems: 'center',
       display: 'flex',
-      fontSize: '0.9em',
+      fontSize: '0.8em',
       minHeight: '48px',
       '@global': {
         '.action': {
@@ -356,11 +345,7 @@ const styles = theme => {
       background: 'green'
     },
     filterSlider: {
-      padding: '8px 24px 32px'
-    },
-    filterDesc: {
-      fontSize: '12px',
-      paddingBottom: '10px'
+      padding: '8px 24px 44px'
     }
   }
 }
