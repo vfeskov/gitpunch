@@ -179,8 +179,8 @@ class Repos extends Component {
                 </a>
               } */}
             </div>
+            <div className="filter-slider-container">
             {selectedRepo === repo && (
-            <div>
               <div className={classes.filterSlider}>
                 <Slider
                   dots
@@ -209,8 +209,8 @@ class Repos extends Component {
                   onChange={value => patchRepo({ repo, filter: value })}
                 />
               </div>
-            </div>
             )}
+            </div>
           </div>
         })}
         <ReposConfirmDeleteAll
@@ -237,7 +237,7 @@ Repos.propTypes = {
 
 const styles = theme => {
   const itemHover = {
-    background: 'rgba(53,114,156,0.075)',
+    backgroundColor: 'rgba(53,114,156,0.075)',
     borderRadius: '24px',
     margin: '4px -10px',
     padding: '0 10px',
@@ -248,6 +248,13 @@ const styles = theme => {
     }
   }
   return {
+    '@global': {
+      '.filter-slider-container': {
+        height: 0,
+        overflow: 'hidden',
+        transition: 'height 0.2s'
+      }
+    },
     container: {
       [theme.breakpoints.down('xs')]: {
         textAlign: 'center'
@@ -265,11 +272,12 @@ const styles = theme => {
       }
     },
     item: {
+      backgroundColor: '#fafafa',
+      transition: 'background-color 0.2s',
       margin: '4px 0',
       '@global': {
         '.action': {
           marginLeft: theme.spacing.unit,
-          // visibility: 'hidden'
         }
       },
       '&:hover': itemHover
@@ -281,7 +289,12 @@ const styles = theme => {
       minHeight: '48px',
     },
     selected: {
-      ...itemHover
+      ...itemHover,
+      '@global': {
+        '.filter-slider-container': {
+          height: '66px'
+        }
+      },
     },
     releaseLink: {
       fontSize: '0.8em'
