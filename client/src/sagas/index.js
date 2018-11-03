@@ -2,7 +2,7 @@ import { delay } from 'redux-saga'
 import { all, take, takeLatest, put, call, fork, select } from 'redux-saga/effects'
 import * as actions from '../actions'
 import * as api from '../services/api'
-import * as cookie from '../services/cookie'
+// import * as cookie from '../services/cookie'
 import * as github from '../services/github'
 
 function* onApiRequest (actionGroup, apiMethod) {
@@ -212,11 +212,11 @@ function* onStartup () {
   }
   const { signedIn, savedRepos, bufferRepos } = yield select()
   yield put(actions.setShownRepos({ repos: signedIn ? savedRepos : bufferRepos }))
-  if (signedIn || cookie.get('dontShowIntro')) {
-    yield put(actions.setShowIntro({ state: 'n' }))
-  } else {
-    yield put(actions.setShowIntro({ state: 'y' }))
-  }
+  // if (signedIn || cookie.get('dontShowIntro')) {
+  //   yield put(actions.setShowIntro({ state: 'n' }))
+  // } else {
+  //   yield put(actions.setShowIntro({ state: 'y' }))
+  // }
 }
 
 export default function* root () {

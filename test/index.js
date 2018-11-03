@@ -10,7 +10,6 @@ fixture `GitHub Sign In`
   );
 
 test('Basic use case', async t => {
-  await skipIntro(t)
   await doGitHubSignIn(t)
   await queryDb(async db => {
     const user = await db.collection('users').findOne({ email: GITHUB_EMAIL });
@@ -19,7 +18,6 @@ test('Basic use case', async t => {
 });
 
 test('First add repos then sign in', async t => {
-  await skipIntro(t);
   await t
     .typeText('[testid=repo-add-input]:not([disabled])', 'facebook/react')
     .click('button[testid=repo-add-submit]')
