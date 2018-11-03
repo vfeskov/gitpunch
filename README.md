@@ -205,7 +205,7 @@ Deletes all repos of authorized user
 
 Responds with `{repos: []}`
 
-### `DELETE /api/repos:repo`
+### `DELETE /api/repos/:repo`
 
 Deletes a repo of authorized user
 
