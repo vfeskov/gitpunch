@@ -8,6 +8,9 @@ export default function styles (theme) {
   }
   return ({
     '@global': {
+      '.github-button': {
+        display: 'none'
+      },
       body: {
         fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
         margin: 0,
