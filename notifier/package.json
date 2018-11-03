@@ -1,6 +1,6 @@
 {
   "name": "gitpunch-notifier",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "",
   "main": "build/index.js",
   "scripts": {
