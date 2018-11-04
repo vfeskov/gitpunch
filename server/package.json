@@ -5,38 +5,38 @@
   "main": "build/index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "postinstall": "npm link gitpunch-lib",
-    "start": "NODE_ENV=production node build/index",
+    "start": "NODE_ENV=production node -r esm build/index",
     "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"nodemon --watch build/index.js --exec node -r dotenv/config build/index.js\""
   },
   "author": "Vladimir Feskov",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.311.0",
-    "babel-core": "^6.26.3",
+    "@babel/core": "^7.1.2",
+    "babel-loader": "^8.0.4",
+    "babel-preset-react-app": "^6.1.0",
+    "aws-sdk": "^2.348.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
+    "esm": "^3.0.84",
     "finalhandler": "^1.1.1",
     "jsonwebtoken": "^8.3.0",
     "lodash.pick": "^4.4.0",
-    "mongodb": "^3.1.4",
-    "mongoose": "^5.3.7",
+    "mongodb": "^3.1.8",
+    "mongoose": "^5.3.9",
     "node-fetch": "^2.2.0",
-    "react": "^16.5.0",
+    "react": "^16.6.0",
     "serve-static": "^1.13.2",
-    "webpack": "^4.17.2"
+    "webpack": "^4.24.0"
   },
   "devDependencies": {
-    "babel-loader": "^7.1.5",
-    "babel-preset-react-app": "^3.1.2",
     "concurrently": "^4.0.1",
-    "dotenv": "^6.0.0",
-    "file-loader": "^1.1.11",
+    "dotenv": "^6.1.0",
+    "file-loader": "^2.0.0",
     "json-loader": "^0.5.7",
-    "nodemon": "^1.18.4",
-    "webpack-command": "^0.4.1",
+    "nodemon": "^1.18.5",
+    "webpack-command": "^0.4.2",
     "webpack-node-externals": "^1.7.2"
   }
 }
