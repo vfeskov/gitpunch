@@ -11,8 +11,11 @@ export default function styles (theme) {
       '.github-button': {
         display: 'none'
       },
-      body: {
+      '*': {
         fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+      },
+      body: {
+        fontSize: 'inherit',
         margin: 0,
         padding: 0
       },
@@ -23,11 +26,18 @@ export default function styles (theme) {
         color: theme.palette.secondary.main,
         textDecoration: 'none'
       },
+      button: {
+        border: 'none',
+        color: theme.palette.secondary.main,
+        fontSize: 'inherit',
+        padding: 0
+      },
       'a.soft': {
         color: theme.palette.primary[900],
         textDecoration: 'none !important'
       },
-      'a:hover': {
+      'button:hover,button:focus,a:hover,a:focus': {
+        outline: 'none',
         textDecoration: 'underline',
         color: theme.palette.secondary.main,
         cursor: 'pointer'
@@ -100,7 +110,9 @@ export default function styles (theme) {
       flexDirection: 'column',
       height: '100%',
       opacity: 0,
-      overflow: 'auto',
+      '-webkit-overflow-scrolling': 'touch',
+      overflowX: 'auto',
+      overflowY: 'scroll',
       pointerEvents: 'none',
       paddingTop: '500px',
       transition: 'opacity 500ms, padding-top 500ms',

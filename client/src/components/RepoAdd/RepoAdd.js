@@ -33,7 +33,7 @@ class RepoAdd extends PureComponent {
     const watchingStarsLink = <a href={starsLink} className={classes.inlineVCentered} onClick={this.starsClicked}>{StarIcon()} stars</a>
     return unwatchingNonstars ? (
       <div className={className}>
-        <h2 className={classes.title}><span className={classes.inlineVCentered}>Watching {watchingStarsLink} for releases</span></h2>
+        <h1 className={classes.title}><span className={classes.inlineVCentered}>Watching {watchingStarsLink} for releases</span></h1>
         <p className={classes.syncHint}><small>syncs list every 15 minutes</small></p>
       </div>
     ) : (

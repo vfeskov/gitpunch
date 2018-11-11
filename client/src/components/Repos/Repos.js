@@ -121,7 +121,7 @@ class Repos extends Component {
         <Header {...headerProps} />
         {sortedRepos.length > 2 && <div className={classes.itemsHeader}>
           <span className={classes.sorting}>
-            Sort by <a className={this.sortClass('org')} onClick={() => this.sort('org')}>org</a>/<a className={this.sortClass('name')} onClick={() => this.sort('name')}>name</a> or <a className={this.sortClass('date')} onClick={() => this.sort('date')}>date</a>
+            Sort by <button className={this.sortClass('org')} onClick={() => this.sort('org')}>org</button>/<button className={this.sortClass('name')} onClick={() => this.sort('name')}>name</button> or <button className={this.sortClass('date')} onClick={() => this.sort('date')}>date</button>
           </span>
           <span style={{ flex: 1 }}></span>
           <span>To All →</span>
@@ -146,8 +146,17 @@ class Repos extends Component {
         </div>}
         {sortedRepos.map(r => {
           const { repo, muted, filter = 3 } = r
-          return <div className={classes.item + (selectedRepo === repo ? ' ' + classes.selected : '')} key={repo} testid="repo">
-            <div className={classes.itemTop} onClick={() => selectRepo({ repo })}>
+          return <div
+            className={classes.item + (selectedRepo === repo ? ' ' + classes.selected : '')}
+            key={repo}
+            onKeyPress={e => console.log(e, e.currentTarget, e.target, e.currentTarget === e.target) || e.currentTarget === e.target && e.key === 'Enter' && selectRepo({ repo })}
+            tabIndex="0"
+            testid="repo"
+          >
+            <div
+              className={classes.itemTop}
+              onClick={() => selectRepo({ repo })}
+            >
               <span className={muted ? classes.muted : ''} testid="repo-name">{repo}</span>
               <span className={classes.filterBadge + ' ' + (muted ? '' : classes[`filterBadge${filter}`])}>
                 {this.filterBadge(filter)}
@@ -273,20 +282,24 @@ const styles = theme => {
     },
     item: {
       backgroundColor: '#fafafa',
-      transition: 'background-color 0.2s',
       margin: '4px 0',
+      outline: 'none',
+      transition: 'all 0.2s',
       '@global': {
         '.action': {
           marginLeft: theme.spacing.unit,
         }
       },
-      '&:hover': itemHover
+      '&:hover,&:focus,&:active': itemHover
     },
     itemTop: {
       alignItems: 'center',
       cursor: 'pointer',
       display: 'flex',
       minHeight: '48px',
+      '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+      '-webkit-touch-callout': 'none',
+      outline: 'none'
     },
     selected: {
       ...itemHover,
@@ -319,7 +332,7 @@ const styles = theme => {
     },
     sorting: {
       '@global': {
-        a: {
+        button: {
           display: 'inline-block',
           position: 'relative',
           '&.asc::after, &.desc::after': {
