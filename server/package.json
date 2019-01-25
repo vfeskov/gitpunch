@@ -20,7 +20,6 @@
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
     "esm": "^3.1.2",
-    "event-stream": "^3.3.5",
     "finalhandler": "^1.1.1",
     "jsonwebtoken": "^8.4.0",
     "lodash.pick": "^4.4.0",
