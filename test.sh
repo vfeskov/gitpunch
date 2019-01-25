@@ -1,6 +1,6 @@
 #!/bin/bash
 docker-compose up --build &
-cd test && npm run test
+cd test && npm install && npm run test
 STATUS=$?
 docker-compose down
 exit $STATUS

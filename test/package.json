@@ -11,8 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "assert": "^1.4.1",
-    "dotenv": "^6.1.0",
-    "mongodb": "^3.1.8",
-    "testcafe": "^0.23.0"
+    "dotenv": "^6.2.0",
+    "mongodb": "^3.1.13",
+    "testcafe": "^0.23.3"
   }
 }
