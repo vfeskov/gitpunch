@@ -175,7 +175,7 @@ function toRaw ({ id, repos, ...result }) {
     })
   }
   return Object.keys(result)
-    .filter(k => !!userSchemaObj[k])
+    .filter(k => k === '_id' || !!userSchemaObj[k])
     .reduce((r, k) => ({ ...r, [k]: result[k] }), {})
 }
 
