@@ -174,7 +174,9 @@ function toRaw ({ id, repos, ...result }) {
       patches: repos.filter(r => r.filter === 2).map(r => r.repo),
     })
   }
-  return result
+  return Object.keys(result)
+    .filter(k => !!userSchemaObj[k])
+    .reduce((r, k) => ({ ...r, [k]: result[k] }), {})
 }
 
 function fromRaw (raw) {
