@@ -57,7 +57,7 @@ function ReposHeader ({
     shownRepos.length ? (
       <h2 className={classes.title}>Sign in to start watching</h2>
     ) : (
-      <h2 className={classes.title}>Subscribe to <a href="/email.png" target="_blank" rel="noopener noreferrer">emails</a> in reatlime or daily, <br/>filter out minor releases and more</h2>
+      <h2 className={classes.title}>Subscribe to <a href="/email.png" target="_blank" rel="noopener noreferrer">emails</a> in realtime or daily, <br/>filter out minor releases and more</h2>
     )
   )
 }
