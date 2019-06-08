@@ -1,0 +1,170 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "home-ec2-user-certs",
+      "host": {
+        "sourcePath": "/home/ec2-user/certs"
+      }
+    },
+    {
+      "name": "etc-nginx-vhost-d",
+      "host": {
+        "sourcePath": "/etc/nginx/vhost.d"
+      }
+    },
+    {
+      "name": "usr-share-nginx-html",
+      "host": {
+        "sourcePath": "/usr/share/nginx/html"
+      }
+    },
+    {
+      "name": "var-run-docker-sock",
+      "host": {
+        "sourcePath": "/var/run/docker.sock"
+      }
+    },
+    {
+      "name": "home-ec2-user-redis-data",
+      "host": {
+        "sourcePath": "/home/ec2-user/redis-data"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "nginx-proxy",
+      "image": "jwilder/nginx-proxy",
+      "essential": true,
+      "memoryReservation": 64,
+      "dockerLabels": {
+        "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
+      },
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        },
+        {
+          "containerPort": 443,
+          "hostPort": 443
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "home-ec2-user-certs",
+          "containerPath": "/etc/nginx/certs",
+          "readOnly": true
+        },
+        {
+          "sourceVolume": "etc-nginx-vhost-d",
+          "containerPath": "/etc/nginx/vhost.d"
+        },
+        {
+          "sourceVolume": "usr-share-nginx-html",
+          "containerPath": "/usr/share/nginx/html"
+        },
+        {
+          "sourceVolume": "var-run-docker-sock",
+          "containerPath": "/tmp/docker.sock",
+          "readOnly": true
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/elasticbeanstalk/main/dockerlogs",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "nginx-proxy"
+        }
+      }
+    },
+    {
+      "name": "letsencrypt-nginx-proxy-companion",
+      "image": "jrcs/letsencrypt-nginx-proxy-companion",
+      "essential": true,
+      "memoryReservation": 64,
+      "volumesFrom": [
+        {
+          "sourceContainer": "nginx-proxy"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "home-ec2-user-certs",
+          "containerPath": "/etc/nginx/certs"
+        },
+        {
+          "sourceVolume": "var-run-docker-sock",
+          "containerPath": "/var/run/docker.sock",
+          "readOnly": true
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/elasticbeanstalk/main/dockerlogs",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "letsencrypt-nginx-proxy-companion"
+        }
+      }
+    },
+    {
+      "name": "war-of-bob",
+      "image": "vfeskov/war-of-bob",
+      "essential": true,
+      "memoryReservation": 128,
+      "environment": [
+        {
+          "name": "VIRTUAL_HOST",
+          "value": "bob.vfeskov.com"
+        },
+        {
+          "name": "LETSENCRYPT_HOST",
+          "value": "bob.vfeskov.com"
+        },
+        {
+          "name": "LETSENCRYPT_EMAIL",
+          "value": "v@vladimirfeskov.com"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/elasticbeanstalk/main/dockerlogs",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "war-of-bob"
+        }
+      }
+    },
+    {
+      "name": "gitpunch",
+      "image": "${DOCKER_IMAGE}",
+      "essential": true,
+      "memoryReservation": 640,
+      "environment": [
+        {
+          "name": "VIRTUAL_HOST",
+          "value": "beer.vfeskov.com,winabeer.com,www.winabeer.com,gitpunch.com,www.gitpunch.com"
+        },
+        {
+          "name": "LETSENCRYPT_HOST",
+          "value": "beer.vfeskov.com,winabeer.com,www.winabeer.com,gitpunch.com,www.gitpunch.com"
+        },
+        {
+          "name": "LETSENCRYPT_EMAIL",
+          "value": "v@vladimirfeskov.com"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/elasticbeanstalk/main/dockerlogs",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "gitpunch"
+        }
+      }
+    }
+  ]
+}
