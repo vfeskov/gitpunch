@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   deploy:
     docker:
-      - image: circleci:node
+      - image: circleci/node
     steps:
       - checkout
       - setup_remote_docker:
