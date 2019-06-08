@@ -12,7 +12,7 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker push $DOCKER_IMAGE
 
-          bash ./deploy-docker-image.sh
+          bash ./.circleci/deploy-docker-image.sh
 
 workflows:
   Deploy:
