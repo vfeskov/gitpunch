@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   deploy:
     docker:
-      - image: circleci/node
+      - image: vfeskov/debian-with-docker-aws
     steps:
       - checkout
       - setup_remote_docker:
