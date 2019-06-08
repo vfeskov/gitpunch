@@ -5,8 +5,8 @@ jobs:
     steps:
       - checkout
       - run: |
-          DOCKER_TAG="$CIRCLE_BRANCH-$CIRCLE_SHA1"
-          DOCKER_IMAGE="vfeskov/gitpunch:$DOCKER_TAG"
+          export DOCKER_TAG="$CIRCLE_BRANCH-$CIRCLE_SHA1"
+          export DOCKER_IMAGE="vfeskov/gitpunch:$DOCKER_TAG"
 
           docker build -t $DOCKER_IMAGE .
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
