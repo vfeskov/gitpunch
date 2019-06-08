@@ -1,9 +1,13 @@
 version: 2.1
 jobs:
   deploy:
-    machine: true
+    docker:
+      - image: circleci:node
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 17.12.1-ce
+          docker_layer_caching: true
       - run: |
           export DOCKER_TAG="$CIRCLE_BRANCH-$CIRCLE_SHA1"
           export DOCKER_IMAGE="vfeskov/gitpunch:$DOCKER_TAG"
@@ -12,7 +16,7 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker push $DOCKER_IMAGE
 
-          bash ./.circleci/deploy-docker-image.sh
+          ./.circleci/deploy-docker-image.sh
 
 workflows:
   Deploy:
