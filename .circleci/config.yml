@@ -6,6 +6,7 @@ jobs:
       - checkout
       - run: |
           docker build -t "vfeskov/gitpunch:$CIRCLE_BRANCH-$CIRCLE_SHA1" .
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker push "vfeskov/gitpunch:$CIRCLE_BRANCH-$CIRCLE_SHA1"
 workflows:
   Build:
