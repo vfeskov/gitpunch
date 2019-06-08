@@ -1,13 +1,10 @@
 version: 2.1
 jobs:
   deploy:
-    docker:
-      - image: vfeskov/debian-with-docker-aws
+    machine:
+      docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 17.12.1-ce
-          docker_layer_caching: true
       - run: |
           export DOCKER_TAG="$CIRCLE_BRANCH-$CIRCLE_SHA1"
           export DOCKER_IMAGE="vfeskov/gitpunch:$DOCKER_TAG"
