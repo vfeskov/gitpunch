@@ -4,7 +4,6 @@ jobs:
     machine: true
     steps:
       - checkout
-      - setup_remote_docker
       - run: |
           docker build -t "vfeskov/gitpunch:$CIRCLE_BRANCH-$CIRCLE_SHA1" .
           docker push "vfeskov/gitpunch:$CIRCLE_BRANCH-$CIRCLE_SHA1"
