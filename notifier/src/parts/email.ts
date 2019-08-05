@@ -19,6 +19,7 @@ export default class Email {
   private bodyBytes: number
   private compression: number
   private repos: RepoToSend[]
+  private _subject: string
 
   constructor (private email: string, repos: RepoWithTags[]) {
     this.repos = repos.map(r => {
@@ -66,70 +67,82 @@ export default class Email {
   }
 
   subject () {
-    return this.repos
-      .map(({repo, name, tags}) =>
-        `${namesWithOrgs.includes(name) ? repo : name}@${tags.map(tag =>
-          `${tag.name.replace(/^v(\d)/, '$1')}`
-        ).join(', ')}`
-      ).join('; ')
+    if (!this._subject) {
+      this._subject = this.repos
+        .map(({repo, name, tags}) =>
+          `${namesWithOrgs.includes(name) ? repo : name}@${tags.map(tag =>
+            `${tag.name.replace(/^v(\d)/, '$1')}`
+          ).join(', ')}`
+        ).join('; ')
+    }
+    return this._subject
   }
 
   body () {
     const { repos } = this
     const hasIndex = repos.length > 1 || repos[0].tags.length > 1
     const raw = `
-      <div style="margin: 0 auto; max-width: 800px; font-family: Roboto, Helvetica, Arial, sans-serif;">
-        ${hasIndex ? `
-        <a name="index"></a>
-        <table style="border-spacing: 0; line-height: 2em; margin: 0 0 2em;" id="index">
-          <tbody>
-          ${repos.map(r => `
-            <tr>
-              <td style="text-align: right; padding: 0; vertical-align: top;">${anchor(repoBold(r), r.tags[0])}</td>
-              <td style="padding: 0; vertical-align: top;">${anchor('@', r.tags[0])}</td>
-              <td style="padding: 0; vertical-align: top;">${r.tags.map(tag => anchor(tag.name, tag)).join(', ')}
-              </td>
-            </tr>`
-          ).join('')}
-          </tbody>
-        </table>
-        ` : ''}
-        ${repos.map(r =>
-          r.tags.map(tag => `
-        <div style="margin: 0 0 2em; border: 1px solid rgba(53,114,156,0.2);">
-          <a name="${tag.id}"></a>
-          <div style="background: rgba(53,114,156,0.2); padding: 0.5em; line-height: 2em;" id="${tag.id}">
-            <div style="display: inline-block;">
-              <span style="word-wrap: break-word;"><a href="https://github.com/${r.repo}">${repoBold(r)}</a>@<a href="https://github.com/${r.repo}/releases/tag/${tag.name}">${tag.name}</a></span>
-              ${tag.title ? `
-              <br/>
-              <span style="font-size: 1.1em;">${tag.title}</span>
-              ` : ''}
+      <!doctype html>
+      <html lang="en-us">
+        <head>
+          <meta charset="utf-8" />
+          <title>${this.subject()}</title>
+        </head>
+        <body>
+          <div style="margin: 0 auto; max-width: 800px; font-family: Roboto, Helvetica, Arial, sans-serif;">
+            ${hasIndex ? `
+            <a name="index"></a>
+            <table style="border-spacing: 0; line-height: 2em; margin: 0 0 2em;" id="index">
+              <tbody>
+              ${repos.map(r => `
+                <tr>
+                  <td style="text-align: right; padding: 0; vertical-align: top;">${anchor(repoBold(r), r.tags[0])}</td>
+                  <td style="padding: 0; vertical-align: top;">${anchor('@', r.tags[0])}</td>
+                  <td style="padding: 0; vertical-align: top;">${r.tags.map(tag => anchor(tag.name, tag)).join(', ')}
+                  </td>
+                </tr>`
+              ).join('')}
+              </tbody>
+            </table>
+            ` : ''}
+            ${repos.map(r =>
+              r.tags.map(tag => `
+            <div style="margin: 0 0 2em; border: 1px solid rgba(53,114,156,0.2);">
+              <a name="${tag.id}"></a>
+              <div style="background: rgba(53,114,156,0.2); padding: 0.5em; line-height: 2em;" id="${tag.id}">
+                <div style="display: inline-block;">
+                  <span style="word-wrap: break-word;"><a href="https://github.com/${r.repo}">${repoBold(r)}</a>@<a href="https://github.com/${r.repo}/releases/tag/${tag.name}">${tag.name}</a></span>
+                  ${tag.title ? `
+                  <br/>
+                  <span style="font-size: 1.1em;">${tag.title}</span>
+                  ` : ''}
+                </div>
+                <div style="float: right; font-size: 0.9em;">
+                  ${hasIndex ? `
+                  <span style="display: inline-block; width: 0.3em;"></span>
+                  <a href="#index">Up</a>
+                  ` : ''}
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+              <div style="padding: 0.5em;">
+                ${description(tag.entry)}
+              </div>
+            </div>`
+              ).join('')
+            ).join('')}
+            <div style="line-height: 2em;">
+              Best wishes from <a href="https://github.com/vfeskov">Vlad</a> @ <a href="${appUrl}">GitPunch</a><br/>
+              <a href="https://github.com/vfeskov/gitpunch">Support me with a star</a>
             </div>
-            <div style="float: right; font-size: 0.9em;">
-              ${hasIndex ? `
-              <span style="display: inline-block; width: 0.3em;"></span>
-              <a href="#index">Up</a>
-              ` : ''}
-            </div>
-            <div style="clear: both;"></div>
+            <div style="border-top: 1px solid rgba(53,114,156,0.2); margin: 2em 0 1em;"></div>
+            <small>
+              This is an automated message, reply if you have any questions<br/>
+              To stop getting these emails click <a href="${this.unsubscribeUrl()}">unsubscribe</a><br/>
+            </small>
           </div>
-          <div style="padding: 0.5em;">
-            ${description(tag.entry)}
-          </div>
-        </div>`
-          ).join('')
-        ).join('')}
-        <div style="line-height: 2em;">
-          Best wishes from <a href="https://github.com/vfeskov">Vlad</a> @ <a href="${appUrl}">GitPunch</a><br/>
-          <a href="https://github.com/vfeskov/gitpunch">Support me with a star</a>
-        </div>
-        <div style="border-top: 1px solid rgba(53,114,156,0.2); margin: 2em 0 1em;"></div>
-        <small>
-          This is an automated message, reply if you have any questions<br/>
-          To stop getting these emails click <a href="${this.unsubscribeUrl()}">unsubscribe</a><br/>
-        </small>
-      </div>
+        </body>
+      </html>
     `
     const body = minifyHtml(style(raw))
     this.bodyBytes = byteLength(body)
