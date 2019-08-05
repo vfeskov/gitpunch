@@ -11,7 +11,7 @@ const config = {
     libraryTarget: 'commonjs2'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.ts$/,
         use: [{

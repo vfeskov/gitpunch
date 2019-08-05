@@ -33,7 +33,8 @@
     "nock": "^9.2.6",
     "ts-node": "^6.0.3",
     "typescript": "^2.8.3",
-    "webpack": "^3.12.0",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
     "webpack-node-externals": "^1.7.2"
   }
 }
