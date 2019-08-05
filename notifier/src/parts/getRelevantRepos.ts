@@ -1,6 +1,5 @@
-import { RepoGroup } from './interfaces'
 import log from 'gitpunch-lib/log'
-import { SQS, Request, AWSError } from 'aws-sdk'
+import { SQS } from 'aws-sdk'
 
 // how often to fetch all repos, ignoring message queue
 const FETCH_ALL_REPOS_INTERVAL = +process.env.FETCH_ALL_REPOS_INTERVAL || 60 // minutes

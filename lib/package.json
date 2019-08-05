@@ -1,7 +1,7 @@
 {
   "name": "gitpunch-lib",
   "version": "1.11.0",
-  "description": "Reusable code for other WinABeer services",
+  "description": "Reusable code for other GitPunch services",
   "main": "githubAtom.js",
   "scripts": {
     "build": "tsc",
@@ -21,6 +21,6 @@
     "typescript": "^2.8.3"
   },
   "dependencies": {
-    "node-fetch": "^2.1.2"
+    "node-fetch": "2.6.0"
   }
 }

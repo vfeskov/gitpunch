@@ -1,5 +1,4 @@
 import { MongoClient } from 'mongodb'
-import { Agent } from 'https'
 import loadUsers from './parts/loadUsers'
 import groupByRelevantRepo from './parts/groupByRelevantRepo'
 import getRelevantRepos from './parts/getRelevantRepos'
