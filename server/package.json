@@ -1,6 +1,6 @@
 {
   "name": "gitpunch-server",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "",
   "main": "build/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "jsonwebtoken": "^8.4.0",
     "lodash.pick": "^4.4.0",
     "mongodb": "^3.1.13",
-    "mongoose": "^5.4.6",
+    "mongoose": "^5.6.8",
     "node-fetch": "2.6.0",
     "react": "^16.7.0",
     "serve-static": "^1.13.2",

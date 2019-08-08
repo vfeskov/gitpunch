@@ -8,7 +8,6 @@ import loadUser from './other-middlewares/loadUser'
 import error from './other-middlewares/error'
 import chain from './util/chain'
 import * as publicEvents from './public-events'
-import syncStars from './sync-stars'
 
 const port = process.env.PORT || 3000
 
@@ -45,9 +44,4 @@ server.listen(port, (e, s) => {
 if (!process.env.DONT_MONITOR_EVENTS) {
   console.log('Monitoring public github events')
   publicEvents.monitor()
-}
-
-if (!process.env.DONT_SYNC_STARS) {
-  console.log('Syncing stars')
-  syncStars()
 }

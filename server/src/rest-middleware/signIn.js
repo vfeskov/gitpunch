@@ -1,4 +1,4 @@
-import { User } from '../db'
+import { User } from 'gitpunch-lib/db'
 import { success, badRequest } from '../util/http'
 import { hash } from '../util/bcrypt'
 import { validEmail, validPassword, validRepos } from '../util/validations'

@@ -1,5 +1,5 @@
 import { verifyToken } from '../util/token'
-import { User } from '../db'
+import { User } from 'gitpunch-lib/db'
 
 export default async function loadUser (req, res, next) {
   if (req.cookies && req.cookies.token) {

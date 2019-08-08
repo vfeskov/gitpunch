@@ -3,3 +3,6 @@ dump
 .env*
 !.env.example
 .DS_store
+bundle
+bundle.zip
+build

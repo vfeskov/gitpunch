@@ -3,10 +3,10 @@ import * as mongoose from 'mongoose'
 import './connection'
 const { assign, keys } = Object
 
-const reposValidator = repos => {
+const reposValidator = (repos: string[]) => {
   return repos.every(repo => /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo))
 }
-const userSchemaObj = {
+const userSchemaObj: mongoose.SchemaDefinition = {
   email: { type: String, required: true, index: true, match: /\S+@\S+\.\S+/ },
   accessToken: { type: String, default: '' },
   passwordEncrypted: { type: String, default: '' },
@@ -24,18 +24,61 @@ const userSchemaObj = {
 const UserSchema = new mongoose.Schema(userSchemaObj)
 export const UserModel = mongoose.model('User', UserSchema)
 
-export class User {
-  constructor (params) {
+export class CuteRepo {
+  repo: string
+  muted: boolean
+  filter: number
+}
+
+export class CuteUser {
+  accessToken?: string
+  passwordEncrypted?: string
+  watching?: boolean
+  watchingStars?: number
+  alerted?: string[][]
+  frequency?: string
+  checkAt?: number
+  email?: string
+  id?: string
+  repos?: CuteRepo[]
+}
+
+export class UpdateAllReposParams {
+  muted?: boolean
+  filter?: number
+}
+
+export class RawUser {
+  accessToken?: string
+  passwordEncrypted?: string
+  watching?: boolean
+  watchingStars?: number
+  alerted?: string[][]
+  frequency?: string
+  checkAt?: number
+  email?: string
+  _id?: ObjectID
+  repos?: string[]
+  majors?: string[]
+  minors?: string[]
+  patches?: string[]
+  mutedRepos? : string[]
+  [key: string]: any
+}
+
+export class User extends CuteUser {
+  constructor (params: CuteUser) {
+    super()
     assign(this, params)
   }
 
-  async save (doc = null) {
+  async save (doc: CuteUser = null) {
     if (this.id) {
-      await User.update(toRaw({ id: this.id }), doc || this)
+      await User.update({ id: this.id }, doc || this)
       return assign(this, doc)
     }
     const raw = await UserModel.create(toRaw(this))
-    return assign(this, fromRaw(raw))
+    return assign(this, toCute(raw))
   }
 
   errors () {
@@ -47,27 +90,32 @@ export class User {
     }
   }
 
-  async addRepos (repos) {
+  async addRepos (repos: CuteRepo[]) {
     await User.addRepos({ id: this.id }, repos)
     const names = this.repos.map(r => r.repo)
     this.repos = [...repos.filter(r => !names.includes(r.repo)).reverse(), ...this.repos]
     return this
   }
 
-  async removeRepos (repos) {
+  async removeRepos (repos: CuteRepo[]) {
     await User.removeRepos({ id: this.id }, repos)
-    repos = repos.map(r => r.repo)
-    this.repos = this.repos.filter(r => !repos.includes(r.repo))
+    const repoNames = repos.map(r => r.repo)
+    this.repos = this.repos.filter(r => !repoNames.includes(r.repo))
     return this
   }
 
-  async updateRepo (repo) {
+  async updateRepo (repo: CuteRepo) {
     await User.updateRepo({ id: this.id }, repo)
-    this.repos.some(r => r.repo === repo.repo && assign(r, repo))
+    this.repos.some(r => {
+      if (r.repo === repo.repo) {
+        assign(r, repo)
+        return true
+      }
+    })
     return this
   }
 
-  async updateAllRepos (params) {
+  async updateAllRepos (params: UpdateAllReposParams) {
     await User.updateAllRepos({ id: this.id }, this.repos, params)
     this.repos = this.repos.map(r => {
       if (typeof params.muted !== 'undefined') {
@@ -81,21 +129,21 @@ export class User {
     return this
   }
 
-  static async load (search) {
+  static async load (search: CuteUser) {
     const raw = await UserModel.findOne(toRaw(search))
-    return raw ? new User(fromRaw(raw)) : null
+    return raw ? new User(toCute(raw)) : null
   }
 
-  static async create (doc) {
+  static async create (doc: CuteUser) {
     const raw = await UserModel.create(toRaw(doc))
-    return new User(fromRaw(raw))
+    return new User(toCute(raw))
   }
 
-  static update (search, doc) {
+  static update (search: CuteUser, doc: CuteUser) {
     return UserModel.updateOne(toRaw(search), toRaw(doc))
   }
 
-  static addRepos (search, repos) {
+  static addRepos (search: CuteUser, repos: CuteRepo[]) {
     const raw = toRaw({ repos })
     const $addToSet = ['repos', 'mutedRepos', 'majors', 'minors', 'patches'].reduce(
       (r, k) => raw[k].length ? assign(r, {[k]: { $each: raw[k].reverse() }}) : r,
@@ -104,24 +152,24 @@ export class User {
     return UserModel.updateOne(toRaw(search), { $addToSet })
   }
 
-  static removeRepos (search, repos) {
-    repos = toRaw({ repos }).repos
+  static removeRepos (search: CuteUser, repos: CuteRepo[]) {
+    const repoNames = toRaw({ repos }).repos
     return UserModel.updateOne(
       toRaw(search),
       {
         $pull: {
-          repos: { $in: repos },
-          mutedRepos: { $in: repos },
-          majors: { $in: repos },
-          minors: { $in: repos },
-          patches: { $in: repos }
+          repos: { $in: repoNames },
+          mutedRepos: { $in: repoNames },
+          majors: { $in: repoNames },
+          minors: { $in: repoNames },
+          patches: { $in: repoNames }
         }
       }
     )
   }
 
-  static updateRepo (search, { repo, filter, muted }) {
-    const command = {
+  static updateRepo (search: CuteUser, { repo, filter, muted }: CuteRepo) {
+    const command: any = {
       $addToSet: {},
       $pull: {}
     }
@@ -141,29 +189,31 @@ export class User {
     return UserModel.updateOne(toRaw(search), command)
   }
 
-  static updateAllRepos (search, repos, { muted, filter }) {
-    const command = {}
-    repos = repos.map(r => r.repo)
+  static updateAllRepos (search: CuteUser, repos: CuteRepo[], params: UpdateAllReposParams) {
+    const { muted, filter } = params
+    const command: RawUser = {}
+    const repoNames = repos.map(r => r.repo)
     if (typeof muted !== 'undefined') {
-      command.mutedRepos = muted ? repos : []
+      command.mutedRepos = muted ? repoNames : []
     }
     if (typeof filter !== 'undefined') {
       ['majors', 'minors', 'patches'].forEach((listName, index) => {
-        command[listName] = (filter === index) ? repos : []
+        command[listName] = (filter === index) ? repoNames : []
       })
     }
     return UserModel.updateOne(toRaw(search), command)
   }
 
-  static async find (rawSearch) {
+  static async find (rawSearch: any) {
     const rawUsers = await UserModel.find(rawSearch)
-    return rawUsers.map(raw => new User(fromRaw(raw)))
+    return rawUsers.map(raw => new User(toCute(raw)))
   }
 }
 
-function toRaw ({ id, repos, ...result }) {
+function toRaw ({ id, repos, ...rest }: CuteUser): RawUser {
+  const result: RawUser = rest
   if (id) {
-    result._id = ObjectID(id)
+    result._id = new ObjectID(id)
   }
   if (repos) {
     assign(result, {
@@ -179,25 +229,22 @@ function toRaw ({ id, repos, ...result }) {
     .reduce((r, k) => ({ ...r, [k]: result[k] }), {})
 }
 
-function fromRaw (raw) {
+function toCute (raw: RawUser): CuteUser {
   // keys(raw) doesn't return document keys but some internal mongoose keys
-  const { repos, mutedRepos, majors, minors, patches, ...rest } =
+  const { repos, mutedRepos, majors, minors, patches, _id, ...rest } =
     keys(userSchemaObj).reduce(
       (r, k) => typeof raw[k] !== 'undefined' ? assign(r, {[k]: raw[k]}) : r,
-      {}
+      {} as RawUser
     )
   return {
     id: raw._id.toString(),
     repos: repos.map(repo => ({
       repo,
       muted: mutedRepos.includes(repo),
-      filter: (() =>
-        (
-          [[majors, 0], [minors, 1], [patches, 2]]
-            .find(([l]) => l.includes(repo)) ||
-          [null, 3]
-        )[1]
-      )()
+      filter: (() => {
+        const lists: [string[], number][] = [[majors, 0], [minors, 1], [patches, 2]];
+        return (lists.find(([l]) => l.includes(repo)) || [null, 3])[1]
+      })()
     })).reverse(),
     ...rest
   }

@@ -1,4 +1,4 @@
-import { loadAccessTokens } from '../db'
+import { loadAccessTokens } from 'gitpunch-lib/db'
 import fetch from 'node-fetch'
 import { SQS } from 'aws-sdk'
 // how often to fetch events in seconds

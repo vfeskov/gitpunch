@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { randomBytes } from 'crypto'
-import { User } from '../db'
+import { User } from 'gitpunch-lib/db'
 import { signToken, setCookieTokenHeader } from '../util/token'
 import { withTags } from '../util/githubAtom'
 import { validRepos } from '../util/validations'

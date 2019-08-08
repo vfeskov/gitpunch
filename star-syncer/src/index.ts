@@ -1,25 +1,31 @@
-import { User } from '../db'
-import fetch from 'node-fetch'
-const INTERVAL = process.env.SYNC_STARS_INTERVAL || 90000
+import { User } from 'gitpunch-lib/db'
+import log from 'gitpunch-lib/log'
+import fetch, { Response } from 'node-fetch'
+import * as mongoose from 'mongoose'
 
-export default async function syncStars () {
+export async function handler (event: any, context: any, callback: (error?: any) => void) {
   try {
-    console.log('Star Sync started')
     const users = await User.find({
       accessToken: { $exists: true, $not: { $in: ['', null] } },
       watchingStars: { $in: [true, 1, 2] }
     })
     if (users && users.length) {
       await Promise.all(users.map(syncUser))
+    } else {
+      log('noUsersWatchingStars')
     }
   } catch (e) {
-    console.log(`Star Sync Error: ${e.message}`, e.stack)
+    log('error', { error: { message: e.message, stack: e.stack } })
   }
-  console.log('Star Sync finished')
-  setTimeout(syncStars, INTERVAL)
+  try {
+    await mongoose.disconnect()
+  } catch (e) {
+  }
+  callback()
+  process.exit(0)
 }
 
-async function syncUser (user) {
+async function syncUser (user: User) {
   try {
     const stars = await fetchStars(user)
     const repoNames = user.repos.map(r => r.repo)
@@ -49,7 +55,7 @@ async function syncUser (user) {
   }
 }
 
-async function fetchStars (user) {
+async function fetchStars (user: User) {
   const { id } = await fetchGitHubApi('https://api.github.com/user', user).then(r => r.body || {})
   if (!id) {
     return []
@@ -66,10 +72,10 @@ async function fetchStars (user) {
     }
     next = response.links && response.links.next
   }
-  return body.map(item => item.full_name).reverse()
+  return (body as { full_name: string }[]).map(item => item.full_name).reverse()
 }
 
-async function fetchGitHubApi (url, user) {
+async function fetchGitHubApi (url: string, user: User) {
   console.log(`Fetching github api ${url} ${user.accessToken}`)
   const response = await fetch(url, {
     headers: { Authorization: `token ${user.accessToken}` }
@@ -88,25 +94,25 @@ async function fetchGitHubApi (url, user) {
 }
 
 const parseRegexp = /<([^>]+)>; rel="([^"]+)"/
-function extractLinks (response) {
+function extractLinks (response: Response): { [name: string]: string } {
   try {
     return response.headers.get('Link').split(',').reduce((links, part) => {
       const match = part.match(parseRegexp)
       if (match) { links[match[2]] = match[1] }
       return links
-    }, {})
+    }, {} as { [name: string]: string })
   } catch (e) {
     return {}
   }
 }
 
 class RevokedTokenError extends Error {
-  constructor (user) {
+  constructor (user: User) {
     super(`Revoked token ${user.accessToken}`)
   }
 }
 class FetchError extends Error {
-  constructor (url, response) {
+  constructor (url: string, response: Response) {
     super(`Failed to load ${url}, response status: ${response.status}`)
   }
 }

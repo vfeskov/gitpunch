@@ -1,10 +1,11 @@
 {
   "name": "gitpunch-notifier",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "bundle": "webpack && time sh ./npm-scripts/bundle.sh",
+    "build": "webpack",
+    "bundle": "webpack && npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp ../build/index.js . && zip -ruX ../bundle.zip node_modules index.js && cd .. && rm -rf bundle && npm install",
     "postinstall": "npm link gitpunch-lib",
     "start": "webpack && node -r dotenv/config -e \"require('./build').handler(null, null, console.log)\"",
     "test": "mocha -r ts-node/register src/**/*.spec.ts"
@@ -14,7 +15,8 @@
     "he": "^1.1.1",
     "html-minifier": "^3.5.15",
     "jsonwebtoken": "^8.2.1",
-    "mongodb": "^3.0.8",
+    "mongodb": "^3.1.13",
+    "mongoose": "^5.6.8",
     "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a"
   },
   "devDependencies": {

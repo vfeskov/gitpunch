@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "noImplicitAny": true,
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "lib": ["es7"]
+  }
+}

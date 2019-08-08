@@ -7,12 +7,16 @@ export const AccessTokenModel = mongoose.model('AccessToken', AccessTokenSchema,
 const CACHE_TTL = 600000 // ms
 
 let prevLoadTS = 0;
-let cachePromise;
+let cachePromise: Promise<string[]>;
 
 export function loadAccessTokens () {
   const now = new Date().getTime()
   if (!cachePromise || now - prevLoadTS > CACHE_TTL){
-    cachePromise = AccessTokenModel.find({})
+    cachePromise = AccessTokenModel.find({}).then((items: AccessToken[]) => items.map(i => i.accessToken))
   }
-  return cachePromise.then(items => items.map(i => i.accessToken))
+  return cachePromise
+}
+
+interface AccessToken extends mongoose.Document {
+  accessToken: string
 }
