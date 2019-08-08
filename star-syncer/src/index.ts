@@ -1,7 +1,6 @@
-import { User } from 'gitpunch-lib/db'
+import { User, connection } from 'gitpunch-lib/db'
 import log from 'gitpunch-lib/log'
 import fetch, { Response } from 'node-fetch'
-import * as mongoose from 'mongoose'
 
 export async function handler (event: any, context: any, callback: (error?: any) => void) {
   try {
@@ -18,11 +17,11 @@ export async function handler (event: any, context: any, callback: (error?: any)
     log('error', { error: { message: e.message, stack: e.stack } })
   }
   try {
-    await mongoose.disconnect()
+    const con = await connection
+    con.disconnect()
   } catch (e) {
   }
   callback()
-  process.exit(0)
 }
 
 async function syncUser (user: User) {

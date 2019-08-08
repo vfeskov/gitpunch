@@ -7,7 +7,7 @@
     "build": "webpack",
     "bundle": "webpack && npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp ../build/index.js . && zip -ruX ../bundle.zip node_modules index.js && cd .. && rm -rf bundle && npm install",
     "postinstall": "npm link gitpunch-lib",
-    "start": "webpack && node -r dotenv/config -e \"require('./build').handler(null, null, console.log)\"",
+    "start": "webpack && node -r dotenv/config -e \"require('./build').handler({}, {}, console.log)\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Vladimir Feskov",

@@ -1,7 +1,7 @@
 import './connection'
 import * as mongoose from 'mongoose'
 
-const AccessTokenSchema = new mongoose.Schema({accessToken: String})
+const AccessTokenSchema = new mongoose.Schema({ accessToken: String })
 export const AccessTokenModel = mongoose.model('AccessToken', AccessTokenSchema, 'accessTokens')
 
 const CACHE_TTL = 600000 // ms
