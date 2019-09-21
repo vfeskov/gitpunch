@@ -48,9 +48,10 @@ async function authToken (code, state, repos) {
   try {
     const accessToken = await getAccessToken(code, state)
     const githubId = await getGithubId(accessToken)
-    let user = await User.load({ githubId })
+    const email = await getEmail(accessToken)
+    let user = await User.load({ $or: [{ githubId }, { email }] })
     if (user) {
-      await user.update({ accessToken })
+      await user.update({ githubId, accessToken })
     } else {
       repos = parseRepos(repos)
       repos = await withTags(repos)
