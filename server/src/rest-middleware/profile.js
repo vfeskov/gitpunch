@@ -9,12 +9,10 @@ export async function get ({ user }, res) {
 const EDITABLE = ['checkAt', 'frequency', 'watching', 'watchingStars', 'repos']
 export async function patch ({ body, user }, res, next) {
   if (!body) { return next(badRequest()) }
-  EDITABLE.forEach(param => {
-    if (typeof body[param] !== 'undefined') {
-      user[param] = body[param]
-    }
-  })
-  if (user.errors()) { return next(badRequest()) }
-  await user.save()
+  const params = EDITABLE
+    .filter(param => typeof body[param] !== 'undefined')
+    .reduce((r, param) => ({ ...r, [param]: body[param] }), {});
+  if (user.validate(params)) { return next(badRequest()) }
+  await user.update(params)
   success(res, serialize(pick(user, EDITABLE)))
 }

@@ -1,4 +1,4 @@
-import { User, connection } from 'gitpunch-lib/db'
+import { User, disconnect } from 'gitpunch-lib/db'
 import log from 'gitpunch-lib/log'
 import fetch, { Response } from 'node-fetch'
 
@@ -16,11 +16,7 @@ export async function handler (event: any, context: any, callback: (error?: any)
   } catch (e) {
     log('error', { error: { message: e.message, stack: e.stack } })
   }
-  try {
-    const con = await connection
-    con.disconnect()
-  } catch (e) {
-  }
+  await disconnect()
   callback()
 }
 
@@ -45,7 +41,7 @@ async function syncUser (user: User) {
   } catch (e) {
     if (e instanceof RevokedTokenError) {
       console.log(`Revoked token ${user.email}`)
-      await user.save({ watchingStars: 0 }).catch(() => {
+      await user.update({ watchingStars: 0 }).catch(() => {
         console.log(`Failed to update watchingStars of ${user.email}`)
       })
     } else {

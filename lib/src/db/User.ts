@@ -7,40 +7,42 @@ const reposValidator = (repos: string[]) => {
   return repos.every(repo => /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo))
 }
 const userSchemaObj: mongoose.SchemaDefinition = {
-  email: { type: String, required: true, index: true, match: /\S+@\S+\.\S+/ },
   accessToken: { type: String, default: '' },
-  passwordEncrypted: { type: String, default: '' },
-  watching: { type: Boolean, default: true },
-  watchingStars: { type: Number, min: 0, max: 3, default: 0, validate: { validator: Number.isInteger } },
-  repos: { type: [String], default: [], validate: { validator: reposValidator } },
-  mutedRepos: { type: [String], default: [], validate: { validator: reposValidator } },
+  alerted: { type: [], default: [] },
+  checkAt: { type: Number, min: 0, max: 23, default: 0, validate: { validator: Number.isInteger } },
+  email: { type: String, required: true, index: true, match: /\S+@\S+\.\S+/ },
+  frequency: { type: String, enum: ['realtime', 'daily'], default: 'realtime' },
+  githubId: { type: Number, default: 0, validate: { validator: Number.isInteger } },
   majors: { type: [String], default: [], validate: { validator: reposValidator } },
   minors: { type: [String], default: [], validate: { validator: reposValidator } },
+  mutedRepos: { type: [String], default: [], validate: { validator: reposValidator } },
+  passwordEncrypted: { type: String, default: '' },
   patches: { type: [String], default: [], validate: { validator: reposValidator } },
-  alerted: { type: [], default: [] },
-  frequency: { type: String, enum: ['realtime', 'daily'], default: 'realtime' },
-  checkAt: { type: Number, min: 0, max: 23, default: 0, validate: { validator: Number.isInteger } }
+  repos: { type: [String], default: [], validate: { validator: reposValidator } },
+  watching: { type: Boolean, default: true },
+  watchingStars: { type: Number, min: 0, max: 3, default: 0, validate: { validator: Number.isInteger } }
 }
 const UserSchema = new mongoose.Schema(userSchemaObj)
 export const UserModel = mongoose.model('User', UserSchema)
 
 export class CuteRepo {
-  repo: string
-  muted: boolean
   filter: number
+  muted: boolean
+  repo: string
 }
 
 export class CuteUser {
   accessToken?: string
-  passwordEncrypted?: string
-  watching?: boolean
-  watchingStars?: number
   alerted?: string[][]
-  frequency?: string
   checkAt?: number
   email?: string
+  frequency?: string
+  githubId?: number
   id?: string
+  passwordEncrypted?: string
   repos?: CuteRepo[]
+  watching?: boolean
+  watchingStars?: number
 }
 
 export class UpdateAllReposParams {
@@ -49,20 +51,21 @@ export class UpdateAllReposParams {
 }
 
 export class RawUser {
+  _id?: ObjectID
   accessToken?: string
-  passwordEncrypted?: string
-  watching?: boolean
-  watchingStars?: number
   alerted?: string[][]
-  frequency?: string
   checkAt?: number
   email?: string
-  _id?: ObjectID
-  repos?: string[]
+  frequency?: string
+  githubId?: number
   majors?: string[]
   minors?: string[]
-  patches?: string[]
   mutedRepos? : string[]
+  passwordEncrypted?: string
+  patches?: string[]
+  repos?: string[]
+  watching?: boolean
+  watchingStars?: number
   [key: string]: any
 }
 
@@ -72,21 +75,32 @@ export class User extends CuteUser {
     assign(this, params)
   }
 
-  async save (doc: CuteUser = null) {
-    if (this.id) {
-      await User.update({ id: this.id }, doc || this)
-      return assign(this, doc)
-    }
+  async create () {
     const raw = await UserModel.create(toRaw(this))
     return assign(this, toCute(raw))
   }
 
-  errors () {
+  async update (doc: CuteUser) {
+    if (!this.id) {
+      throw new Error('Can\'t update non-existent user')
+    }
+    if (!doc) {
+      throw new Error('Updating existing user requires object with updated attributes as parameter')
+    }
+    await User.update({ id: this.id }, doc)
+    return assign(this, doc)
+  }
+
+  validate (params: CuteUser = {}) {
+    return User.validate(assign({}, this, params))
+  }
+
+  static validate (doc: CuteUser) {
     try {
-      const model = new UserModel(toRaw(this))
+      const model = new UserModel(toRaw(doc))
       return model.validateSync()
     } catch (e) {
-      return true
+      return e
     }
   }
 
@@ -242,7 +256,7 @@ function toCute (raw: RawUser): CuteUser {
       repo,
       muted: mutedRepos.includes(repo),
       filter: (() => {
-        const lists: [string[], number][] = [[majors, 0], [minors, 1], [patches, 2]];
+        const lists: [string[], number][] = [[majors, 0], [minors, 1], [patches, 2]]
         return (lists.find(([l]) => l.includes(repo)) || [null, 3])[1]
       })()
     })).reverse(),

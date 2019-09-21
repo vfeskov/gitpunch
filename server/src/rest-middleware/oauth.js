@@ -47,14 +47,15 @@ export async function done (req, res, next) {
 async function authToken (code, state, repos) {
   try {
     const accessToken = await getAccessToken(code, state)
-    const email = await getEmail(accessToken)
-    let user = await User.load({ email })
+    const githubId = await getGithubId(accessToken)
+    let user = await User.load({ githubId })
     if (user) {
-      await user.save({ accessToken })
+      await user.update({ accessToken })
     } else {
       repos = parseRepos(repos)
       repos = await withTags(repos)
-      user = await User.create({ email, accessToken, repos })
+      const email = await getEmail(accessToken)
+      user = await User.create({ email, accessToken, githubId, repos })
     }
     return signToken({ id: user.id })
   } catch (error) {
@@ -81,6 +82,18 @@ async function getAccessToken (code, state) {
   const accessToken = json.access_token
   if (!accessToken) { throw Error(`Empty accessToken ${JSON.stringify(json)}`)}
   return accessToken
+}
+
+async function getGithubId (accessToken) {
+  const response = await fetch('https://api.github.com/user', {
+    headers: {
+      Authorization: `token ${accessToken}`,
+      Accept: 'application/json'
+    }
+  })
+  if (response.status !== 200) { throw Error(`getGithubId ${response.status} ${accessToken}`) }
+  const { id: githubId } = await response.json()
+  return githubId
 }
 
 async function getEmail (accessToken) {

@@ -1,7 +1,7 @@
 import { Selector } from 'testcafe';
 import * as assert from 'assert';
 import { queryDb, doGitHubSignIn, skipIntro } from './lib';
-const { SERVER_URL, GITHUB_EMAIL } = process.env;
+const { SERVER_URL, GITHUB_EMAIL, GITHUB_ID } = process.env;
 
 fixture `GitHub Sign In`
   .page(SERVER_URL)
@@ -12,7 +12,7 @@ fixture `GitHub Sign In`
 test('Basic use case', async t => {
   await doGitHubSignIn(t)
   await queryDb(async db => {
-    const user = await db.collection('users').findOne({ email: GITHUB_EMAIL });
+    const user = await db.collection('users').findOne({ email: GITHUB_EMAIL, githubId: +GITHUB_ID });
     assert.equal(true, typeof user.accessToken === 'string' && !!user.accessToken);
   });
 });
@@ -43,7 +43,7 @@ test('First add repos then sign in', async t => {
   await doGitHubSignIn(t);
 
   await queryDb(async db => {
-    const user = await db.collection('users').findOne({ email: GITHUB_EMAIL });
+    const user = await db.collection('users').findOne({ email: GITHUB_EMAIL, githubId: +GITHUB_ID });
     assert.equal(true, typeof user.accessToken === 'string' && !!user.accessToken);
     assert.deepStrictEqual(['facebook/react', 'angular/angular', 'vuejs/vue', 'emberjs/ember.js'], user.repos);
     assert.deepStrictEqual(['angular/angular'], user.mutedRepos);

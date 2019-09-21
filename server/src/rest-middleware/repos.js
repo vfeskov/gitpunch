@@ -41,8 +41,7 @@ export async function remove ({ params, user }, res, next) {
 }
 
 export async function removeAll ({ user }, res, next) {
-  user.repos = []
-  await user.save()
+  await user.update({ repos: [] })
   success(res, serialize({ repos: [] }))
 }
 
@@ -57,7 +56,7 @@ export async function patch ({ user, params, body }, res, next) {
       repo[param] = body[param]
     }
   })
-  if (user.errors()) {
+  if (user.validate({ repos: [repo] })) {
     return next(badRequest())
   }
   await user.updateRepo(repo)
