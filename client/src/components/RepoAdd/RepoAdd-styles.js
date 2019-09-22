@@ -6,7 +6,7 @@ export function styles (theme) {
     },
     suggestionsContainerOpen: {
       position: 'absolute',
-      marginBottom: theme.spacing.unit * 3,
+      marginBottom: theme.spacing(3),
       left: 0,
       right: 0,
       zIndex: 2
@@ -21,7 +21,7 @@ export function styles (theme) {
     },
     title: {
       ...theme.typography.h6,
-      marginBottom: theme.spacing.unit,
+      marginBottom: theme.spacing(1),
       marginTop: 0,
       [theme.breakpoints.down('xs')]: {
         textAlign: 'center'
@@ -60,11 +60,11 @@ export function styles (theme) {
       width: '100%',
       position: 'relative',
       [theme.breakpoints.down('xs')]: {
-        marginBottom: theme.spacing.unit * 4
+        marginBottom: theme.spacing(4)
       }
     },
     newLine: {
-      marginBottom: theme.spacing.unit * 4
+      marginBottom: theme.spacing(4)
     },
     addButton: {
       color: `${theme.palette.secondary.main} !important`,
@@ -75,7 +75,7 @@ export function styles (theme) {
     },
     starsLinkContainer: {
       [theme.breakpoints.down('xs')]: {
-        margin: `${theme.spacing.unit}px 0`,
+        margin: `${theme.spacing(1)}px 0`,
         textAlign: 'center'
       }
     },
@@ -91,7 +91,7 @@ export function styles (theme) {
       }
     },
     error: {
-      paddingTop: theme.spacing.unit,
+      paddingTop: theme.spacing(1),
       position: 'absolute',
       top: '100%',
       color: '#f00',

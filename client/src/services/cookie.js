@@ -12,7 +12,17 @@ export function get (name) {
 }
 
 export function set (name, value) {
+  if (customSource) {
+    return;
+  }
   document.cookie = `${name}=${value}; expires=Thu, 01 Jan 2030 00:00:00 GMT; Path=/; SameSite=Lax`
+}
+
+export function unset (name) {
+  if (customSource) {
+    return;
+  }
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
 function parse () {

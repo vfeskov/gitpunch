@@ -10,7 +10,7 @@ export default function styles (theme) {
       position: 'relative'
     },
     formControl: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     or: {
       textAlign: 'center'

@@ -16,6 +16,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { Route } from 'react-router-dom'
 import styles from './App-styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import NewGithubEmailDialog from '../NewGithubEmailDialog'
 
 const homePath = '/(stars|unsubscribe/.+)?'
 const homePathRegExp = new RegExp(`^${homePath}$`)
@@ -32,7 +33,7 @@ class App extends PureComponent {
   }
 
   render () {
-    const { classes, signedIn, email, signOut, showIntro, location } = this.props
+    const { classes, signedIn, email, signOut, showIntro, location, patchProfileSuccess } = this.props
     const isHome = homePathRegExp.test(location.pathname)
     return (
       <Fragment>
@@ -40,7 +41,7 @@ class App extends PureComponent {
         <div className={classes.app}>
           <div className={classes.contentContainer + ' ' + (showIntro === 'n' || !isHome ? classes.contentOn : '')} id="scroll-container">
             <div className={classes.content}>
-              <Header className={classes.block} email={email} signOut={signOut} />
+              <Header className={classes.block} email={email} signOut={signOut} patchProfileSuccess={patchProfileSuccess} />
               <Route exact path={homePath} render={() => <div>
                 <RepoAdd className={`${classes.block} ${classes.maxWidth}`} />
                 <div className={`${classes.container} ${classes.maxWidth}`}>
@@ -56,6 +57,7 @@ class App extends PureComponent {
           </div>
           <Stars />
           <UnwatchMessage />
+          <NewGithubEmailDialog patchProfileSuccess={patchProfileSuccess} />
           <div className={
             classes.introContainer + ' ' +
             (showIntro === 'y' && isHome ?

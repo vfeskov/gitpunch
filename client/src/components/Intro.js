@@ -107,9 +107,9 @@ export default withStyles(theme => {
   return {
     container: {
       fontSize: '14px',
-      paddingTop: theme.spacing.unit,
+      paddingTop: theme.spacing(1),
       [theme.breakpoints.up('sm')]: {
-        paddingTop: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
       }
     },
     avatar: {
@@ -176,9 +176,9 @@ export default withStyles(theme => {
     },
     skipContainer: {
       [theme.breakpoints.up('sm')]: {
-        bottom: theme.spacing.unit * 4
+        bottom: theme.spacing(4)
       },
-      bottom: theme.spacing.unit * 2,
+      bottom: theme.spacing(2),
       left: 0,
       position: 'fixed',
       textAlign: 'center',
@@ -201,7 +201,7 @@ export default withStyles(theme => {
 
   function animated ({
     className,
-    delay,
+    delay = 0,
     duration = 200,
     from = { opacity: 0 },
     to = { opacity: 1 }
@@ -216,7 +216,7 @@ export default withStyles(theme => {
     }
     return {
       [className]: {
-        animation: `${className}kfs ${delay + duration}ms 1 linear`
+        animation: `$${className}kfs ${delay + duration}ms 1 linear`
       },
       [`@keyframes ${className}kfs`]: keyframes
     }

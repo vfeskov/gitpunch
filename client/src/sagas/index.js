@@ -1,5 +1,4 @@
-import { delay } from 'redux-saga'
-import { all, take, takeLatest, put, call, fork, select } from 'redux-saga/effects'
+import { all, take, takeLatest, put, call, fork, select, delay } from 'redux-saga/effects'
 import * as actions from '../actions'
 import * as api from '../services/api'
 // import * as cookie from '../services/cookie'

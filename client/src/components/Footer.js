@@ -33,7 +33,7 @@ export default withStyles(theme => ({
     marginBottom: '0 !important',
     textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing.unit * 2
+      marginTop: theme.spacing(2)
     }
   },
   menu: {

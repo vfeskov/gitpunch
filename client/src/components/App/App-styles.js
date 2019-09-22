@@ -27,10 +27,14 @@ export default function styles (theme) {
         textDecoration: 'none'
       },
       button: {
+        background: 'none',
         border: 'none',
         color: theme.palette.secondary.main,
         fontSize: 'inherit',
         padding: 0
+      },
+      'button.soft': {
+        color: 'inherit'
       },
       'a.soft': {
         color: theme.palette.primary[900],
@@ -75,11 +79,11 @@ export default function styles (theme) {
     },
     block: {
       [theme.breakpoints.up('sm')]: {
-        marginBottom: theme.spacing.unit * 3,
-        padding: theme.spacing.unit * 4
+        marginBottom: theme.spacing(3),
+        padding: theme.spacing(4)
       },
-      marginBottom: theme.spacing.unit * 1.5,
-      padding: theme.spacing.unit * 2
+      marginBottom: theme.spacing(1.5),
+      padding: theme.spacing(2)
     },
     maxWidth,
     maxWidthWide: { ...maxWidth, maxWidth: '1000px' },

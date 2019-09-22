@@ -6,12 +6,12 @@ export default function styles (theme) {
       justifyContent: 'center'
     },
     ampm: {
-      marginLeft: theme.spacing.unit * 2
+      marginLeft: theme.spacing(2)
     },
     value: {
       fontSize: '1.2em',
       textAlign: 'center',
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     canvas: {
       width: '200px',

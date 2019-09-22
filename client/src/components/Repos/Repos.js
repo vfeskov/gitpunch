@@ -276,7 +276,7 @@ const styles = theme => {
       minHeight: '48px',
       '@global': {
         '.action': {
-          marginLeft: theme.spacing.unit
+          marginLeft: theme.spacing(1)
         }
       }
     },
@@ -287,7 +287,7 @@ const styles = theme => {
       transition: 'all 0.2s',
       '@global': {
         '.action': {
-          marginLeft: theme.spacing.unit,
+          marginLeft: theme.spacing(1),
         }
       },
       '&:hover,&:focus,&:active': itemHover
@@ -376,4 +376,4 @@ const styles = theme => {
   }
 }
 
-export default withTheme()(withStyles(styles)(Repos))
+export default withTheme(withStyles(styles)(Repos))

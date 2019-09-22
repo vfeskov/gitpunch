@@ -85,7 +85,7 @@ const styles = theme => ({
   controlGroup: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing(4),
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column'
     }
@@ -102,7 +102,7 @@ const styles = theme => ({
   },
   title: {
     ...theme.typography.subtitle1,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
     marginTop: 0,
     [theme.breakpoints.down('xs')]: {
       textAlign: 'center'

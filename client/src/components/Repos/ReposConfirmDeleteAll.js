@@ -31,4 +31,4 @@ ReposConfirmDeleteAll.propTypes = {
   theme: PropTypes.object.isRequired
 }
 
-export default withTheme()(ReposConfirmDeleteAll)
+export default withTheme(ReposConfirmDeleteAll)

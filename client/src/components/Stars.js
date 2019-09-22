@@ -198,13 +198,13 @@ function styles(theme) {
       display: 'flex'
     },
     actions: {
-      minHeight: theme.spacing.unit * 6
+      minHeight: theme.spacing(6)
     },
     nav: {
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
-      paddingBottom: theme.spacing.unit * 2
+      paddingBottom: theme.spacing(2)
     },
     watchAllContainer: {
       alignItems: 'center',

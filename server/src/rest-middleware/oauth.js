@@ -10,7 +10,7 @@ const clientHost = process.env.WAB_CLIENT_HOST
 
 export function start (req, res, next) {
   const state = randomBytes(32).toString('hex')
-  const flags = 'Path=/; expires=0; HttpOnly; SameSite=Lax'
+  const flags = 'Path=/; Expires=0; HttpOnly; SameSite=Lax'
   const cookies = [`githubOAuthState=${state}; ${flags}`]
   const { repos, returnTo } = req.params || {}
   if (repos) { cookies.push([`repos=${hex(repos)}; ${flags}`]) }
@@ -25,7 +25,7 @@ export function start (req, res, next) {
 export async function done (req, res, next) {
   const { code, state } = req.params
   const { githubOAuthState: rightState, repos, returnTo } = req.cookies
-  const flags = 'Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+  const flags = 'Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
   const cookies = [
     `githubOAuthState=; ${flags}`,
     `repos=; ${flags}`,
@@ -33,7 +33,13 @@ export async function done (req, res, next) {
   ]
   let redirect = clientHost
   if (state === rightState && code) {
-    const token = await authToken(code, state, repos)
+    const accessToken = await getAccessToken(code, state)
+    const { githubEmail, user } = await saveUser(accessToken, repos)
+    const token = await signToken({ id: user.id })
+    if (githubEmail !== user.email) {
+      const inOneMinute = new Date(new Date().getTime() + 60000).toUTCString()
+      cookies.push(`githubEmail=${githubEmail}; Path=/; Expires=${inOneMinute}; SameSite=Lax`)
+    }
     cookies.push(setCookieTokenHeader(token))
     redirect += parseReturnTo(returnTo)
   }
@@ -44,23 +50,21 @@ export async function done (req, res, next) {
   res.end()
 }
 
-async function authToken (code, state, repos) {
+async function saveUser (accessToken, repos) {
   try {
-    const accessToken = await getAccessToken(code, state)
     const githubId = await getGithubId(accessToken)
-    const email = await getEmail(accessToken)
-    let user = await User.load({ $or: [{ githubId }, { email }] })
+    const githubEmail = await getGithubEmail(accessToken)
+    let user = await User.load({ $or: [{ githubId }, { email: githubEmail }] })
     if (user) {
       await user.update({ githubId, accessToken })
     } else {
       repos = parseRepos(repos)
       repos = await withTags(repos)
-      const email = await getEmail(accessToken)
       user = await User.create({ email, accessToken, githubId, repos })
     }
-    return signToken({ id: user.id })
+    return { githubEmail, user }
   } catch (error) {
-    console.error('authTokenError', code, error)
+    console.error('getUserInfo', error)
   }
 }
 
@@ -97,7 +101,7 @@ async function getGithubId (accessToken) {
   return githubId
 }
 
-async function getEmail (accessToken) {
+async function getGithubEmail (accessToken) {
   const response = await fetch('https://api.github.com/user/emails', {
     headers: {
       Authorization: `token ${accessToken}`,
