@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "start": "NODE_ENV=production node -r esm -r dotenv/config build/index",
+    "start": "NODE_ENV=production node -r esm build/index",
     "watch": "NODE_ENV=development PORT=3001 concurrently \"webpack --watch\" \"nodemon --watch build/index.js --exec node -r dotenv/config build/index.js\""
   },
   "author": "Vladimir Feskov",
