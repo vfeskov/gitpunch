@@ -54,13 +54,16 @@ async function saveUser (accessToken, repos) {
   try {
     const githubId = await getGithubId(accessToken)
     const githubEmail = await getGithubEmail(accessToken)
-    let user = await User.load({ $or: [{ githubId }, { email: githubEmail }] })
+    let user = await User.load({ githubId })
+    if (!user) {
+      user = await User.load({ email: githubEmail })
+    }
     if (user) {
       await user.update({ githubId, accessToken })
     } else {
       repos = parseRepos(repos)
       repos = await withTags(repos)
-      user = await User.create({ email, accessToken, githubId, repos })
+      user = await User.create({ email: githubEmail, accessToken, githubId, repos })
     }
     return { githubEmail, user }
   } catch (error) {

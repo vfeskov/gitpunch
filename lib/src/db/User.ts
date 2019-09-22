@@ -143,8 +143,12 @@ export class User extends CuteUser {
     return this
   }
 
-  static async load (search: CuteUser) {
-    const raw = await UserModel.findOne(toRaw(search))
+  static async load (conditions: any) {
+    const { id, ...rest } = conditions
+    if (id) {
+      conditions = { _id: new ObjectID(id), ...rest }
+    }
+    const raw = await UserModel.findOne(conditions)
     return raw ? new User(toCute(raw)) : null
   }
 
