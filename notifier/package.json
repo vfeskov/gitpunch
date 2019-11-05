@@ -16,7 +16,7 @@
     "html-minifier": "^3.5.15",
     "jsonwebtoken": "^8.2.1",
     "mongodb": "^3.1.13",
-    "mongoose": "^5.6.8",
+    "mongoose": "^5.7.5",
     "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a"
   },
   "devDependencies": {
