@@ -8,7 +8,7 @@ const PAGES = process.env.WAB_EVENTS_MONITORING_PAGES || 5
 // how often github resets rate limit in seconds
 const CYCLE = process.env.WAB_EVENTS_MONITORING_CYCLE || 3600
 const SQS_QUEUE_URL = process.env.WAB_SQS_QUEUE_URL
-const TRACK_EVENTS_FOR_DUPLICATES = 100;
+const TRACK_EVENTS_FOR_DUPLICATES = +process.env.WAB_TRACK_EVENTS_FOR_DUPLICATES || 200;
 
 let prevEvents = []
 export async function monitor () {
@@ -16,7 +16,7 @@ export async function monitor () {
   try {
     const accessToken = await pickAccessToken()
     const events = await fetchEvents(accessToken)
-    events
+    const releaseEvents = events
       // keep only release/tag events
       .filter(e =>
         e.type === 'ReleaseEvent' ||
@@ -24,8 +24,8 @@ export async function monitor () {
       )
       // filter out duplicates
       .filter(e => prevEvents.every(prevE => prevE.id !== e.id))
-      .forEach(sendMessageToQueue)
-    prevEvents = prevEvents.concat(events)
+    releaseEvents.forEach(sendMessageToQueue)
+    prevEvents = prevEvents.concat(releaseEvents)
     if (prevEvents.length > TRACK_EVENTS_FOR_DUPLICATES) {
       prevEvents = prevEvents.slice(prevEvents.length - TRACK_EVENTS_FOR_DUPLICATES);
     }
