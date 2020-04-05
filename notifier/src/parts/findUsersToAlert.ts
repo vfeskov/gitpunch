@@ -26,7 +26,7 @@ function withActionableRepos (user: FullUser) {
 }
 
 function pushRepoWithNewTags (result, tags, alerted, repo) {
-  if (!alerted[repo]) {
+  if (!alerted[repo] || !tags[0].name) {
     result[ONLY_UPDATE_ALERTED].push({ repo, tags: [tags[0]] })
     return
   }

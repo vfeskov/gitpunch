@@ -31,7 +31,7 @@ export interface ActionableUser extends User {
 
 export interface RepoGroup {
   repo: string
-  users: User[]
+  users: User[],
 }
 
 export interface RepoGroupWithTags extends RepoGroup {

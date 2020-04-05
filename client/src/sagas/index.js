@@ -131,7 +131,7 @@ function* fetchSuggestions ({ value }) {
     yield put(actions.fetchSuggestions.success({ items: [] }))
     return
   }
-  yield call(delay, 300)
+  yield delay(300)
   yield put(actions.fetchSuggestions.request({ value }))
   const { accessToken } = yield select()
   try {

@@ -2,12 +2,16 @@ import { Collection } from 'mongodb'
 import log from 'gitpunch-lib/log'
 import { DBUser } from './interfaces'
 
-export default async function loadUsers (collection: Collection, relevantRepos: String[]) {
+export default async function loadUsers (collection: Collection) {
   const query: any = {
     watching: true,
     $or: [
-      { frequency: { $exists: false } },
-      { frequency: 'realtime' }
+      {
+        $or: [
+          { frequency: { $exists: false } },
+          { frequency: 'realtime' }
+        ]
+      }
     ]
   }
 
@@ -19,25 +23,18 @@ export default async function loadUsers (collection: Collection, relevantRepos: 
     })
   }
 
-  if (relevantRepos) {
-    query.repos = {
-      '$in': relevantRepos
-    }
-  }
-
-  const dbUsers = await collection.find(query).toArray()
-  if (!dbUsers.length) {
-    return []
-  }
-  const users = dbUsers.map(user => {
+  let users: DBUser[] = [];
+  const cursor = collection.find(query);
+  while(await cursor.hasNext()) {
+    const user = await cursor.next();
     user.alerted = (user.alerted || [])
       .reduce((alerted, [repo, tag]) => {
         alerted[repo] = tag
         return alerted
       }, {})
-    return user
-  }) as DBUser[]
-  log('dbUsers', { count: users.length })
+    users.push(user);
+  }
   log('dbUsersDetails', { users })
+  log('dbUsers', { count: users.length })
   return users
 }
