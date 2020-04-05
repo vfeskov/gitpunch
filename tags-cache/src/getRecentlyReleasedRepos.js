@@ -33,7 +33,6 @@ async function receiveQueuedMesages() {
     const params = {
       QueueUrl: SQS_URL,
       MaxNumberOfMessages: 10,
-      VisibilityTimeout: 0,
     };
     const responses = await Promise.all(
       Array.from(Array(RECEIVE_MAX_EVENTS / 10)).map(() =>
