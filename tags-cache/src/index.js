@@ -1,6 +1,7 @@
 "use strict";
 
 const { MongoClient } = require("mongodb");
+const moment = require("moment");
 const log = require("gitpunch-lib/log").default;
 const githubAtom = require("gitpunch-lib");
 const getRecentlyReleasedRepos = require("./getRecentlyReleasedRepos").default;
@@ -8,7 +9,7 @@ const TagsCache = require("./tagsCache").default;
 
 let {
   MONGODB_URL = "mongodb://localhost:27017/gitpunch",
-  GITHUB_FETCH_LIMIT = -1,
+  GITHUB_FETCH_LIMIT = 50,
 } = process.env;
 GITHUB_FETCH_LIMIT = +GITHUB_FETCH_LIMIT;
 
@@ -21,30 +22,29 @@ module.exports.handler = async function handler(event, context, callback) {
       useUnifiedTopology: true,
     });
 
-    // load unique repos of all users that are watching
-    const usersCol = client.db().collection("users");
-    const userReposCursor = usersCol.aggregate([
-      { $match: { watching: true } },
-      { $unwind: "$repos" },
-      { $group: { _id: "$repos" } },
-    ]);
+    const tagsCache = new TagsCache(client);
+    await tagsCache.loadAll();
 
-    // load recently released repos from github event queue
+    const watchedReposCursor = client
+      .db()
+      .collection("users")
+      .aggregate([
+        { $match: { watching: true } },
+        { $unwind: "$repos" },
+        { $group: { _id: "$repos" } },
+      ]);
+
     const releasedAll = await getRecentlyReleasedRepos();
     const released = [];
 
-    const tagsCache = new TagsCache(client);
-    // mark every existing repo in tagsCache with watched=false
-    await tagsCache.resetWatched();
-    while (await userReposCursor.hasNext()) {
-      const { _id: name } = await userReposCursor.next();
-      // track which of the recently released repos are being watched
-      releasedAll.includes(name) && released.push(name);
-      // insert new repo into tagsCache or update existing with watched=true
-      await tagsCache.upsert(name);
+    const then = moment();
+    while (await watchedReposCursor.hasNext()) {
+      const watchedRepo = await watchedReposCursor.next().then((i) => i._id);
+      tagsCache.addWatchedRepo(watchedRepo);
+      releasedAll.includes(watchedRepo) && released.push(watchedRepo);
     }
-    await tagsCache.doneUpserting();
-    log("watchedRecentlyReleasedRepos", { released, count: released.length });
+    await tagsCache.updateWatched();
+    log("watchedReposCursor", { duration: moment().diff(then, "ms") });
 
     // load repos which tags haven't been loaded for a while
     const outdated = await tagsCache.loadOutdated(
@@ -55,6 +55,7 @@ module.exports.handler = async function handler(event, context, callback) {
     for (let name of [...released, ...outdated]) {
       const latestTag = await getLatestTag(name);
       await tagsCache.updateLatestTag(name, latestTag);
+      log("latestTag", { repo: name, latestTag });
     }
   } catch (e) {
     log("error", { error: { message: e.message, stack: e.stack } });
