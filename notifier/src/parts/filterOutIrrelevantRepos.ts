@@ -16,7 +16,7 @@ export default async function filterOutIrrelevantRepos(client: MongoClient, byRe
     }
     return latestTag[group.repo] !== alertedTags[0];
   });
-  log('uniqueReposDetails', { repos: result });
+  log('uniqueReposDetails', { repos: result.map(r => r.repo) });
   log('uniqueRepos', { count: result.length });
   return result;
 }

@@ -12,6 +12,7 @@ export default async function fetchTags (byRepo: RepoGroup[]) {
       const tags = await fetchAtom(url, false)
       result.push({ repo, users, tags })
     } catch (error) {
+      result.push({ repo, users, tags: [] })
       errors.push(repo, error)
     }
   }
