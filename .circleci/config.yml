@@ -1,8 +1,6 @@
 version: 2.1
 jobs:
   deploy:
-    machine:
-      docker_layer_caching: true
     steps:
       - checkout
       - run: |
