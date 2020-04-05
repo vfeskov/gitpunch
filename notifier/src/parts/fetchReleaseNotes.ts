@@ -15,23 +15,20 @@ export default async function fetchReleaseNotes (users: ActionableUser[]) {
   )]
 
   const errors = trackFetchErrors()
-  const notesArray = await Promise.all(
-    reposToFetch.map(async repo => {
-      try {
-        const url = `https://github.com/${repo}/releases.atom`
-        const releases = await fetchAtom(url, true)
-        const map = releases.reduce((res, { name, entry }) => ({ ...res, [name]: entry }), {})
-        return { repo, releases: map }
-      } catch (error) {
-        errors.push(repo, error)
-        return null
-      }
-    })
-  )
+  const notesArray = [];
+  for (let repo of reposToFetch) {
+    try {
+      const url = `https://github.com/${repo}/releases.atom`
+      const releases = await fetchAtom(url, true)
+      const map = releases.reduce((res, { name, entry }) => ({ ...res, [name]: entry }), {})
+      notesArray.push({ repo, releases: map })
+    } catch (error) {
+      errors.push(repo, error)
+    }
+  }
   errors.log('fetchReleaseNotesErrors')
 
   const notes = notesArray
-    .filter(Boolean)
     .reduce((res, { repo, releases }) => ({ ...res, [repo]: releases }), {})
 
   repos.forEach(userRepos =>
