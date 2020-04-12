@@ -16,9 +16,9 @@ const sqs = new SQS({
   apiVersion: "2012-11-05",
 });
 
-module.exports.default = async function getRecentlyReleasedRepos() {
+module.exports.default = async function getRecentlyReleasedRepos(limit) {
   try {
-    const messages = await receiveQueuedMesages();
+    const messages = await receiveQueuedMesages(limit);
     const repos = [...new Set(messages.map((e) => e.repoName))];
     log("recentlyReleasedRepos", { repos, count: repos.length });
     return repos;
@@ -28,30 +28,35 @@ module.exports.default = async function getRecentlyReleasedRepos() {
   }
 };
 
-async function receiveQueuedMesages() {
+async function receiveQueuedMesages(limit) {
   try {
     const params = {
       QueueUrl: SQS_URL,
       MaxNumberOfMessages: 10,
     };
-    const responses = await Promise.all(
-      Array.from(Array(RECEIVE_MAX_EVENTS / 10)).map(() =>
-        receiveMessage(params)
-      )
-    );
+    const responses = [];
+    const messages = [];
+    while (messages.length < limit) {
+      const response = await receiveMessage(params);
+      responses.push(response);
+      messages.push(
+        ...response.Messages.map((m) => {
+          try {
+            return JSON.parse(m.Body);
+          } catch (e) {
+            return null;
+          }
+        })
+        .filter(Boolean)
+      );
+      if (!response.Messages.length) {
+        break;
+      }
+    }
     if (!DONT_DELETE_EVENTS) {
       await Promise.all(responses.map(deleteMessageBatch));
     }
-    const messages = responses.reduce((r, i) => r.concat(i.Messages || []), []);
-    return messages
-      .map((m) => {
-        try {
-          return JSON.parse(m.Body);
-        } catch (e) {
-          return null;
-        }
-      })
-      .filter(Boolean);
+    return messages;
   } catch (e) {
     return [];
   }

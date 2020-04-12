@@ -34,7 +34,7 @@ module.exports.handler = async function handler(event, context, callback) {
         { $group: { _id: "$repos" } },
       ]);
 
-    const releasedAll = await getRecentlyReleasedRepos();
+    const releasedAll = await getRecentlyReleasedRepos(GITHUB_FETCH_LIMIT);
     const released = [];
 
     const then = moment();
@@ -55,7 +55,6 @@ module.exports.handler = async function handler(event, context, callback) {
     for (let name of [...released, ...outdated]) {
       const latestTag = await getLatestTag(name);
       await tagsCache.updateLatestTag(name, latestTag);
-      log("latestTag", { repo: name, latestTag });
     }
   } catch (e) {
     log("error", { error: { message: e.message, stack: e.stack } });
