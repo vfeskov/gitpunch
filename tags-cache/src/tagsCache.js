@@ -5,43 +5,58 @@ const log = require("gitpunch-lib/log").default;
 let {
   HOURS_AGO_IS_OUTDATED_WITH_TAGS = 24,
   HOURS_AGO_IS_OUTDATED_WITHOUT_TAGS = 72,
+  CACHE_REPOS_EXPIRY_HOURS = 1,
 } = process.env;
+
+let cacheRepos;
+let cacheReposLoadedAt = moment();
 
 module.exports.default = class TagsCache {
   constructor(client) {
     this.collection = client.db().collection("tagsCache");
-    this.cacheRepos = {};
     this.toUpdateWatched = [];
     this.toUpdateNotWatched = [];
     this.toInsert = [];
   }
 
   async loadAll() {
-    const then = moment();
-    this.cacheRepos = await this.collection
-      .find({}, { name: 1, watched: 1 })
-      .toArray()
-      .then((items) =>
-        items.reduce((r, i) => Object.assign(r, { [i.name]: i.watched }), {})
-      );
-    log("tagsCacheLoadAll", { duration: moment().diff(then, "ms") });
+    if (
+      !cacheRepos ||
+      moment().diff(cacheReposLoadedAt, "hours") > +CACHE_REPOS_EXPIRY_HOURS
+    ) {
+      const then = moment();
+      cacheRepos = {};
+      const cursor = this.collection.find({}, { name: 1, watched: 1 })
+      while(await cursor.hasNext()) {
+        const repo = await cursor.next();
+        cacheRepos[repo.name] = repo.watched;
+      }
+      cacheReposLoadedAt = moment();
+      log("tagsCacheLoadAll", { duration: moment().diff(then, "ms") });
+    } else {
+      log("tagsCacheReused");
+    }
+    return cacheRepos;
   }
 
   addWatchedRepo(name) {
-    if (!this.cacheRepos.hasOwnProperty(name)) {
+    if (!cacheRepos.hasOwnProperty(name)) {
       this.toInsert.push(name);
-    } else if (!this.cacheRepos[name]) {
+      return;
+    } else if (!cacheRepos[name]) {
       this.toUpdateWatched.push(name);
     }
-    delete this.cacheRepos[name];
+    cacheRepos[name] = null;
   }
 
   updateWatched() {
-    const { cacheRepos, toUpdateWatched, toUpdateNotWatched, toInsert } = this;
+    const { toUpdateWatched, toUpdateNotWatched, toInsert } = this;
 
     for (let name in cacheRepos) {
       if (cacheRepos[name]) {
         toUpdateNotWatched.push(name);
+      } else if (cacheRepos[name] === null) {
+        cacheRepos[name] = !toUpdateWatched.includes(name);
       }
     }
     if (
@@ -59,10 +74,14 @@ module.exports.default = class TagsCache {
         count: toUpdateWatched.length,
       });
       queries.push(
-        this.collection.updateMany(
-          { name: { $in: toUpdateWatched } },
-          { $set: { watched: true } }
-        )
+        this.collection
+          .updateMany(
+            { name: { $in: toUpdateWatched } },
+            { $set: { watched: true } }
+          )
+          .then(() =>
+            toUpdateWatched.forEach((name) => (cacheRepos[name] = true))
+          )
       );
     }
     // update watched = false
@@ -72,10 +91,14 @@ module.exports.default = class TagsCache {
         count: toUpdateNotWatched.length,
       });
       queries.push(
-        this.collection.updateMany(
-          { name: { $in: toUpdateNotWatched } },
-          { $set: { watched: false } }
-        )
+        this.collection
+          .updateMany(
+            { name: { $in: toUpdateNotWatched } },
+            { $set: { watched: false } }
+          )
+          .then(() =>
+            toUpdateNotWatched.forEach((name) => (cacheRepos[name] = false))
+          )
       );
     }
     // toInsert new watched
@@ -93,6 +116,7 @@ module.exports.default = class TagsCache {
             { ordered: false }
           )
           .catch((r) => r)
+          .then(() => toInsert.forEach((name) => (cacheRepos[name] = true)))
       );
     }
     return Promise.all(queries);
