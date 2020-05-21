@@ -5,6 +5,7 @@ import log from './log'
 import timeout from './timeout'
 
 export const FETCH_ATTEMPTS = 3
+export const FETCH_ATTEMPTS_INTERVAL = 60000
 export const FETCH_TIMEOUT = 10000
 export const KEEP_ALIVE_MSECS = 120000
 
@@ -33,7 +34,7 @@ export async function fetchAtom (url: string, includeEntry: boolean) {
       break
     } catch (e) {
       error = e
-      if (e instanceof BadRequest) { break }
+      await timeout(FETCH_ATTEMPTS_INTERVAL)
     }
   }
   if (_trackTotalRequests) { _totalRequests += attempts }
