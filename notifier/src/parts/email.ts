@@ -186,7 +186,7 @@ function description (repo: string, tag: Tag) {
     const full = (type === 'html') ? decode(raw, { strict: true }) : raw
     let truncated = (truncateHtml as any)(full, 200, { byWords: true })
     if (full.length > truncated.length) {
-      truncated += `<a href="https://github.com/${repo}/releases/tag/${tag.name}">READ MORE</a>`;
+      truncated += `<a href="https://github.com/${repo}/releases/tag/${tag.name}">READ MORE</a>`
     }
     return truncated;
   } catch (e) {

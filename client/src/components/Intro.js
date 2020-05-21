@@ -58,6 +58,7 @@ export class Intro extends Component {
       sixth,
       seventh,
       eighth,
+      ninth,
       skipContainer
     } = this.props.classes
     // conditional animation class to make keyframes resettable
@@ -70,10 +71,10 @@ export class Intro extends Component {
             <strong className={author}>some_dude</strong> commented
           </div>
           <div className={content}>
-            <div className={a(second)}>PUNCH me if I'm wrong</div>
-            <div className={a(third)}>but there's no way to</div>
+            <div className={a(second)}>Hey <strong>torvalds</strong> my man,</div>
+            <div className={a(third)}>what do you use to</div>
             <div className={a(fourth)}>get EMAILED when</div>
-            <div className={a(fifth)}>RELEASES happen on GitHub</div>
+            <div className={a(fifth)}>RELEASES happen on GitHub?</div>
           </div>
         </div>
       </div>
@@ -87,12 +88,10 @@ export class Intro extends Component {
             <span>&#32;commented</span>
           </div>
           <div className={content}>
-            <span className={a(seventh)}>Dude</span>
-            <span className={a(eighth)}>&#32;→&#32;</span>
-            <div className={`${a(eighth)} ${thelinkContainer}`}>
+            <div className={`${a(seventh)} ${thelinkContainer}`}>
               <a href="" onClick={this.skip} className={thelink}>GitPunch</a>
-              <CircularProgress size={20} variant="static" value={this.state.ds * 2} />
             </div>
+            <span className={a(eighth)}>of course</span><span className={a(ninth)}>, duh <CircularProgress size={20} variant="static" value={this.state.ds * 2} /></span>
           </div>
         </div>
       </div>
@@ -112,11 +111,14 @@ export default withStyles(theme => {
         paddingTop: theme.spacing(2),
       }
     },
+    author: {
+      cursor: 'pointer'
+    },
     avatar: {
       borderRadius: '3px',
       height: '44px',
       paddingRight: '16px',
-      width: '44px'
+      width: '60px'
     },
     commentContainer: {
       alignItems: 'flex-start',
@@ -193,7 +195,7 @@ export default withStyles(theme => {
       delayAfterEach: 400
     }),
     ...animatedSequence ({
-      classNames: ['sixth', 'seventh', 'eighth'],
+      classNames: ['sixth', 'seventh', 'eighth', 'ninth'],
       delay: 2200,
       delayAfterEach: 400
     })
