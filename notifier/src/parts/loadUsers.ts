@@ -34,7 +34,6 @@ export default async function loadUsers (collection: Collection) {
       }, {})
     users.push(user);
   }
-  log('dbUsersDetails', { users })
   log('dbUsers', { count: users.length })
   return users
 }

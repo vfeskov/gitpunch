@@ -4,6 +4,7 @@
   "description": "",
   "main": "",
   "dependencies": {
+    "aws-sdk": "^2.681.0",
     "gitpunch-lib": "^1.11.1",
     "mongodb": "^3.3.2",
     "node-fetch": "^2.6.0"

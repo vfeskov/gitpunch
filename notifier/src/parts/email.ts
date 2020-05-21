@@ -5,6 +5,7 @@ import { SES } from 'aws-sdk'
 import log from 'gitpunch-lib/log'
 import { RepoWithTags, Tag } from './interfaces'
 import namesWithOrgs from './namesWithOrgs'
+import * as truncateHtml from 'truncate-html';
 const { byteLength } = Buffer;
 const privateKey = process.env.JWT_RSA_PRIVATE_KEY.replace(/\\n/g, '\n')
 const appUrl = process.env.APP_URL
@@ -126,7 +127,7 @@ export default class Email {
                 <div style="clear: both;"></div>
               </div>
               <div style="padding: 0.5em;">
-                ${description(tag.entry)}
+                ${description(r.repo, tag)}
               </div>
             </div>`
               ).join('')
@@ -179,10 +180,15 @@ function title (tag: Tag) {
 }
 
 const contentRegExp = /<content[^>]*?type="([^"]+)"[^>]*?>([^<]*)<\/content>/
-function description (entry: string) {
+function description (repo: string, tag: Tag) {
   try {
-    const [_, type, raw] = entry.match(contentRegExp)
-    return type === 'html' ? decode(raw, { strict: true }) : raw
+    const [_, type, raw] = tag.entry.match(contentRegExp)
+    const full = (type === 'html') ? decode(raw, { strict: true }) : raw
+    let truncated = (truncateHtml as any)(full, 200, { byWords: true })
+    if (full.length > truncated.length) {
+      truncated += `<a href="https://github.com/${repo}/releases/tag/${tag.name}">READ MORE</a>`;
+    }
+    return truncated;
   } catch (e) {
     return 'No description'
   }

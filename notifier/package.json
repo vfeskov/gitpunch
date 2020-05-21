@@ -17,7 +17,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.7",
-    "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a"
+    "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a",
+    "truncate-html": "^1.0.3"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
