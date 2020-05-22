@@ -184,7 +184,7 @@ function description (repo: string, tag: Tag) {
   try {
     const [_, type, raw] = tag.entry.match(contentRegExp)
     const full = (type === 'html') ? decode(raw, { strict: true }) : raw
-    let truncated = (truncateHtml as any)(full, 200, { byWords: true })
+    let truncated = (truncateHtml as any)(full, 200, { byWords: true, keepWhitespaces: true })
     if (full.length > truncated.length) {
       truncated += `<a href="https://github.com/${repo}/releases/tag/${tag.name}">READ MORE</a>`
     }
