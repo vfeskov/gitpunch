@@ -1207,5 +1207,5 @@ export default [
   "zipper",
   "zoom.js",
   "zstd",
-  "zuul"
-]
+  "zuul",
+];

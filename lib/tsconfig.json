@@ -1,17 +1,12 @@
 {
   "compilerOptions": {
-      "module": "commonjs",
-      "noImplicitAny": true,
-      "removeComments": true,
-      "declaration": true,
-      "target": "es2017",
-      "outDir": "."
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "declaration": true,
+    "target": "es2017",
+    "outDir": "."
   },
-  "include": [
-      "src/**/*"
-  ],
-  "exclude": [
-      "node_modules",
-      "**/*.spec.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

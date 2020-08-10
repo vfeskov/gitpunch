@@ -1,49 +1,49 @@
-import { ObjectID } from 'mongodb'
+import { ObjectID } from "mongodb";
 
 export interface User {
-  _id: ObjectID
-  email: string
-  alerted: Alerted,
-  mutedRepos: string[],
-  accessToken?: string,
-  majors: string[],
-  minors: string[],
-  patches: string[]
+  _id: ObjectID;
+  email: string;
+  alerted: Alerted;
+  mutedRepos: string[];
+  accessToken?: string;
+  majors: string[];
+  minors: string[];
+  patches: string[];
 }
 
 export interface Alerted {
-  [repo: string]: string
+  [repo: string]: string;
 }
 
 export interface DBUser extends User {
-  repos: string[]
+  repos: string[];
 }
 
 export interface FullUser extends User {
-  repos: RepoWithTags[]
+  repos: RepoWithTags[];
 }
 
 export interface ActionableUser extends User {
   actionableRepos: {
-    [type: string]: RepoWithTags[]
-  }
+    [type: string]: RepoWithTags[];
+  };
 }
 
 export interface RepoGroup {
-  repo: string
-  users: User[],
+  repo: string;
+  users: User[];
 }
 
 export interface RepoGroupWithTags extends RepoGroup {
-  tags: Tag[]
+  tags: Tag[];
 }
 
 export interface RepoWithTags {
-  repo: string
-  tags: Tag[]
+  repo: string;
+  tags: Tag[];
 }
 
 export interface Tag {
-  name: string
-  entry: string
+  name: string;
+  entry: string;
 }
