@@ -30,7 +30,10 @@ export async function loadAllStars (accessToken) {
 }
 
 export async function loadSuggestions ({ value, accessToken }) {
-  const response = await fetch(`https://api.github.com/search/repositories?q=${value}`, makeReqOpts(accessToken))
+  const response = await fetch(
+    'https://api.github.com/search/repositories?q=' + encodeURIComponent(`${value} fork:true`),
+    makeReqOpts(accessToken)
+  )
   if (response.status !== 200) { throw new Error() }
   return response.json()
 }
