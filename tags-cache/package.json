@@ -18,7 +18,7 @@
     "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a"
   },
   "devDependencies": {
-    "aws-sdk": "^2.653.0",
+    "aws-sdk": "^2.814.0",
     "prettier": "2.0.2"
   }
 }
