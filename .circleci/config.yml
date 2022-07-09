@@ -1,10 +1,15 @@
 version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@3.1
 jobs:
   deploy:
-    machine:
-      image: ubuntu-1604:201903-01
+    executor: aws-cli/default
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - aws-cli/setup:
+          profile-name: default
       - run: |
           export DOCKER_TAG="$CIRCLE_BRANCH-$CIRCLE_SHA1"
           export DOCKER_IMAGE="vfeskov/gitpunch:$DOCKER_TAG"
@@ -16,10 +21,11 @@ jobs:
           ./.circleci/deploy-docker-image.sh
 
 workflows:
-  Deploy:
+  aws-cli:
     jobs:
       - deploy:
           filters:
             branches:
               only:
                 - master
+                - deploy-circleci
