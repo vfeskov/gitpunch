@@ -18,7 +18,7 @@ export function fetchTags(repo: string) {
 }
 
 export async function fetchAtom(url: string, includeEntry: boolean) {
-  let error = new Unknown();
+  let error: BaseErrorWithStatus | Unknown = new Unknown();
   let success;
   let attempts = 0;
   agent =
@@ -29,7 +29,7 @@ export async function fetchAtom(url: string, includeEntry: boolean) {
       const response = await fetch(url, { agent, timeout: FETCH_TIMEOUT });
       const { status } = response;
       if (status >= 400 && status < 500) {
-        throw new BadRequest();
+        throw new BadRequest(status);
       }
       if (status !== 200) {
         throw new BadResponse(status);
@@ -39,6 +39,8 @@ export async function fetchAtom(url: string, includeEntry: boolean) {
       break;
     } catch (e) {
       error = e;
+      log("fetchAtomError", { url, error: error.message });
+      if (error instanceof BaseErrorWithStatus && error.status === 404) break;
       await timeout(FETCH_ATTEMPTS_INTERVAL);
     }
   }
@@ -111,14 +113,22 @@ export class Unknown extends BaseError {
   message = "unknown";
 }
 
-export class BadResponse extends BaseError {
-  constructor(public status: number) {
-    super("bad response");
+export class BaseErrorWithStatus extends BaseError {
+  constructor(message: string, public status: number) {
+    super(`${message} ${status}`);
   }
 }
 
-export class BadRequest extends BaseError {
-  message = "bad request";
+export class BadResponse extends BaseErrorWithStatus {
+  constructor(status: number) {
+    super("bad response", status);
+  }
+}
+
+export class BadRequest extends BaseErrorWithStatus {
+  constructor(status: number) {
+    super("bad request", status);
+  }
 }
 
 const ENTRY_REGEXP = /<entry>[\s\S]*?<\/entry>/gm;
