@@ -48,7 +48,7 @@ async function receiveQueuedMesages(limit) {
           })
           .filter(Boolean)
       );
-      if (!response.Messages.length) {
+      if (!(response.Messages || []).length) {
         break;
       }
     }
