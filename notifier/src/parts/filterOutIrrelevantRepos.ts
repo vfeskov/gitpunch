@@ -1,22 +1,13 @@
 import { MongoClient } from "mongodb";
 import { RepoGroup } from "./interfaces";
 import log from "gitpunch-lib/log";
+import getCachedTags from "./getCachedTags";
 
 export default async function filterOutIrrelevantRepos(
   client: MongoClient,
   byRepo: RepoGroup[]
 ) {
-  const latestTag = await client
-    .db()
-    .collection("tagsCache")
-    .find({ name: { $in: byRepo.map((i) => i.repo) } }, {
-      name: 1,
-      latestTag: 1,
-    } as any)
-    .toArray()
-    .then((items) =>
-      items.reduce((r, i) => Object.assign(r, { [i.name]: i.latestTag }), {})
-    );
+  const latestTag = await getCachedTags(client, byRepo);
   const result = byRepo.filter((group) => {
     let alertedTags = [
       ...new Set(

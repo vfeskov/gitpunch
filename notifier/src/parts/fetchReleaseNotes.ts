@@ -2,6 +2,8 @@ import { ActionableUser } from "./interfaces";
 import { fetchAtom, trackFetchErrors } from "gitpunch-lib/githubAtom";
 import { SEND_EMAIL_AND_UPDATE_ALERTED } from "./constants";
 
+let { MAX_RELEASE_NOTES_TO_FETCH = 1000 } = process.env;
+
 export default async function fetchReleaseNotes(users: ActionableUser[]) {
   const repos = users.map(
     (u) => u.actionableRepos[SEND_EMAIL_AND_UPDATE_ALERTED]
@@ -20,7 +22,7 @@ export default async function fetchReleaseNotes(users: ActionableUser[]) {
 
   const errors = trackFetchErrors();
   const notesArray = [];
-  for (let repo of reposToFetch) {
+  for (let repo of reposToFetch.slice(0, +MAX_RELEASE_NOTES_TO_FETCH)) {
     try {
       const url = `https://github.com/${repo}/releases.atom`;
       const releases = await fetchAtom(url, true);
@@ -44,7 +46,12 @@ export default async function fetchReleaseNotes(users: ActionableUser[]) {
     userRepos.forEach(
       ({ repo, tags }) =>
         notes[repo] &&
-        tags.forEach((tag) => (tag.entry = notes[repo][tag.name] || ""))
+        tags.forEach(
+          (tag) =>
+            (tag.entry = notes[repo]
+              ? notes[repo][tag.name] || ""
+              : "Couldn't load release notes")
+        )
     )
   );
   return users;

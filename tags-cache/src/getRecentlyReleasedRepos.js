@@ -5,11 +5,9 @@ const { SQS } = require("aws-sdk");
 
 let {
   SQS_URL,
-  RECEIVE_MAX_EVENTS = 40,
   SQS_REQUEST_TIMEOUT = 2000,
   DONT_DELETE_EVENTS = false,
 } = process.env;
-RECEIVE_MAX_EVENTS = +RECEIVE_MAX_EVENTS;
 SQS_REQUEST_TIMEOUT = +SQS_REQUEST_TIMEOUT;
 
 const sqs = new SQS({
@@ -58,6 +56,7 @@ async function receiveQueuedMesages(limit) {
     }
     return messages;
   } catch (e) {
+    log('receiveQueuedMesagesError', { error: error.message });
     return [];
   }
 }
