@@ -38,14 +38,15 @@ async function receiveQueuedMesages(limit) {
       const response = await receiveMessage(params);
       responses.push(response);
       messages.push(
-        ...response.Messages.map((m) => {
-          try {
-            return JSON.parse(m.Body);
-          } catch (e) {
-            return null;
-          }
-        })
-        .filter(Boolean)
+        ...(response.Messages || [])
+          .map((m) => {
+            try {
+              return JSON.parse(m.Body);
+            } catch (e) {
+              return null;
+            }
+          })
+          .filter(Boolean)
       );
       if (!response.Messages.length) {
         break;
@@ -56,7 +57,7 @@ async function receiveQueuedMesages(limit) {
     }
     return messages;
   } catch (e) {
-    log('receiveQueuedMesagesError', { error: error.message });
+    log("receiveQueuedMesagesError", { error: e.stack });
     return [];
   }
 }

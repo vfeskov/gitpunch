@@ -108,10 +108,11 @@ function sendMessageToQueue({ id, type, repo, payload, created_at }) {
 
 function timeUntilNextFetch(fetchStartTime) {
   const nextOnSchedule = fetchStartTime + INTERVAL * 1000;
-  if (now() > nextOnSchedule) {
+  const nowTs = now();
+  if (nowTs > nextOnSchedule) {
     return 0;
   }
-  return nextOnSchedule - now();
+  return nextOnSchedule - nowTs;
 }
 
 function now() {

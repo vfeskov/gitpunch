@@ -40,7 +40,7 @@ export async function fetchAtom(url: string, includeEntry: boolean) {
     } catch (e) {
       error = e;
       log("fetchAtomError", { url, error: error.message, attempts });
-      if (error instanceof BaseErrorWithStatus && error.status === 404) break;
+      if (error instanceof BaseErrorWithStatus && error.status !== 429) break;
       await timeout(FETCH_ATTEMPTS_INTERVAL);
     }
   }
