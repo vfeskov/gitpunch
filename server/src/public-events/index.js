@@ -1,8 +1,10 @@
 import { loadAccessTokens } from "gitpunch-lib/db";
+import log, { debug } from "gitpunch-lib/log";
 import fetch from "node-fetch";
 import { SQS } from "aws-sdk";
+import { Agent } from "https";
 // how often to fetch events in seconds
-const INTERVAL = process.env.WAB_EVENTS_MONITORING_INTERVAL || 1;
+const INTERVAL = +process.env.WAB_EVENTS_MONITORING_INTERVAL || 1;
 
 const PER_PAGE = 100;
 const PAGES = 3;
@@ -18,28 +20,37 @@ export async function monitor() {
   try {
     const accessToken = await pickAccessToken();
     const events = await fetchEvents(accessToken);
-    const releaseEvents = events
-      // keep only release/tag events
-      .filter(
-        (e) =>
-          e.type === "ReleaseEvent" ||
-          (e.type === "CreateEvent" && e.payload.ref_type === "tag")
-      )
-      // filter out duplicates
+    // keep only release/tag events
+    const releases = filterAndMapReleases(events);
+    // filter out duplicates
+    const deduped = releases
+      .filter((e, _, self) => self.find((_e) => _e.id === e.id) === e)
       .filter((e) => prevEvents.every((prevE) => prevE.id !== e.id));
-    releaseEvents.forEach(sendMessageToQueue);
-    prevEvents = prevEvents.concat(releaseEvents);
+
+    debug("monitor", {
+      duration: now() - fetchStartTime,
+      events: events.length,
+      releases: releases.length,
+      deduped: deduped.length,
+    });
+
+    deduped.forEach(sendEventToQueue);
+
+    prevEvents = prevEvents.concat(deduped);
     if (prevEvents.length > TRACK_EVENTS_FOR_DUPLICATES) {
       prevEvents = prevEvents.slice(
         prevEvents.length - TRACK_EVENTS_FOR_DUPLICATES
       );
     }
   } catch (e) {
-    console.log("Error" + e.message, e.stack);
+    log("monitorError", { error: e.stack });
   }
   setTimeout(monitor, timeUntilNextFetch(fetchStartTime));
 }
 
+const agents = Array.from(Array(PAGES)).map(
+  () => new Agent({ keepAlive: true })
+);
 const paginatedApiUrls = (() => {
   const baseUrl = "https://api.github.com/events";
   return Array.from(Array(PAGES)).map(
@@ -48,30 +59,28 @@ const paginatedApiUrls = (() => {
 })();
 async function fetchEvents(accessToken) {
   const pages = await Promise.all(
-    paginatedApiUrls.map(async (url) => {
+    paginatedApiUrls.map(async (url, index) => {
       try {
         const response = await fetch(url, {
+          agent: agents[index],
           headers: { Authorization: `token ${accessToken}` },
-          timeout: 5000,
+          timeout: 1000,
         });
         if (response.status !== 200) {
           throw new Error(`GitHub says ${response.status}`);
         }
         const events = await response.json();
-        if (eventsValid(events)) {
-          return events;
-        }
+        if (eventsValid(events)) return events;
         throw new Error("GitHub sends gibberish");
       } catch (e) {
-        console.error("Fetch Error: " + e.message, e.stack);
+        log("fetchEventsError", { error: e.stack });
         return [];
       }
     })
   );
   return pages
     .reduce((r, p) => [...r, ...p], [])
-    .sort((e1, e2) => e2.id - e1.id)
-    .filter((e, i, self) => self.find((_e) => _e.id === e.id) === e);
+    .sort((e1, e2) => e2.id - e1.id);
 }
 
 async function pickAccessToken() {
@@ -82,27 +91,37 @@ async function pickAccessToken() {
   return accessTokens[turn];
 }
 
+function filterAndMapReleases(events) {
+  return events
+    .filter(
+      (e) =>
+        e.type === "ReleaseEvent" ||
+        (e.type === "CreateEvent" && e.payload.ref_type === "tag")
+    )
+    .map(({ type, repo, payload, created_at }) => {
+      const tagName =
+        type === "ReleaseEvent" ? payload.release.tag_name : payload.ref;
+      return {
+        id: `${repo.name}@${tagName}`,
+        repoName: repo.name,
+        tagName,
+        createdAt: created_at,
+      };
+    });
+}
+
 const sqs = new SQS({
   apiVersion: "2012-11-05",
   region: process.env.WAB_SQS_REGION,
 });
-function sendMessageToQueue({ id, type, repo, payload, created_at }) {
-  const tagName =
-    type === "ReleaseEvent" ? payload.release.tag_name : payload.ref;
-  const message = {
-    id,
-    type,
-    repoName: repo.name,
-    tagName,
-    createdAt: created_at,
-  };
+function sendEventToQueue(message) {
+  debug("sendEventToQueue", message);
   sqs.sendMessage(
     {
       MessageBody: JSON.stringify(message),
       QueueUrl: SQS_QUEUE_URL,
     },
-    (err, data) =>
-      err && console.error("Can't send message to queue", message, err)
+    (err, data) => err && log("sendEventToQueueError", { message, error: err })
   );
 }
 
