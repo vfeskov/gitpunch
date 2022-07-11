@@ -45,7 +45,10 @@ export async function monitor() {
   } catch (e) {
     log("monitorError", { error: e.stack });
   }
-  setTimeout(monitor, timeUntilNextFetch(fetchStartTime));
+  const delay = timeUntilNextFetch(fetchStartTime);
+  debug("monitorNextCycleDelay", { delay });
+  setTimeout(monitor, delay);
+  debug("monitorNextCycleScheduled");
 }
 
 const agents = Array.from(Array(PAGES)).map(
