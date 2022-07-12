@@ -16,13 +16,21 @@ const TRACK_EVENTS_FOR_DUPLICATES =
 
 let prevEvents = [];
 export async function monitor() {
+  debug("monitorStart");
   const fetchStartTime = now();
   try {
+    debug("pickAccessToken");
     const accessToken = await pickAccessToken();
+
+    debug("fetchEvents");
     const events = await fetchEvents(accessToken);
+
     // keep only release/tag events
+    debug("filterAndMapReleases");
     const releases = filterAndMapReleases(events);
+
     // filter out duplicates
+    debug("deduped");
     const deduped = releases
       .filter((e, _, self) => self.find((_e) => _e.id === e.id) === e)
       .filter((e) => prevEvents.every((prevE) => prevE.id !== e.id));
