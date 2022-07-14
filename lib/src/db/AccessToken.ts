@@ -1,7 +1,10 @@
 import "./connection";
 import * as mongoose from "mongoose";
 
-const AccessTokenSchema = new mongoose.Schema({ accessToken: String });
+const AccessTokenSchema = new mongoose.Schema(
+  { accessToken: String },
+  { bufferCommands: false }
+);
 export const AccessTokenModel = mongoose.model(
   "AccessToken",
   AccessTokenSchema,

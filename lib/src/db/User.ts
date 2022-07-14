@@ -58,7 +58,9 @@ const userSchemaObj: mongoose.SchemaDefinition = {
     validate: { validator: Number.isInteger },
   },
 };
-const UserSchema = new mongoose.Schema(userSchemaObj);
+const UserSchema = new mongoose.Schema(userSchemaObj, {
+  bufferCommands: false,
+});
 export const UserModel = mongoose.model("User", UserSchema);
 
 export class CuteRepo {

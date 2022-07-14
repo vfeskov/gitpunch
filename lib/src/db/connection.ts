@@ -3,6 +3,8 @@ import log from "../log";
 
 export const connection = mongoose.connect(process.env.WAB_MONGODB_URL, {
   useNewUrlParser: true,
+  useUnifiedTopology: true,
+  bufferMaxEntries: 0,
 });
 
 export function disconnect() {
