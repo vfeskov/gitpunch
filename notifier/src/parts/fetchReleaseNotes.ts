@@ -43,15 +43,13 @@ export default async function fetchReleaseNotes(users: ActionableUser[]) {
   );
 
   repos.forEach((userRepos) =>
-    userRepos.forEach(
-      ({ repo, tags }) =>
-        notes[repo] &&
-        tags.forEach(
-          (tag) =>
-            (tag.entry = notes[repo]
-              ? notes[repo][tag.name] || ""
-              : "Couldn't load release notes")
-        )
+    userRepos.forEach(({ repo, tags }) =>
+      tags.forEach(
+        (tag) =>
+          (tag.entry = notes[repo]
+            ? notes[repo][tag.name] || ""
+            : `<a href="https://github.com/${repo}/releases/tag/${tag.name}">Release notes</a>`)
+      )
     )
   );
   return users;
