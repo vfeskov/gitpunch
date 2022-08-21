@@ -19,7 +19,7 @@
     "mongodb": "^3.6.0",
     "mongoose": "^5.9.28",
     "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a",
-    "nodemailer": "^6.4.11",
+    "nodemailer": "^6.7.8",
     "nodemailer-ses-transport": "^1.5.1",
     "truncate-html": "^1.0.3"
   },
@@ -33,7 +33,7 @@
     "@types/node": "^10.17.28",
     "@types/node-fetch": "^2.5.7",
     "awesome-typescript-loader": "^5.2.1",
-    "aws-sdk": "^2.729.0",
+    "aws-sdk": "^2.1199.0",
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "mocha": "^7.2.0",
