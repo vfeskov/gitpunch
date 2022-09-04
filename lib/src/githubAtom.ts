@@ -1,8 +1,9 @@
 // Reusable service to work with GitHub's Atom feeds
 import fetch from "node-fetch";
+import timeoutSignal from "timeout-signal";
 import { Agent } from "https";
-import log from "./log";
-import timeout from "./timeout";
+import log from "./log.js";
+import timeout from "./timeout.js";
 
 export const FETCH_ATTEMPTS = 3;
 export const FETCH_ATTEMPTS_INTERVAL = 60000;
@@ -26,7 +27,10 @@ export async function fetchAtom(url: string, includeEntry: boolean) {
   while (attempts < FETCH_ATTEMPTS) {
     try {
       attempts++;
-      const response = await fetch(url, { agent, timeout: FETCH_TIMEOUT });
+      const response = await fetch(url, {
+        agent,
+        signal: timeoutSignal(FETCH_TIMEOUT),
+      });
       const { status } = response;
       if (status >= 400 && status < 500) {
         throw new BadRequest(status);

@@ -1,6 +1,6 @@
 import { ActionableUser } from "./interfaces";
-import { fetchAtom, trackFetchErrors } from "gitpunch-lib/githubAtom";
-import { SEND_EMAIL_AND_UPDATE_ALERTED } from "./constants";
+import { fetchAtom, trackFetchErrors } from "gitpunch-lib/githubAtom.js";
+import { SEND_EMAIL_AND_UPDATE_ALERTED } from "./constants.js";
 
 let { MAX_RELEASE_NOTES_TO_FETCH = 1000 } = process.env;
 

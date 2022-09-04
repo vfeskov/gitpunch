@@ -1,8 +1,8 @@
-import "./connection";
-import * as mongoose from "mongoose";
+import "./connection.js";
+import mongoose from "mongoose";
 
 const AccessTokenSchema = new mongoose.Schema(
-  { accessToken: String },
+  { accessToken: { type: String, required: true } },
   { bufferCommands: false }
 );
 export const AccessTokenModel = mongoose.model(

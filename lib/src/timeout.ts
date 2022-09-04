@@ -10,7 +10,7 @@ export function timeout(ms: number) {
 }
 
 export function testTimeout(ms: number) {
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     _testTimePassed += ms;
     resolve();
   });

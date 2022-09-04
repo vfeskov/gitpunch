@@ -1,7 +1,7 @@
-import { ObjectID } from "mongodb";
+import { Types } from "mongoose";
 
 export interface User {
-  _id: ObjectID;
+  _id: Types.ObjectId;
   email: string;
   alerted: Alerted;
   mutedRepos: string[];
