@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
-    "bundle": "tsc && npm prune --production && rm -rf node_modules/aws-sdk bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp ../build/index.js . && zip -ruX ../bundle.zip node_modules index.js && cd .. && rm -rf bundle && npm install",
+    "bundle": "tsc && npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp -r ../build/index.js ../build/* ../package.json . && zip -ruX ../bundle.zip ./* && cd .. && rm -rf bundle && npm install",
     "postinstall": "npm link gitpunch-lib",
     "start": "tsc && node ./start.js",
     "test": "mocha -r ts-node/register src/**/*.spec.ts"

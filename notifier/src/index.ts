@@ -8,11 +8,12 @@ import fetchReleaseNotes from "./parts/fetchReleaseNotes.js";
 import sendEmailAndUpdateDb from "./parts/sendEmailAndUpdateDb.js";
 import log, { debug } from "gitpunch-lib/log.js";
 import * as githubAtom from "gitpunch-lib/githubAtom.js";
-import { disconnect } from "gitpunch-lib/db/index.js";
+import { connect, disconnect } from "gitpunch-lib/db/index.js";
 
 export async function handler(event, context, callback) {
   githubAtom.trackTotalRequests();
   try {
+    await connect();
     debug("loadUsers");
     const dbUsers = await loadUsers();
     debug("groupByRepo");

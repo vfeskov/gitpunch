@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import log from "../log.js";
 
-await mongoose.connect(process.env.WAB_MONGODB_URL);
+export function connect() {
+  return mongoose.connect(process.env.WAB_MONGODB_URL);
+}
 
 export const connection = mongoose.connection;
 
