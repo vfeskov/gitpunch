@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node -r dotenv/config -e \"require('./src/index').handler(null, null, console.log)\"",
+    "start": "node start.js",
     "bundle": "npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp -r ../src . && zip -ruX ../bundle.zip node_modules src && cd .. && rm -rf bundle && npm install",
     "prettier": "prettier --write .",
     "postinstall": "npm link gitpunch-lib"
@@ -14,11 +14,13 @@
   "license": "ISC",
   "dependencies": {
     "moment": "^2.24.0",
-    "mongodb": "^3.5.5",
-    "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a"
+    "mongodb": "^4.9.1",
+    "node-fetch": "github:vfeskov/node-fetch#0fa27e75a9087be4ec196599a9b84ce08cb34284"
   },
   "devDependencies": {
     "aws-sdk": "^2.653.0",
+    "dotenv": "^16.0.2",
     "prettier": "2.0.2"
-  }
+  },
+  "type": "module"
 }
