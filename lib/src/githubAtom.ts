@@ -28,7 +28,7 @@ export async function fetchAtom(url: string, includeEntry: boolean) {
     try {
       attempts++;
       const response = await fetch(url, {
-        agent,
+        // agent,
         signal: timeoutSignal(FETCH_TIMEOUT),
       });
       const { status } = response;
@@ -136,7 +136,7 @@ export class BadRequest extends BaseErrorWithStatus {
 }
 
 const ENTRY_REGEXP = /<entry>[\s\S]*?<\/entry>/gm;
-const ID_REGEXP = new RegExp("<id>[^<]+/([^/<]+)</id>");
+const ID_REGEXP = new RegExp("<id>[^<]+Repository/\\d+/([^<]+)</id>");
 
 function parse(xml: string, includeEntry: boolean) {
   return (xml.match(ENTRY_REGEXP) || [])
