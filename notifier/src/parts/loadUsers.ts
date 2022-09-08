@@ -16,7 +16,7 @@ export default async function loadUsers(): Promise<DBUser[]> {
   if (date.getUTCMinutes() === 0) {
     query.$or.push({
       frequency: "daily",
-      checkAt: 7,
+      checkAt: date.getUTCHours(),
     });
   }
 
