@@ -6,19 +6,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node start.js",
-    "bundle": "npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp -r ../src . && zip -ruX ../bundle.zip node_modules src && cd .. && rm -rf bundle && npm install",
+    "bundle": "npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp -r ../src ../package.json . && zip -ruX ../bundle.zip node_modules src package.json && cd .. && rm -rf bundle && npm install",
     "prettier": "prettier --write .",
     "postinstall": "npm link gitpunch-lib"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1211.0",
     "moment": "^2.24.0",
     "mongodb": "^4.9.1",
-    "node-fetch": "github:vfeskov/node-fetch#0fa27e75a9087be4ec196599a9b84ce08cb34284"
+    "node-fetch": "github:vfeskov/node-fetch#0fa27e75a9087be4ec196599a9b84ce08cb34284",
+    "timeout-signal": "^1.1.0"
   },
   "devDependencies": {
-    "aws-sdk": "^2.653.0",
     "dotenv": "^16.0.2",
     "prettier": "2.0.2"
   },
