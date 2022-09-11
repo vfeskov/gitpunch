@@ -5,7 +5,7 @@ import AWS from "aws-sdk";
 import log from "gitpunch-lib/log.js";
 import { RepoWithTags, Tag } from "./interfaces";
 import namesWithOrgs from "./namesWithOrgs.js";
-import * as truncateHtml from "truncate-html";
+import truncateHtml from "truncate-html";
 import nodemailer from "nodemailer";
 import nodemailerSesTransport from "nodemailer-ses-transport";
 
@@ -48,7 +48,7 @@ export default class Email {
       });
   }
 
-  send() {
+  async send() {
     const message = {
       from,
       to: this.email,

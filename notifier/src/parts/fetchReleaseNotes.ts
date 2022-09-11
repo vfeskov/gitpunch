@@ -48,7 +48,7 @@ export default async function fetchReleaseNotes(users: ActionableUser[]) {
         (tag) =>
           (tag.entry = notes[repo]
             ? notes[repo][tag.name] || ""
-            : `<a href="https://github.com/${repo}/releases/tag/${tag.name}">Release notes</a>`)
+            : `<content type="html">&lt;a href=&quot;https://github.com/${repo}/releases/tag/${tag.name}&quot;&gt;Release notes&lt;/a&gt;</content>`)
       )
     )
   );
