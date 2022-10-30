@@ -1,20 +1,18 @@
-import * as mongoose from "mongoose";
-import log from "../log";
+import mongoose from "mongoose";
+import log from "../log.js";
 
-export const connection = mongoose.connect(process.env.WAB_MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  bufferMaxEntries: 0,
-});
+export function connect() {
+  return mongoose.connect(process.env.WAB_MONGODB_URL);
+}
+
+export const connection = mongoose.connection;
 
 export function disconnect() {
-  return connection.then(
-    (con) => con.disconnect(),
-    (e) =>
-      log("disconnectError", {
-        name: e.name,
-        message: e.message,
-        stack: e.stack,
-      })
+  return mongoose.disconnect().catch((e) =>
+    log("disconnectError", {
+      name: e.name,
+      message: e.message,
+      stack: e.stack,
+    })
   );
 }

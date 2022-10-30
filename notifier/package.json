@@ -4,44 +4,46 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "build": "webpack",
-    "bundle": "webpack && npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp ../build/index.js . && zip -ruX ../bundle.zip node_modules index.js && cd .. && rm -rf bundle && npm install",
+    "build": "tsc",
+    "bundle": "tsc && npm prune --production && rm -rf bundle bundle.zip && mkdir bundle && cd bundle && cp -r ../node_modules . && cp -r ../../lib node_modules && rm -rf node_modules/lib/node_modules && mv node_modules/lib node_modules/gitpunch-lib && cp -r ../build/index.js ../build/* ../package.json . && zip -ruX ../bundle.zip ./* && cd .. && rm -rf bundle && npm install",
     "postinstall": "npm link gitpunch-lib",
-    "start": "webpack && node -r dotenv/config -e \"require('./build').handler(null, null, console.log)\"",
+    "start": "tsc && node ./start.js",
     "test": "mocha -r ts-node/register src/**/*.spec.ts"
   },
   "license": "MIT",
   "dependencies": {
     "@types/nodemailer": "^6.4.0",
+    "cheerio": "^1.0.0-rc.12",
     "he": "^1.2.0",
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.6.0",
-    "mongoose": "^5.9.28",
-    "node-fetch": "github:vfeskov/node-fetch#0cc7a7b6d86653e127b55291bc649d39be066d9a",
-    "nodemailer": "^6.4.11",
+    "mongoose": "^6.5.2",
+    "node-fetch": "github:vfeskov/node-fetch#0fa27e75a9087be4ec196599a9b84ce08cb34284",
+    "nodemailer": "^6.7.8",
     "nodemailer-ses-transport": "^1.5.1",
-    "truncate-html": "^1.0.3"
+    "timeout-signal": "^1.1.0",
+    "truncate-html": "^0.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.12",
     "@types/he": "^1.1.1",
     "@types/html-minifier": "^3.5.3",
     "@types/mocha": "^7.0.2",
-    "@types/mongodb": "^3.5.25",
-    "@types/nock": "^11.1.0",
-    "@types/node": "^10.17.28",
-    "@types/node-fetch": "^2.5.7",
-    "awesome-typescript-loader": "^5.2.1",
-    "aws-sdk": "^2.729.0",
+    "@types/node": "^18.7.8",
+    "@types/node-fetch": "^2.6.2",
+    "aws-sdk": "^2.1209.0",
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "mocha": "^7.2.0",
     "nock": "^12.0.3",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.7",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-node-externals": "^1.7.2"
+    "ts-loader": "^9.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  },
+  "type": "module",
+  "overrides": {
+    "truncate-html": {
+      "cheerio": "$cheerio"
+    }
   }
 }

@@ -27,5 +27,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
                 - deploy-circleci

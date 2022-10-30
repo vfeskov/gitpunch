@@ -1,13 +1,13 @@
-import * as JWT from "jsonwebtoken";
+import JWT from "jsonwebtoken";
 import { minify } from "html-minifier";
-import { decode } from "he";
-import { SES } from "aws-sdk";
-import log from "gitpunch-lib/log";
+import he from "he";
+import AWS from "aws-sdk";
+import log from "gitpunch-lib/log.js";
 import { RepoWithTags, Tag } from "./interfaces";
-import namesWithOrgs from "./namesWithOrgs";
-import * as truncateHtml from "truncate-html";
-import * as nodemailer from "nodemailer";
-import * as nodemailerSesTransport from "nodemailer-ses-transport";
+import namesWithOrgs from "./namesWithOrgs.js";
+import truncateHtml from "truncate-html";
+import nodemailer from "nodemailer";
+import nodemailerSesTransport from "nodemailer-ses-transport";
 
 const { byteLength } = Buffer;
 const privateKey = process.env.JWT_RSA_PRIVATE_KEY.replace(/\\n/g, "\n");
@@ -16,7 +16,7 @@ const from = process.env.FROM;
 const region = process.env.SES_REGION;
 const mailer = nodemailer.createTransport(
   nodemailerSesTransport({
-    ses: new SES({
+    ses: new AWS.SES({
       apiVersion: "2010-12-01",
       region,
     }),
@@ -48,7 +48,7 @@ export default class Email {
       });
   }
 
-  send() {
+  async send() {
     const message = {
       from,
       to: this.email,
@@ -218,7 +218,7 @@ const contentRegExp = /<content[^>]*?type="([^"]+)"[^>]*?>([^<]*)<\/content>/;
 function description(repo: string, tag: Tag) {
   try {
     const [_, type, raw] = tag.entry.match(contentRegExp);
-    const full = type === "html" ? decode(raw, { strict: true }) : raw;
+    const full = type === "html" ? he.decode(raw, { strict: true }) : raw;
     let truncated = (truncateHtml as any)(full, 200, {
       byWords: true,
       keepWhitespaces: true,
@@ -239,7 +239,8 @@ function style(html) {
   );
 }
 
-const tagsWithAttrsToStrip = /<[^>]+\s+[^>]*(data-[\w\d\-]+|class)="[^">]*"[^>]*>/g;
+const tagsWithAttrsToStrip =
+  /<[^>]+\s+[^>]*(data-[\w\d\-]+|class)="[^">]*"[^>]*>/g;
 const attrsToStrip = /(data-[\w\d\-]+|class)="[^">]*"/g;
 function minifyHtml(html: string) {
   // strip data-* and class attributes

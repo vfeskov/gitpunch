@@ -1,15 +1,11 @@
-import { MongoClient } from "mongodb";
-import { fetchAtom, trackFetchErrors } from "gitpunch-lib/githubAtom";
-import shuffle from "gitpunch-lib/shuffle";
+import { fetchAtom, trackFetchErrors } from "gitpunch-lib/githubAtom.js";
+import shuffle from "gitpunch-lib/shuffle.js";
 import { RepoGroup, RepoGroupWithTags } from "./interfaces";
-import getCachedTags from "./getCachedTags";
+import getCachedTags from "./getCachedTags.js";
 
 let { MAX_TAGS_TO_FETCH = 500 } = process.env;
 
-export default async function fetchTags(
-  client: MongoClient,
-  byRepo: RepoGroup[]
-) {
+export default async function fetchTags(byRepo: RepoGroup[]) {
   const errors = trackFetchErrors();
   let shuffled = shuffle(byRepo);
   let toFetchFromCache = [];
@@ -31,7 +27,7 @@ export default async function fetchTags(
   }
 
   if (toFetchFromCache.length) {
-    const cachedTags = await getCachedTags(client, byRepo);
+    const cachedTags = await getCachedTags(byRepo);
     for (const { repo, users } of toFetchFromCache) {
       result.push({
         repo,

@@ -1,7 +1,7 @@
 "use strict";
 
-const log = require("gitpunch-lib/log").default;
-const { SQS } = require("aws-sdk");
+import log from "gitpunch-lib/log.js";
+import AWS from "aws-sdk";
 
 let {
   SQS_URL,
@@ -10,11 +10,11 @@ let {
 } = process.env;
 SQS_REQUEST_TIMEOUT = +SQS_REQUEST_TIMEOUT;
 
-const sqs = new SQS({
+const sqs = new AWS.SQS({
   apiVersion: "2012-11-05",
 });
 
-module.exports.default = async function getRecentlyReleasedRepos(limit) {
+export default async function getRecentlyReleasedRepos(limit) {
   try {
     const messages = await receiveQueuedMesages(limit);
     const repos = [...new Set(messages.map((e) => e.repoName))];
@@ -24,7 +24,7 @@ module.exports.default = async function getRecentlyReleasedRepos(limit) {
     log("error", { error: e });
     return [];
   }
-};
+}
 
 async function receiveQueuedMesages(limit) {
   try {

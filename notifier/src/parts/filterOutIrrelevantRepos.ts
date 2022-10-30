@@ -1,13 +1,9 @@
-import { MongoClient } from "mongodb";
 import { RepoGroup } from "./interfaces";
-import log from "gitpunch-lib/log";
-import getCachedTags from "./getCachedTags";
+import log from "gitpunch-lib/log.js";
+import getCachedTags from "./getCachedTags.js";
 
-export default async function filterOutIrrelevantRepos(
-  client: MongoClient,
-  byRepo: RepoGroup[]
-) {
-  const latestTag = await getCachedTags(client, byRepo);
+export default async function filterOutIrrelevantRepos(byRepo: RepoGroup[]) {
+  const latestTag = await getCachedTags(byRepo);
   const result = byRepo.filter((group) => {
     let alertedTags = [
       ...new Set(

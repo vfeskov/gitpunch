@@ -1,11 +1,11 @@
 "use strict";
 
-const { MongoClient } = require("mongodb");
-const moment = require("moment");
-const log = require("gitpunch-lib/log").default;
-const githubAtom = require("gitpunch-lib");
-const getRecentlyReleasedRepos = require("./getRecentlyReleasedRepos").default;
-const TagsCache = require("./tagsCache").default;
+import mongodb from "mongodb";
+import moment from "moment";
+import log from "gitpunch-lib/log.js";
+import * as githubAtom from "gitpunch-lib/githubAtom.js";
+import getRecentlyReleasedRepos from "./getRecentlyReleasedRepos.js";
+import TagsCache from "./tagsCache.js";
 
 let {
   MONGODB_URL = "mongodb://localhost:27017/gitpunch",
@@ -13,11 +13,11 @@ let {
 } = process.env;
 GITHUB_FETCH_LIMIT = +GITHUB_FETCH_LIMIT;
 
-module.exports.handler = async function handler(event, context, callback) {
+export async function handler(event, context, callback) {
   let client;
   githubAtom.trackTotalRequests();
   try {
-    client = await MongoClient.connect(MONGODB_URL, {
+    client = await mongodb.MongoClient.connect(MONGODB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -63,7 +63,7 @@ module.exports.handler = async function handler(event, context, callback) {
   githubAtom.closeConnections();
   githubAtom.logTotalRequests();
   callback();
-};
+}
 
 function getLatestTag(name) {
   return githubAtom
