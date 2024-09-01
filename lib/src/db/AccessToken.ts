@@ -1,4 +1,4 @@
-import "./connection";
+import { connect } from "./connection";
 import * as mongoose from "mongoose";
 
 const AccessTokenSchema = new mongoose.Schema(
@@ -19,8 +19,11 @@ let cachePromise: Promise<string[]>;
 export function loadAccessTokens() {
   const now = new Date().getTime();
   if (!cachePromise || now - prevLoadTS > CACHE_TTL) {
-    cachePromise = AccessTokenModel.find({}).then((items: AccessToken[]) =>
-      items.map((i) => i.accessToken)
+    ;
+    cachePromise = connect().then(() =>
+      AccessTokenModel.find({}).then((items: AccessToken[]) =>
+        items.map((i) => i.accessToken)
+      )
     );
   }
   return cachePromise;
