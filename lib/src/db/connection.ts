@@ -1,16 +1,14 @@
 import * as mongoose from "mongoose";
 import log from "../log";
 
-export function connect() {
-  if (mongoose.connection) return mongoose.connection;
+export async function connect() {
+  if ([1, 2].includes(mongoose.connection.readyState)) return mongoose.connection;
   return mongoose.connect(process.env.WAB_MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     bufferMaxEntries: 0,
-  });
+  }).then(() => mongoose.connection);
 }
-
-export const connection = connect();
 
 export function disconnect() {
   mongoose.disconnect().catch((e) =>
