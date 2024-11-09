@@ -110,11 +110,11 @@
       "environment": [
         {
           "name": "VIRTUAL_HOST",
-          "value": "bob.vfeskov.com"
+          "value": "bob.vfeskov.com,www.bob.vfeskov.com"
         },
         {
           "name": "LETSENCRYPT_HOST",
-          "value": "bob.vfeskov.com"
+          "value": "bob.vfeskov.com,www.bob.vfeskov.com"
         },
         {
           "name": "LETSENCRYPT_EMAIL",
@@ -138,11 +138,11 @@
       "environment": [
         {
           "name": "VIRTUAL_HOST",
-          "value": "beer.vfeskov.com,winabeer.com,www.winabeer.com,gitpunch.com,www.gitpunch.com"
+          "value": "beer.vfeskov.com,winabeer.com,www.winabeer.com,gitpunch.com,www.gitpunch.com,www.beer.vfeskov.com"
         },
         {
           "name": "LETSENCRYPT_HOST",
-          "value": "beer.vfeskov.com,winabeer.com,www.winabeer.com,gitpunch.com,www.gitpunch.com"
+          "value": "beer.vfeskov.com,winabeer.com,www.winabeer.com,gitpunch.com,www.gitpunch.com,www.beer.vfeskov.com"
         },
         {
           "name": "LETSENCRYPT_EMAIL",
