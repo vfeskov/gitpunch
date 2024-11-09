@@ -1,7 +1,7 @@
 #!/bin/bash
 REGION=eu-west-1
 APPLICATION_NAME=vfeskov.com
-APPLICATION_ENV=main2
+APPLICATION_ENV=main
 DOCKERRUN_FILE=${DOCKER_TAG}-Dockerrun.aws.json
 
 # 1. generate Dockerrun.aws.json
@@ -18,4 +18,4 @@ aws elasticbeanstalk create-application-version --region=$REGION --application-n
     --version-label $DOCKER_TAG --source-bundle S3Bucket=$DEPLOYMENT_BUCKET,S3Key=$DOCKERRUN_FILE
 
 # 4. deploy the version
-aws elasticbeanstalk update-environment --solution-stack-name "64bit Amazon Linux 2023 v4.0.6 running ECS" --region=$REGION --environment-name $APPLICATION_ENV --version-label $DOCKER_TAG
+aws elasticbeanstalk update-environment --region=$REGION --environment-name $APPLICATION_ENV --version-label $DOCKER_TAG

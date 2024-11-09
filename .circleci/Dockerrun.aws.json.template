@@ -2,45 +2,36 @@
   "AWSEBDockerrunVersion": 2,
   "volumes": [
     {
-      "name": "home-ec2-user-certs",
+      "name": "certs",
       "host": {
         "sourcePath": "/home/ec2-user/certs"
       }
     },
     {
-      "name": "etc-nginx-vhost-d",
+      "name": "html",
       "host": {
-        "sourcePath": "/etc/nginx/vhost.d"
+        "sourcePath": "/home/ec2-user/html"
       }
     },
     {
-      "name": "usr-share-nginx-html",
-      "host": {
-        "sourcePath": "/usr/share/nginx/html"
-      }
-    },
-    {
-      "name": "var-run-docker-sock",
+      "name": "docker_sock",
       "host": {
         "sourcePath": "/var/run/docker.sock"
       }
     },
     {
-      "name": "home-ec2-user-redis-data",
+      "name": "acme",
       "host": {
-        "sourcePath": "/home/ec2-user/redis-data"
+        "sourcePath": "/home/ec2-user/acme"
       }
     }
   ],
   "containerDefinitions": [
     {
       "name": "nginx-proxy",
-      "image": "jwilder/nginx-proxy",
+      "image": "nginxproxy/nginx-proxy",
       "essential": true,
       "memoryReservation": 64,
-      "dockerLabels": {
-        "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
-      },
       "portMappings": [
         {
           "containerPort": 80,
@@ -53,20 +44,15 @@
       ],
       "mountPoints": [
         {
-          "sourceVolume": "home-ec2-user-certs",
-          "containerPath": "/etc/nginx/certs",
-          "readOnly": true
+          "sourceVolume": "certs",
+          "containerPath": "/etc/nginx/certs"
         },
         {
-          "sourceVolume": "etc-nginx-vhost-d",
-          "containerPath": "/etc/nginx/vhost.d"
-        },
-        {
-          "sourceVolume": "usr-share-nginx-html",
+          "sourceVolume": "html",
           "containerPath": "/usr/share/nginx/html"
         },
         {
-          "sourceVolume": "var-run-docker-sock",
+          "sourceVolume": "docker_sock",
           "containerPath": "/tmp/docker.sock",
           "readOnly": true
         }
@@ -81,10 +67,16 @@
       }
     },
     {
-      "name": "letsencrypt-nginx-proxy-companion",
-      "image": "jrcs/letsencrypt-nginx-proxy-companion",
+      "name": "nginx-proxy-acme",
+      "image": "nginxproxy/acme-companion",
       "essential": true,
-      "memoryReservation": 64,
+      "memory": 64,
+      "environment": [
+        {
+          "name": "DEFAULT_EMAIL",
+          "value": "v@vladimirfeskov.com"
+        }
+      ],
       "volumesFrom": [
         {
           "sourceContainer": "nginx-proxy"
@@ -92,13 +84,13 @@
       ],
       "mountPoints": [
         {
-          "sourceVolume": "home-ec2-user-certs",
-          "containerPath": "/etc/nginx/certs"
-        },
-        {
-          "sourceVolume": "var-run-docker-sock",
+          "sourceVolume": "docker_sock",
           "containerPath": "/var/run/docker.sock",
           "readOnly": true
+        },
+        {
+          "sourceVolume": "acme",
+          "containerPath": "/etc/acme.sh"
         }
       ],
       "logConfiguration": {
