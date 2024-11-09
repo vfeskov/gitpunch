@@ -1,3 +1,3 @@
-export * from "./User";
-export * from "./AccessToken";
-export * from "./connection";
+export * from "./User.js";
+export * from "./AccessToken.js";
+export * from "./connection.js";

@@ -1,7 +1,7 @@
 "use strict";
 
-const moment = require("moment");
-const log = require("gitpunch-lib/log").default;
+import moment from "moment";
+import log from "gitpunch-lib/log.js";
 let {
   HOURS_AGO_IS_OUTDATED_WITH_TAGS = 24,
   HOURS_AGO_IS_OUTDATED_WITHOUT_TAGS = 72,
@@ -11,7 +11,7 @@ let {
 let cacheRepos;
 let cacheReposLoadedAt = moment();
 
-module.exports.default = class TagsCache {
+export default class TagsCache {
   constructor(client) {
     this.collection = client.db().collection("tagsCache");
     this.toUpdateWatched = [];
@@ -26,8 +26,8 @@ module.exports.default = class TagsCache {
     ) {
       const then = moment();
       cacheRepos = {};
-      const cursor = this.collection.find({}, { name: 1, watched: 1 })
-      while(await cursor.hasNext()) {
+      const cursor = this.collection.find({}, { name: 1, watched: 1 });
+      while (await cursor.hasNext()) {
         const repo = await cursor.next();
         cacheRepos[repo.name] = repo.watched;
       }
@@ -163,4 +163,4 @@ module.exports.default = class TagsCache {
       { $set: { latestTag, updatedAt: new Date() } }
     );
   }
-};
+}

@@ -1,6 +1,6 @@
 import { ActionableUser } from "./interfaces";
-import { fetchAtom, trackFetchErrors } from "gitpunch-lib/githubAtom";
-import { SEND_EMAIL_AND_UPDATE_ALERTED } from "./constants";
+import { fetchAtom, trackFetchErrors } from "gitpunch-lib/githubAtom.js";
+import { SEND_EMAIL_AND_UPDATE_ALERTED } from "./constants.js";
 
 let { MAX_RELEASE_NOTES_TO_FETCH = 1000 } = process.env;
 
@@ -48,7 +48,7 @@ export default async function fetchReleaseNotes(users: ActionableUser[]) {
         (tag) =>
           (tag.entry = notes[repo]
             ? notes[repo][tag.name] || ""
-            : `<a href="https://github.com/${repo}/releases/tag/${tag.name}">Release notes</a>`)
+            : `<content type="html">&lt;a href=&quot;https://github.com/${repo}/releases/tag/${tag.name}&quot;&gt;Release notes&lt;/a&gt;</content>`)
       )
     )
   );

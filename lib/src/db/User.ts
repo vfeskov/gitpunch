@@ -1,6 +1,5 @@
-import { ObjectID } from "mongodb";
-import * as mongoose from "mongoose";
-import "./connection";
+import mongoose from "mongoose";
+import "./connection.js";
 const { assign, keys } = Object;
 
 const reposValidator = (repos: string[]) => {
@@ -58,10 +57,10 @@ const userSchemaObj: mongoose.SchemaDefinition = {
     validate: { validator: Number.isInteger },
   },
 };
-const UserSchema = new mongoose.Schema(userSchemaObj, {
+const UserSchema = new mongoose.Schema<RawUser>(userSchemaObj, {
   bufferCommands: false,
 });
-export const UserModel = mongoose.model("User", UserSchema);
+export const UserModel = mongoose.model<RawUser>("User", UserSchema);
 
 export class CuteRepo {
   filter: number;
@@ -89,23 +88,25 @@ export class UpdateAllReposParams {
 }
 
 export class RawUser {
-  _id?: ObjectID;
-  accessToken?: string;
-  alerted?: string[][];
+  _id: mongoose.Types.ObjectId;
+  accessToken: string;
+  alerted: string[][];
   checkAt?: number;
-  email?: string;
+  email: string;
   frequency?: string;
   githubId?: number;
-  majors?: string[];
-  minors?: string[];
-  mutedRepos?: string[];
+  majors: string[];
+  minors: string[];
+  mutedRepos: string[];
   passwordEncrypted?: string;
-  patches?: string[];
-  repos?: string[];
+  patches: string[];
+  repos: string[];
   watching?: boolean;
   watchingStars?: number;
   [key: string]: any;
 }
+
+export type RawUserUpdate = Partial<RawUser>;
 
 export class User extends CuteUser {
   constructor(params: CuteUser) {
@@ -189,7 +190,7 @@ export class User extends CuteUser {
   static async load(conditions: any) {
     const { id, ...rest } = conditions;
     if (id) {
-      conditions = { _id: new ObjectID(id), ...rest };
+      conditions = { _id: new mongoose.Types.ObjectId(id), ...rest };
     }
     const raw = await UserModel.findOne(conditions);
     return raw ? new User(toCute(raw)) : null;
@@ -261,7 +262,7 @@ export class User extends CuteUser {
     params: UpdateAllReposParams
   ) {
     const { muted, filter } = params;
-    const command: RawUser = {};
+    const command: RawUserUpdate = {};
     const repoNames = repos.map((r) => r.repo);
     if (typeof muted !== "undefined") {
       command.mutedRepos = muted ? repoNames : [];
@@ -281,9 +282,9 @@ export class User extends CuteUser {
 }
 
 function toRaw({ id, repos, ...rest }: CuteUser): RawUser {
-  const result: RawUser = rest;
+  const result: RawUserUpdate = rest;
   if (id) {
-    result._id = new ObjectID(id);
+    result._id = new mongoose.Types.ObjectId(id);
   }
   if (repos) {
     assign(result, {
@@ -296,7 +297,7 @@ function toRaw({ id, repos, ...rest }: CuteUser): RawUser {
   }
   return Object.keys(result)
     .filter((k) => k === "_id" || !!userSchemaObj[k])
-    .reduce((r, k) => ({ ...r, [k]: result[k] }), {});
+    .reduce((r, k) => ({ ...r, [k]: result[k] }), {} as RawUser);
 }
 
 function toCute(raw: RawUser): CuteUser {

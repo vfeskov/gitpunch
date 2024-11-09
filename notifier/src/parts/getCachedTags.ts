@@ -1,14 +1,10 @@
-import { MongoClient } from "mongodb";
+import { connection } from "gitpunch-lib/db/index.js";
 
 let cache: Promise<{ [name: string]: string }> = null;
 
-export default async function getCachedTags(
-  client: MongoClient,
-  repos: Array<{ repo: string }>
-) {
+export default async function getCachedTags(repos: Array<{ repo: string }>) {
   if (!cache) {
-    cache = client
-      .db()
+    cache = connection.db
       .collection("tagsCache")
       .find({ name: { $in: repos.map((i) => i.repo) } }, {
         name: 1,

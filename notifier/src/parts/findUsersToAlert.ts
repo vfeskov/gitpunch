@@ -1,7 +1,7 @@
 import {
   SEND_EMAIL_AND_UPDATE_ALERTED,
   ONLY_UPDATE_ALERTED,
-} from "./constants";
+} from "./constants.js";
 import { FullUser, ActionableUser, User } from "./interfaces";
 
 export default function findUsersToAlert(users: FullUser[]): ActionableUser[] {
