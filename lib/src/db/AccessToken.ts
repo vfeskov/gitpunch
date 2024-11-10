@@ -30,5 +30,5 @@ export function loadAccessTokens() {
 }
 
 interface AccessToken extends mongoose.Document {
-  accessToken: string;
+  accessToken?: string;
 }
