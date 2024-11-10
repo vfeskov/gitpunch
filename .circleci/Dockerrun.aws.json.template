@@ -119,6 +119,14 @@
         {
           "name": "LETSENCRYPT_EMAIL",
           "value": "v@vladimirfeskov.com"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID",
+          "value": "{{WOB_AWS_ACCESS_KEY_ID}}"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "value": "{{WOB_AWS_SECRET_ACCESS_KEY}}"
         }
       ],
       "logConfiguration": {
